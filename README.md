@@ -43,8 +43,8 @@ Each demo has its own README with specific setup instructions. Python examples u
 
 | Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
 |:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
-| 🔗 LangChain | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
-| 👥 CrewAI | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
-| 🏗️ MCP | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
-| 🐝 BeeAI | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
-| 🧩 Agno | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
+| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
+| [🏗️ MCP](examples/agents/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| [🧩 Agno](examples/agents/agno/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
