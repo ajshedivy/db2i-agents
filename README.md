@@ -1,32 +1,50 @@
-# Db2 for i AI Agents Cookbook
+# 🤖 Db2 for i AI Agents Cookbook
 
 This repository contains a collection of example AI agents that demonstrate integration with Db2 for i across various AI agent frameworks.
 
-## Repository Structure
+## 🧠 What are AI Agents?
 
-- `demos/`: Contains individual agent examples organized by framework and language
+AI agents are autonomous or semi-autonomous software entities powered by large language models (LLMs) that can:
+
+- 🔍 Perceive their environment through tools and APIs
+- 🤔 Make decisions based on reasoning and planning
+- 🛠️ Execute actions to accomplish specific tasks
+- 🔄 Learn and adapt from feedback and experience
+
+Unlike basic LLM applications, agents can maintain context, use specialized tools, chain together operations, and solve complex problems that require multiple steps and data interactions.
+
+## 📂 Repository Structure
+
+- `examples/`: Contains individual agent examples organized by framework and language
+  - `langchain/`: LangChain framework demos with Python implementation
   - `mcp/`: Model-Control-Processor framework demos
   - `crewai/`: CrewAI framework demos
-  - `langchain/`: LangChain framework demos
   - `agno/`: Agno framework demos
   - `beeai/`: BeeAI framework demos
-  - Each framework folder contains:
+  - Each framework folder typically contains:
     - `python/`: Python implementations
     - `typescript/`: TypeScript implementations
     
 - `shared/`: Common utilities and components used across demos
-  - `auth/`: Authentication utilities for Db2 for i
-  - `models/`: Shared data models and schemas
-  - `utils/`: General utilities and helpers
 
 - `docs/`: Additional documentation and guides
 
-## Getting Started
+## 🚀 Getting Started
 
 Each demo has its own README with specific setup instructions. Python examples use the `uv` package manager for dependency management.
 
-## Requirements
+## 📋 Requirements
 
 - For Python demos: Python 3.9+ and `uv` package manager
 - For TypeScript demos: Node.js 18+ and npm/yarn
 - Access to a Db2 for i instance
+
+## 📊 Agent Framework Comparison
+
+| Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
+|:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
+| 🔗 LangChain | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
+| 👥 CrewAI | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
+| 🏗️ MCP | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| 🐝 BeeAI | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| 🧩 Agno | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
