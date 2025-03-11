@@ -256,7 +256,7 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
       "command": "uv",
       "args": [
         "--directory",
-        "/Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/mcp/db2i-mcp-server",
+        "PATH_TO_THIS_REPO/db2i-agents/examples/mcp/db2i-mcp-server",
         "run",
         "db2i-mcp-server"
       ]
@@ -267,7 +267,7 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
 
 <details>
   <summary>Published Servers Configuration</summary>
-  
+
   ```json
   "mcpServers": {
     "db2i-mcp-server": {
