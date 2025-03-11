@@ -21,24 +21,28 @@ The codebase contains several tools that can be used with Langchain's agent fram
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/db2i-ai.git
-   cd db2i-ai/db2i-agents/examples/agents/langchain
+   git clone https://github.com/ajshedivy/db2i-agents.git
+   cd db2i-agents/examples/agents/langchain
    ```
 
 2. **Create and activate a virtual environment using uv:**
    ```bash
    uv venv
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
+
+4. **(Optional) Activate the virtual environment:**
+   ```bash
    source .venv/bin/activate  # On Linux/macOS
    # OR
    .venv\Scripts\activate  # On Windows
    ```
 
-3. **Install dependencies:**
-   ```bash
-   uv pip install -e .
-   ```
-
-4. **Set up environment variables:**
+5. **Set up environment variables:**
    
    Create a `.env` file in the project root with the following content:
 
@@ -80,6 +84,78 @@ The codebase contains several tools that can be used with Langchain's agent fram
    ```
 
 or open this project in VSCode. you can then open the `db2i_agent.ipynb` notebook and run the cells to see the tools in action.
+
+### 💻 Running the CLI Example
+
+You can also run the CLI example by running the following command:
+
+```bash
+cd examples/agents/langchain
+uv run main.py --question "how many employees are there?"
+```
+
+Output:
+```
+$ uv run main.py --question "how many employees are there?"
+
+🚀 Starting DB2i Agent with LangChain
+==================================================
+📝 Question: how many employees are there?
+--------------------------------------------------
+⚙️  Loading environment variables...
+📡 Loading database connection details...
+✅ Connection details loaded for host: MY_HOST, schema: SAMPLE
+🗄️  Initializing database connection...
+✅ Database connection initialized
+🧠 Initializing language model...
+🔄 Using Claude (claude-3-sonnet-20240229)
+📊 Retrieving table information...
+✅ Table information retrieved
+
+🔄 Creating workflow...
+🏁 Initializing workflow state...
+
+🚀 Running workflow...
+
+📋 WORKFLOW EXECUTION
+--------------------------------------------------
+
+🔄 STEP 1: SQL Query Generation
+🔍 Generating SQL query based on user question...
+✨ Generated SQL query: SELECT COUNT(*) AS num_employees
+FROM SAMPLE.EMPLOYEE
+
+🔄 STEP 2: SQL Query Execution
+🔄 Executing SQL query against database...
+✅ Query execution complete
+
+🔄 STEP 3: Answer Generation
+🤔 Generating natural language answer from query results...
+💬 Answer generation complete
+
+📊 RESULTS
+==================================================
+❓ Question: how many employees are there?
+🔍 SQL Query: SELECT COUNT(*) AS num_employees
+FROM SAMPLE.EMPLOYEE
+💬 Answer: Based on the provided SQL query and result, the answer to the question "how many employees are there?" is 42.
+
+The SQL query `SELECT COUNT(*) AS num_employees FROM SAMPLE.EMPLOYEE` is counting the total number of rows in the `EMPLOYEE` table from the `SAMPLE` database or schema. The `COUNT(*)` function counts all non-null rows in the specified table.
+
+The result `[(42,)]` indicates that the query returned a single row with a value of 42, which represents the total number of employees in the `EMPLOYEE` table.
+
+Therefore, the number of employees in the database is 42.
+==================================================
+✅ Process completed successfully
+
+```
+
+
+**Note:** I am using Anthropic, but you can also use Ollama by passing `--model` flag:
+
+```bash
+uv run main.py --question "how many employees are there?" --model llama3.1:latest
+```
 
 ## 📊 Testing
 
