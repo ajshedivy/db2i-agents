@@ -249,7 +249,8 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
 
 <details>
   <summary>Development/Unpublished Servers Configuration</summary>
-  ```
+
+  ```json
   "mcpServers": {
     "db2i-mcp-server": {
       "command": "uv",
@@ -266,7 +267,8 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
 
 <details>
   <summary>Published Servers Configuration</summary>
-  ```
+  
+  ```json
   "mcpServers": {
     "db2i-mcp-server": {
       "command": "uvx",
