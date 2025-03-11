@@ -115,6 +115,6 @@ More on the LangChain framework can be found in the [LangChain README](examples/
 |:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
 | [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
 | [👥 CrewAI](examples/agents/crewai/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
-| [🏗️ MCP](examples/agents/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
+| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
 | [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
 | [🧩 Agno](examples/agents/agno/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
