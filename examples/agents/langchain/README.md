@@ -1,3 +1,22 @@
+- [🔗 Langchain Db2i Tools Demo](#-langchain-db2i-tools-demo)
+  - [🔍 Overview](#-overview)
+  - [🛠️ Setup Instructions](#️-setup-instructions)
+    - [Prerequisites](#prerequisites)
+    - [Setting Up Your Environment](#setting-up-your-environment)
+  - [🚀 Running the CLI Example](#-running-the-cli-example)
+    - [💻 Running the SQL Chain Example](#-running-the-sql-chain-example)
+    - [🤖 Running the SQL Agent Example](#-running-the-sql-agent-example)
+  - [🌐 Running the Server](#-running-the-server)
+  - [📊 Testing](#-testing)
+  - [🧩 Components](#-components)
+    - [Base Tool](#base-tool)
+    - [Database Query Tools](#database-query-tools)
+    - [Database Information Tools](#database-information-tools)
+  - [🔌 Database Connection Details](#-database-connection-details)
+    - [Mapepire Database Client](#mapepire-database-client)
+    - [How the Database Tool Works](#how-the-database-tool-works)
+
+
 # 🔗 Langchain Db2i Tools Demo
 
 This project demonstrates how to create SQL database tools for Langchain, specifically designed to work with Db2i Database.
