@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional, Type
 
-from examples.agents.langchain.tools.prompt import QUERY_CHECKER
-from tools.database import Db2iDatabase
+from react_agent.prompt import QUERY_CHECKER
+from react_agent.database import Db2iDatabase
 from langchain_core._api.deprecation import deprecated
 from langchain_core.callbacks import (CallbackManagerForToolRun)
 from langchain_core.tools import BaseTool
@@ -22,8 +22,8 @@ class BaseDb2iDatabaseTool(BaseModel):
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
     )
-    
-    
+
+
 class _QuerySQLDatabaseToolInput(BaseModel):
     query: str = Field(..., description="A detailed and correct SQL query.")
 
@@ -145,6 +145,10 @@ class QuerySQLCheckerTool(BaseDb2iDatabaseTool, BaseTool):  # type: ignore[overr
                     template=QUERY_CHECKER, input_variables=["dialect", "query"]
                 ),
             )
+
+            # values["llm_chain"] = values.get("llm") | PromptTemplate(
+            #     template=QUERY_CHECKER, input_variables=["dialect", "query"]
+            # )
 
         if values["llm_chain"].prompt.input_variables != ["dialect", "query"]:
             raise ValueError(

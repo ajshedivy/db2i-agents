@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import pytest
-from database import Db2iDatabase
+from db2i_tools.database import Db2iDatabase
 import os
 from dotenv import load_dotenv
 

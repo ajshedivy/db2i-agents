@@ -11,16 +11,21 @@ Usage:
 
 import os
 import argparse
+from textwrap import dedent
 from typing_extensions import TypedDict, Annotated
 from dotenv import load_dotenv
 
-from tools.database import Db2iDatabase
-from tools.tools import QuerySQLDatabaseTool
+from db2i_tools.database import Db2iDatabase
+from db2i_tools.tools import QuerySQLDatabaseTool
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
 from langchain_anthropic import ChatAnthropic
 from langgraph.graph import START, StateGraph
+from langchain import hub
+from langgraph.prebuilt import create_react_agent
+
+from db2i_tools.toolkit import Db2iDatabaseToolkit
 
 
 class State(TypedDict):
@@ -113,33 +118,34 @@ def generate_answer(state, llm):
     print("💬 Answer generation complete")
     return {"answer": response.content}
 
+def get_system_message():
+    """Get system message for the agent"""
+    template = dedent("""
+        ================================ System Message ================================
 
-def main():
-    """Main function to run the agent"""
-    print("\n🚀 Starting Db2i Agent with LangChain")
-    print("=" * 50)
-    
-    parser = argparse.ArgumentParser(description="Db2i Agent with LangChain")
-    parser.add_argument("--question", type=str, required=True, help="The question to ask the agent")
-    parser.add_argument("--model", type=str, default="llama3.1", help="The Ollama model to use (default: llama3.1)")
-    args = parser.parse_args()
-    
-    print(f"📝 Question: {args.question}")
-    print("-" * 50)
+        You are an agent designed to interact with a SQL database.
+        Given an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.
+        Unless the user specifies a specific number of examples they wish to obtain, always limit your query to at most {top_k} results.
+        You can order the results by a relevant column to return the most interesting examples in the database.
+        Never query for all the columns from a specific table, only ask for the relevant columns given the question.
+        You have access to tools for interacting with the database.
+        Only use the below tools. Only use the information returned by the below tools to construct your final answer.
+        You MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.
 
-    # Load environment variables
-    print("⚙️  Loading environment variables...")
-    load_dotenv()
-    config = load_connection()
-    schema = os.getenv("SCHEMA")
+        DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
+        
+        DO NOT add ; to the end of sql queries.
+        
+        ALWAYS use SCHEMA.TABLE_NAME to reference tables in the database.
 
-    # Initialize database
-    print("🗄️  Initializing database connection...")
-    db = Db2iDatabase(schema=schema, server_config=config)
-    print("✅ Database connection initialized")
+        To start you should ALWAYS look at the tables in the database to see what you can query.
+        Do NOT skip this step.
+        Then you should query the schema of the most relevant tables.  
+    """)
     
-    # Get LLM
-    llm = get_llm(args.model)
+    return template.format(dialect="Db2i", top_k=100)
+
+def run_chain(args, db, llm):
     
     # Get table info for the schema
     print("📊 Retrieving table information...")
@@ -187,6 +193,80 @@ def main():
     print(f"💬 Answer: {final_state['answer']}")
     print("=" * 50)
     print("✅ Process completed successfully")
+    
+    
+def run_agent(args, db, llm):
+    print("🔄 Running LangChain agent...")
+    
+    # configure system message
+    print("📝 Configuring system message...")
+    # prompt_template = hub.pull("langchain-ai/sql-agent-system-prompt")
+
+    # assert len(prompt_template.messages) == 1
+    # prompt_template.messages[0].pretty_print()
+    system_message = get_system_message()
+    
+    # get database tool
+    print("🔧 Initializing database toolkit...")
+    toolkit = Db2iDatabaseToolkit(db=db, llm=llm)
+
+    tools = toolkit.get_tools()
+    for tool in tools:
+        print(f"🔧 Tool: {tool.name}")
+    
+    # create agent executor
+    print("🚀 Creating agent executor...")
+    agent_executor = create_react_agent(llm, tools, prompt=system_message + " DO NOT use ; at the end of the query.")
+    
+    # run agent
+    print("🔄 Running agent...")
+    for step in agent_executor.stream(
+        {"messages": [{"role": "user", "content": args.question}]},
+        stream_mode="values",
+    ):
+        step["messages"][-1].pretty_print()
+    
+    print("✅ LangChain agent completed successfully")
+
+
+def main():
+    """Main function to run the agent"""
+
+    
+    parser = argparse.ArgumentParser(description="Db2i Agent with LangChain")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--chain", action="store_true", help="Run the LangChain workflow")
+    group.add_argument("--agent", action="store_true", help="Run the LangChain agent")
+    parser.add_argument("--question", type=str, required=True, help="The question to ask the agent")
+    parser.add_argument("--model", type=str, default="llama3.1", help="The Ollama model to use (default: llama3.1)")
+    args = parser.parse_args()
+    
+    print("\n🚀 Starting Db2i Agent with LangChain")
+    print("=" * 50)
+    
+    print(f"📝 Question: {args.question}")
+    print("-" * 50)
+
+    # Load environment variables
+    print("⚙️  Loading environment variables...")
+    load_dotenv()
+    config = load_connection()
+    schema = os.getenv("SCHEMA")
+
+    # Initialize database
+    print("🗄️  Initializing database connection...")
+    db = Db2iDatabase(schema=schema, server_config=config, ignore_tables=['EMPLOYEES'])
+    print("✅ Database connection initialized")
+    
+    # Get LLM
+    llm = get_llm(args.model)
+    
+    if args.chain:
+        run_chain(args, db, llm)
+    elif args.agent:
+        run_agent(args, db, llm)
+    else:
+        print("Invalid arguments. Please specify --chain or --agent")
 
 
 if __name__ == "__main__":
