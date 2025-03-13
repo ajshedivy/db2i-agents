@@ -98,7 +98,7 @@ Output:
 ```
 $ uv run main.py --question "how many employees are there?"
 
-🚀 Starting DB2i Agent with LangChain
+🚀 Starting Db2i Agent with LangChain
 ==================================================
 📝 Question: how many employees are there?
 --------------------------------------------------

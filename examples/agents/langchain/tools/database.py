@@ -58,6 +58,11 @@ class Db2iDatabase:
         self._sample_rows_in_table_info = sampler_rows_in_table_info
         self._customed_table_info = custom_table_info
         self._max_string_length = max_string_length
+        
+    @property
+    def dialect(self) -> str:
+        """Return string representation of dialect to use."""
+        return "Db2i"
 
     def _get_all_table_names(self, schema: str) -> List[str]:
         sql = f"""

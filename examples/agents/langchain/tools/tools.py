@@ -1,11 +1,18 @@
-from typing import Optional, Type
+from typing import Any, Dict, Optional, Type
 
+from examples.agents.langchain.tools.prompt import QUERY_CHECKER
 from tools.database import Db2iDatabase
 from langchain_core._api.deprecation import deprecated
 from langchain_core.callbacks import (CallbackManagerForToolRun)
 from langchain_core.tools import BaseTool
+from langchain_core.prompts import PromptTemplate
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.callbacks import (
+    AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
+)
 from pep249 import ResultRow, ResultSet
-from pydantic import (BaseModel, ConfigDict, Field)
+from pydantic import (BaseModel, ConfigDict, Field, model_validator)
 
 
 class BaseDb2iDatabaseTool(BaseModel):
@@ -108,63 +115,63 @@ class ListSQLDatabaseTool(BaseDb2iDatabaseTool, BaseTool):  # type: ignore[overr
         return ", ".join(self.db.get_usable_table_names())
 
 
-# class _QuerySQLCheckerToolInput(BaseModel):
-#     query: str = Field(..., description="A detailed and SQL query to be checked.")
+class _QuerySQLCheckerToolInput(BaseModel):
+    query: str = Field(..., description="A detailed and SQL query to be checked.")
 
 
-# class QuerySQLCheckerTool(BaseDb2iDatabaseTool, BaseTool):  # type: ignore[override, override]
-#     """Use an LLM to check if a query is correct.
-#     Adapted from https://www.patterns.app/blog/2023/01/18/crunchbot-sql-analyst-gpt/"""
+class QuerySQLCheckerTool(BaseDb2iDatabaseTool, BaseTool):  # type: ignore[override, override]
+    """Use an LLM to check if a query is correct.
+    Adapted from https://www.patterns.app/blog/2023/01/18/crunchbot-sql-analyst-gpt/"""
 
-#     template: str = QUERY_CHECKER
-#     llm: BaseLanguageModel
-#     llm_chain: Any = Field(init=False)
-#     name: str = "sql_db_query_checker"
-#     description: str = """
-#     Use this tool to double check if your query is correct before executing it.
-#     Always use this tool before executing a query with sql_db_query!
-#     """
-#     args_schema: Type[BaseModel] = _QuerySQLCheckerToolInput
+    template: str = QUERY_CHECKER
+    llm: BaseLanguageModel
+    llm_chain: Any = Field(init=False)
+    name: str = "sql_db_query_checker"
+    description: str = """
+    Use this tool to double check if your query is correct before executing it.
+    Always use this tool before executing a query with sql_db_query!
+    """
+    args_schema: Type[BaseModel] = _QuerySQLCheckerToolInput
 
-#     @model_validator(mode="before")
-#     @classmethod
-#     def initialize_llm_chain(cls, values: Dict[str, Any]) -> Any:
-#         if "llm_chain" not in values:
-#             from langchain.chains.llm import LLMChain
+    @model_validator(mode="before")
+    @classmethod
+    def initialize_llm_chain(cls, values: Dict[str, Any]) -> Any:
+        if "llm_chain" not in values:
+            from langchain.chains.llm import LLMChain
 
-#             values["llm_chain"] = LLMChain(
-#                 llm=values.get("llm"),  # type: ignore[arg-type]
-#                 prompt=PromptTemplate(
-#                     template=QUERY_CHECKER, input_variables=["dialect", "query"]
-#                 ),
-#             )
+            values["llm_chain"] = LLMChain(
+                llm=values.get("llm"),  # type: ignore[arg-type]
+                prompt=PromptTemplate(
+                    template=QUERY_CHECKER, input_variables=["dialect", "query"]
+                ),
+            )
 
-#         if values["llm_chain"].prompt.input_variables != ["dialect", "query"]:
-#             raise ValueError(
-#                 "LLM chain for QueryCheckerTool must have input variables ['query', 'dialect']"
-#             )
+        if values["llm_chain"].prompt.input_variables != ["dialect", "query"]:
+            raise ValueError(
+                "LLM chain for QueryCheckerTool must have input variables ['query', 'dialect']"
+            )
 
-#         return values
+        return values
 
-#     def _run(
-#         self,
-#         query: str,
-#         run_manager: Optional[CallbackManagerForToolRun] = None,
-#     ) -> str:
-#         """Use the LLM to check the query."""
-#         return self.llm_chain.predict(
-#             query=query,
-#             dialect=self.db.dialect,
-#             callbacks=run_manager.get_child() if run_manager else None,
-#         )
+    def _run(
+        self,
+        query: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the LLM to check the query."""
+        return self.llm_chain.predict(
+            query=query,
+            dialect=self.db.dialect,
+            callbacks=run_manager.get_child() if run_manager else None,
+        )
 
-#     async def _arun(
-#         self,
-#         query: str,
-#         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
-#     ) -> str:
-#         return await self.llm_chain.apredict(
-#             query=query,
-#             dialect=self.db.dialect,
-#             callbacks=run_manager.get_child() if run_manager else None,
-#         )
+    async def _arun(
+        self,
+        query: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        return await self.llm_chain.apredict(
+            query=query,
+            dialect=self.db.dialect,
+            callbacks=run_manager.get_child() if run_manager else None,
+        )

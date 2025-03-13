@@ -4,7 +4,7 @@ A Model Context Protocol (MCP) server implementation for Db2 for i that enables 
 
 ## Overview
 
-The DB2i MCP Server provides a standardized interface for AI assistants to work with Db2 for i databases, enabling intelligent data exploration, querying, and analysis capabilities. This server acts as a bridge between AI assistants and your Db2 for i data, leveraging the [Mapepire](https://mapepire-ibmi.github.io/) database driver for seamless connectivity.
+The Db2i MCP Server provides a standardized interface for AI assistants to work with Db2 for i databases, enabling intelligent data exploration, querying, and analysis capabilities. This server acts as a bridge between AI assistants and your Db2 for i data, leveraging the [Mapepire](https://mapepire-ibmi.github.io/) database driver for seamless connectivity.
 
 ### Key Features
 

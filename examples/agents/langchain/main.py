@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DB2i Agent - LangChain Script
+Db2i Agent - LangChain Script
 
 This script converts the db2i_agent.ipynb notebook into a Python script
 that takes a question parameter as an argument.
@@ -116,10 +116,10 @@ def generate_answer(state, llm):
 
 def main():
     """Main function to run the agent"""
-    print("\n🚀 Starting DB2i Agent with LangChain")
+    print("\n🚀 Starting Db2i Agent with LangChain")
     print("=" * 50)
     
-    parser = argparse.ArgumentParser(description="DB2i Agent with LangChain")
+    parser = argparse.ArgumentParser(description="Db2i Agent with LangChain")
     parser.add_argument("--question", type=str, required=True, help="The question to ask the agent")
     parser.add_argument("--model", type=str, default="llama3.1", help="The Ollama model to use (default: llama3.1)")
     args = parser.parse_args()

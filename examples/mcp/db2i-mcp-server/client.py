@@ -79,7 +79,7 @@ async def main(server_path=None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="DB2i MCP Client")
+    parser = argparse.ArgumentParser(description="Db2i MCP Client")
     parser.add_argument(
         "--server-path", 
         default=None,

@@ -1,6 +1,6 @@
-# 🚀 DB2i MCP (Model Context Protocol) Examples 
+# 🚀 Db2i MCP (Model Context Protocol) Examples 
 
-This repository contains a DB2i MCP server and client examples that enable AI assistants to interact with DB2 for i databases through the Model Context Protocol (MCP). 🤖💬
+This repository contains a Db2i MCP server and client examples that enable AI assistants to interact with DB2 for i databases through the Model Context Protocol (MCP). 🤖💬
 
 ## 🔍 What is MCP?
 
@@ -18,7 +18,7 @@ In this repository, MCP enables Claude and other compatible AI assistants to dir
 ```
 mcp/
 ├── README.md              # This file - overview and getting started
-├── db2i-mcp-server/       # The MCP server implementation for DB2i
+├── db2i-mcp-server/       # The MCP server implementation for Db2i
 │   ├── README.md          # Detailed server documentation and setup
 │   ├── src/               # Server source code
 │   └── ...
@@ -30,7 +30,7 @@ mcp/
 
 ## 🚦 Getting Started
 
-### 1. 🔧 Set Up the DB2i MCP Server
+### 1. 🔧 Set Up the Db2i MCP Server
 
 The `db2i-mcp-server` directory contains the core MCP server that connects to your DB2 for i database. This server must be setup and configured for any client examples to work.
 
@@ -55,11 +55,11 @@ Once your server is running, you can interact with it using one of these options
 
 - **🤖 Claude Desktop**: For a full AI assistant experience, see the [server README](./db2i-mcp-server/README.md#using-with-claude-desktop) for setup instructions.
 
-- **🛠️ Custom Clients**: The `/python` and `/typescript` directories contain example client implementations for building your own applications that utilize the DB2i MCP server.
+- **🛠️ Custom Clients**: The `/python` and `/typescript` directories contain example client implementations for building your own applications that utilize the Db2i MCP server.
 
 ## ✨ Features
 
-The DB2i MCP server provides these key capabilities to AI assistants:
+The Db2i MCP server provides these key capabilities to AI assistants:
 
 - **🔍 Database Discovery**: List and explore tables in the configured schema
 - **📊 Schema Inspection**: View detailed table definitions and sample data

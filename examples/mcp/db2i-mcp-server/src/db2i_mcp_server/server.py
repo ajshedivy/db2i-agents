@@ -61,7 +61,7 @@ def configure_logging():
         
         # Log startup info if enabled
         if logging_enabled:
-            logger.info(f"Starting DB2i MCP Server (log level: {log_level_name})")
+            logger.info(f"Starting Db2i MCP Server (log level: {log_level_name})")
             logger.info(f"Logs location: {log_filename}")
         
         return logger
@@ -475,7 +475,7 @@ async def main():
     # logger.info(f"Using schema: {SCHEMA}")
 
     # Initialize server
-    # logger.info("Initializing MCP DB2i server")
+    # logger.info("Initializing MCP Db2i server")
     server = Server("db2i-mcp-server")
     
     # Initialize database connection
