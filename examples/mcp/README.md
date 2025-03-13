@@ -55,6 +55,11 @@ Once your server is running, you can interact with it using one of these options
 
 - **🤖 Claude Desktop**: For a full AI assistant experience, see the [server README](./db2i-mcp-server/README.md#using-with-claude-desktop) for setup instructions.
 
+  > [!NOTE]
+  > Here is an example chat using the MCP server with Claude Desktop: [link](https://claude.ai/share/f4420035-4476-4877-9243-7bb8bb689130)
+  >
+
+
 - **🛠️ Custom Clients**: The `/python` and `/typescript` directories contain example client implementations for building your own applications that utilize the Db2i MCP server.
 
 ## ✨ Features
