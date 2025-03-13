@@ -21,6 +21,14 @@
 
 This project demonstrates how to create SQL database tools for Langchain, specifically designed to work with Db2i Database.
 
+Here is a sneak peek of the Db2i Agent in action 👀:
+
+
+https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
+
+
+
+
 ## 🔍 Overview
 
 The codebase contains several tools that can be used with Langchain's agent framework to interact with Db2i databases:
