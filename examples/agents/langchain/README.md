@@ -368,7 +368,11 @@ You can deploy a local LangGraph app server to run a ReAct Db2i Agent.
 
 https://github.com/user-attachments/assets/f713ff93-4856-4a6c-99ca-86447dff31b5
 
-
+> [!NOTE]
+> The server example requires an Anthropic API key to run. I am planning on adding support for Ollama as well.
+> 
+>  This example also assumes that you have the `SAMPLE` database set up on your Db2i instance. More info: [SAMPLE database setup](../../../README.md#-sample-database)
+>
 
 
 ## 📊 Testing
