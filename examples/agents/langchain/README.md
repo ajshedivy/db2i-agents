@@ -8,6 +8,8 @@ The codebase contains several tools that can be used with Langchain's agent fram
 
 1. `QuerySQLDatabaseTool` - Execute SQL queries against a database
 2. `InfoSQLDatabaseTool` - Get schema information about database tables
+3. `ListSQLDatabaseTool` - List tables in the current schema
+4. `QuerySQLCheckerTool` - Check if a SQL query is valid
 
 ## 🛠️ Setup Instructions
 
@@ -18,6 +20,12 @@ The codebase contains several tools that can be used with Langchain's agent fram
 - Access to a Db2i database instance
 
 ### Setting Up Your Environment
+
+Install uv if you haven't already:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
 1. **Clone the repository:**
    ```bash
@@ -49,45 +57,21 @@ The codebase contains several tools that can be used with Langchain's agent fram
    ```
    HOST=your_db2i_host
    DB_USER=your_username
-   PORT=8075
+   PORT=8076               # Default port for Mapepire
    PASSWORD=your_password
-   SCHEMA=SAMPLE  # Or your preferred schema
+   SCHEMA=SAMPLE           # Or your preferred schema
    ```
 
    These environment variables are required for connecting to your Db2i database.
 
-## 🧩 Components
-
-### Base Tool
-
-- `BaseDb2iDatabaseTool` - A base class that all Db2i database tools inherit from, containing the database connection
-
-### Database Query Tool
-
-- `QuerySQLDatabaseTool` - Allows executing SQL queries against the database
-  - Input: SQL query string
-  - Output: Query results or error message
-  - Alias: `QuerySQLDataBaseTool` (deprecated but maintained for backward compatibility)
-
-### Database Information Tool
-
-- `InfoSQLDatabaseTool` - Retrieves schema information for specified tables
-  - Input: Comma-separated list of table names
-  - Output: Schema information and sample rows for the specified tables
 
 ## 🚀 Running the Example
 
-1. Make sure your `.env` file is set up correctly
-2. Run the notebook example:
-   ```bash
-   jupyter notebook db2i_agent.ipynb
-   ```
-
-or open this project in VSCode. you can then open the `db2i_agent.ipynb` notebook and run the cells to see the tools in action.
+Make sure your `.env` file is set up correctly with your database connection details.
 
 ### 💻 Running the CLI Example
 
-You can also run the CLI example by running the following command:
+The CLI example in `main.py` demonstrates a simple "chain" of tools that interact with a Db2i database. You can run the CLI example by running the following command:
 
 ```bash
 cd examples/agents/langchain
@@ -150,12 +134,12 @@ Therefore, the number of employees in the database is 42.
 
 ```
 
-
-**Note:** I am using Anthropic, but you can also use Ollama by passing `--model` flag:
-
-```bash
-uv run main.py --question "how many employees are there?" --model llama3.1:latest
-```
+> [!NOTE]
+> I am using Anthropic, but you can also use Ollama by passing `--model` flag:
+>  ```bash
+>  uv run main.py --question "how many employees are there?" --model llama3.1:latest
+>  ```
+>  This example also assumes that you have the `SAMPLE` database set up on your Db2i instance. More info: [SAMPLE database setup](../../../README.md#-sample-database)
 
 ## 📊 Testing
 
@@ -166,6 +150,46 @@ uncomment the test you want to run in `tools/test_database.py` and run:
 uv run tools/test_database.py
 ```
 
+
+## 🧩 Components
+
+### Base Tool
+
+- `BaseDb2iDatabaseTool` - A base class that all Db2i database tools inherit from, containing the database connection.
+  - Pydantic model with a Db2iDatabase field
+  - Allows arbitrary types to support the database connection object
+  - Parent class for all Db2i database tools
+
+### Database Query Tools
+
+- `QuerySQLDatabaseTool` - Executes SQL queries against the database
+  - Input: `query` - A detailed and correct SQL query string
+  - Output: Query results or error message if query is incorrect
+  - Tool name: `sql_db_query`
+  - Inherits from: `BaseDb2iDatabaseTool` and `BaseTool`
+  - Alias: `QuerySQLDataBaseTool` (deprecated but maintained for backward compatibility)
+
+- `QuerySQLCheckerTool` - Uses an LLM to validate SQL queries before execution
+  - Input: `query` - A SQL query to be checked for correctness
+  - Output: LLM analysis of query validity
+  - Tool name: `sql_db_query_checker`
+  - Requires: LangChain BaseLanguageModel for validation
+  - Best practice: Use this tool before executing queries with QuerySQLDatabaseTool
+
+### Database Information Tools
+
+- `InfoSQLDatabaseTool` - Retrieves schema information for specified tables
+  - Input: `table_names` - Comma-separated list of table names
+  - Output: Schema information and sample rows for the specified tables
+  - Tool name: `sql_db_schema`
+  - Inherits from: `BaseDb2iDatabaseTool` and `BaseTool`
+
+- `ListSQLDatabaseTool` - Lists all tables available in the database
+  - Input: Empty string (no input required)
+  - Output: Comma-separated list of all tables in the database
+  - Tool name: `sql_db_list_tables`
+  - Inherits from: `BaseDb2iDatabaseTool` and `BaseTool`
+  
 ## 🔌 Database Connection Details
 
 ### Mapepire Database Client

@@ -1,3 +1,21 @@
+<details>
+   <summary>Table of Contents</summary>
+   
+- [🤖 Db2 for i AI Agents Cookbook](#-db2-for-i-ai-agents-cookbook)
+  - [🧠 What are AI Agents?](#-what-are-ai-agents)
+  - [📂 Repository Structure](#-repository-structure)
+  - [📋 Requirements](#-requirements)
+  - [🚀 Getting Started](#-getting-started)
+  - [🛠️ Mapepire Setup](#️-mapepire-setup)
+    - [Recommended Installation (Service Commander)](#recommended-installation-service-commander)
+    - [Port Configuration](#port-configuration)
+  - [🤔 How Mapepire is used in the examples](#-how-mapepire-is-used-in-the-examples)
+  - [📚 SAMPLE database](#-sample-database)
+  - [🔥 Quickstart](#-quickstart)
+  - [📊 Agent Framework Comparison](#-agent-framework-comparison)
+</details>
+
+
 # 🤖 Db2 for i AI Agents Cookbook
 
 This repository contains a collection of example AI agents that demonstrate integration with Db2 for i across various AI agent frameworks.
@@ -61,14 +79,14 @@ Almost all of the examples in this repository use the [Mapepire](https://mapepir
 
 This approach requires the RPM installed version of Mapepire.
 
-1. Install Mapepire on your IBM i system:
-   ```bash
-   yum install mapepire
-   ```
-
-2. Set up the service commander:
+1. Install service commander:
    ```bash
    yum install service-commander
+   ```
+
+2. Install Mapepire on your IBM i system:
+   ```bash
+   yum install mapepire
    ```
 
 3. Start Mapepire:
@@ -97,8 +115,18 @@ READONLY=XXX
 
 In the future, I plan to add better configuration management for Mapepire. 
 
+## 📚 SAMPLE database
 
-## Quickstart
+Unless explicitly specified, all examples in this repository use the `SAMPLE` database schema by default. If you want to use a different schema, you can change the `SCHEMA` environment variable in the `.env` file.
+
+To setup the SAMPLE database, you can use the following SQL script:
+
+```sql
+CALL QSYS.CREATE_SQL_SAMPLE('SAMPLE')
+```
+
+
+## 🔥 Quickstart
 
 To get started with the the Db2 for i Agent examples, I recommend starting with the [LangChain](examples/agents/langchain/) framework. Which offers a complete implementation and a good starting point for understanding how to build AI agents that interact with Db2 for i databases.
 
