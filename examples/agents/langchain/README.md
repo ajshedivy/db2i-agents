@@ -346,6 +346,12 @@ You can deploy a local LangGraph app server to run a ReAct Db2i Agent.
 5. You can now interact with the Db2i Agent using the LangGraph Studio UI:
 
 
+
+https://github.com/user-attachments/assets/f713ff93-4856-4a6c-99ca-86447dff31b5
+
+
+
+
 ## 📊 Testing
 
 Some makeshift test are available in `tools/test_database.py`.
