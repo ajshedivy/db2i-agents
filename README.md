@@ -39,10 +39,10 @@ Unlike basic LLM applications, agents can maintain context, use specialized tool
 | Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
 |:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
 | [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
-| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
+| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | - | - |
 | [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
-| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
-| [🧩 Agno](examples/agents/agno/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | - | - |
+| [🧩 Agno](examples/agents/agno/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | Yes ✅ | - | - |
 
 ## 📂 Repository Structure
 
