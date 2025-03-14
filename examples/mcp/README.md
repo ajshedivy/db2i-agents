@@ -65,7 +65,7 @@ Once your server is running, you can interact with it using one of these options
 
 ### 🔥Client spotlight: Continue
 
-We can integrate our Db2i MCP server directly in VSCode using Continue - an open-source code assistant. More in depth instructions to come!
+We can integrate our Db2i MCP server directly in VSCode using Continue - an open-source code assistant. More in depth instructions coming soon!
 
 https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
 
