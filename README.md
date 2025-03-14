@@ -12,6 +12,9 @@
   - [🤔 How Mapepire is used in the examples](#-how-mapepire-is-used-in-the-examples)
   - [📚 SAMPLE database](#-sample-database)
   - [🔥 Quickstart](#-quickstart)
+  - [🌟 Highlighted Demos](#-highlighted-demos)
+    - [LangChain](#langchain)
+    - [MCP Server in Continue:](#mcp-server-in-continue)
   - [📊 Agent Framework Comparison](#-agent-framework-comparison)
 </details>
 
@@ -135,6 +138,15 @@ cd examples/agents/langchain
 uv run main.py --question "how many employees are there?"
 ```
 More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+
+## 🌟 Highlighted Demos
+
+### LangChain
+https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
+
+### MCP Server in Continue:
+https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
+
 
 
 ## 📊 Agent Framework Comparison
