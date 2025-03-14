@@ -144,9 +144,12 @@ More on the LangChain framework can be found in the [LangChain README](examples/
 ### LangChain
 https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
 
+More on LangChain can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+
 ### MCP Server in Continue:
 https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
 
+More on the MCP server can be found in the [MCP README](examples/mcp/README.md#-getting-started).
 
 
 ## 📊 Agent Framework Comparison
