@@ -3,19 +3,19 @@
    
 - [🤖 Db2 for i AI Agents Cookbook](#-db2-for-i-ai-agents-cookbook)
   - [🧠 What are AI Agents?](#-what-are-ai-agents)
+  - [📊 Agent Framework Comparison](#-agent-framework-comparison)
   - [📂 Repository Structure](#-repository-structure)
   - [📋 Requirements](#-requirements)
   - [🚀 Getting Started](#-getting-started)
+  - [🔥 Quickstart](#-quickstart)
+  - [🌟 Highlighted Demos](#-highlighted-demos)
+    - [LangChain](#langchain)
+    - [MCP Server in Continue:](#mcp-server-in-continue)
   - [🛠️ Mapepire Setup](#️-mapepire-setup)
     - [Recommended Installation (Service Commander)](#recommended-installation-service-commander)
     - [Port Configuration](#port-configuration)
   - [🤔 How Mapepire is used in the examples](#-how-mapepire-is-used-in-the-examples)
   - [📚 SAMPLE database](#-sample-database)
-  - [🔥 Quickstart](#-quickstart)
-  - [🌟 Highlighted Demos](#-highlighted-demos)
-    - [LangChain](#langchain)
-    - [MCP Server in Continue:](#mcp-server-in-continue)
-  - [📊 Agent Framework Comparison](#-agent-framework-comparison)
 </details>
 
 
@@ -33,6 +33,16 @@ AI agents are autonomous or semi-autonomous software entities powered by large l
 - 🔄 Learn and adapt from feedback and experience
 
 Unlike basic LLM applications, agents can maintain context, use specialized tools, chain together operations, and solve complex problems that require multiple steps and data interactions.
+
+## 📊 Agent Framework Comparison
+
+| Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
+|:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
+| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
+| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
+| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
+| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
+| [🧩 Agno](examples/agents/agno/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
 
 ## 📂 Repository Structure
 
@@ -73,6 +83,28 @@ Each demo has its own README with specific setup instructions. Python examples u
    ```
 4. Follow the setup instructions in the README for that example.
 
+
+## 🔥 Quickstart
+
+To get started with the the Db2 for i Agent examples, I recommend starting with the [LangChain](examples/agents/langchain/) framework. Which offers a complete implementation and a good starting point for understanding how to build AI agents that interact with Db2 for i databases.
+
+```bash
+cd examples/agents/langchain
+uv run main.py --question "how many employees are there?"
+```
+More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+
+## 🌟 Highlighted Demos
+
+### LangChain
+https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
+
+More on LangChain can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+
+### MCP Server in Continue:
+https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
+
+More on the MCP server can be found in the [MCP README](examples/mcp/README.md#-getting-started).
 
 ## 🛠️ Mapepire Setup
 
@@ -128,36 +160,3 @@ To setup the SAMPLE database, you can use the following SQL script:
 CALL QSYS.CREATE_SQL_SAMPLE('SAMPLE')
 ```
 
-
-## 🔥 Quickstart
-
-To get started with the the Db2 for i Agent examples, I recommend starting with the [LangChain](examples/agents/langchain/) framework. Which offers a complete implementation and a good starting point for understanding how to build AI agents that interact with Db2 for i databases.
-
-```bash
-cd examples/agents/langchain
-uv run main.py --question "how many employees are there?"
-```
-More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
-
-## 🌟 Highlighted Demos
-
-### LangChain
-https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
-
-More on LangChain can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
-
-### MCP Server in Continue:
-https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
-
-More on the MCP server can be found in the [MCP README](examples/mcp/README.md#-getting-started).
-
-
-## 📊 Agent Framework Comparison
-
-| Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
-|:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
-| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
-| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | No ❌ | - | - |
-| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
-| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
-| [🧩 Agno](examples/agents/agno/) | Python ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | - |
