@@ -47,10 +47,14 @@ jobs:
         working-directory: ${{ matrix.package }}
         run: uv build
 
+      - name: Extract safe package name
+        id: extract
+        run: echo "safe_name=$(basename '${{ matrix.package }}')" >> $GITHUB_OUTPUT"
+
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ matrix.package }}
+          name: dist-${{ steps.extract.outputs.safe_name }}
           path: ${{ matrix.package }}/dist/
 
   publish:
