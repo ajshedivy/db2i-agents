@@ -90,7 +90,7 @@ To get started with the the Db2 for i Agent examples, I recommend starting with 
 
 ```bash
 cd examples/agents/langchain
-uv run main.py --question "how many employees are there?"
+uv run main.py --chain --question "how many employees are there?"
 ```
 More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
 
