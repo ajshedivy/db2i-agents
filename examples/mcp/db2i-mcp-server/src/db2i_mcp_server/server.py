@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-import sys
+import argparse
 from textwrap import dedent
 from typing import Any, Dict, List, Literal, Optional, Union
 
@@ -11,11 +11,65 @@ from mcp.server import NotificationOptions, Server
 from pep249 import QueryParameters, ResultRow, ResultSet
 from pydantic import AnyUrl
 import mcp.server.stdio
+from pathlib import Path
 
 from mapepire_python import Connection, DaemonServer, connect
 
 import logging
 
+SERVER = "db2i-mcp-server"
+
+QUERY_PROMPT = """
+You are a Db2 for IBM i expert focused on writing efficient, accuracte SQL queries.
+
+When a user messages you, determine if you need to query the database or respond directly. If you can respond directly, do so.
+
+If you need to access the database to answer the user's question, you can use the following tools:
+- `list-usable-tables`: List the usable tables in the schema. This tool should be called before running any other tool.
+- `describe-table`: Describe a specific table including its columns and sample rows. This tool should be called after list-usable-tables.
+- `run-sql-query`: Run a valid Db2 for i SQL query. This tool should be called after list-usable-tables and describe-table.
+
+Follow these steps to answer the user's question:
+1. First, indentify the tables that the user has access to. use the `list-usable-tables` tool to get the list of usable tables in the schema.
+    - This should ALWAYS be the first tool call. 
+2. Then, think step-by-step about the query construction process, don't rush this step
+3. Follow a chain of thought approach before writing the SQL query, ask clarifying questions where needed.
+4. Based on the user's question, determine if you need to describe any tables. If so, use the `describe-table` tool to get the table definition and sample rows.
+    - decribe multiple tables if needed to get a better understanding of the data.
+5. Then, using all the information about the tables, create a single syntactically correct Db2 for i SQL query to accomplish the task.
+6. If you need to join tables, check the table definitions for foreign keys and constraints to determine the relationships between the tables.
+    - ONLY join tables for which you have table definitions. If you do not have a table definition, call `describe-table` to get the table definition.
+    - If the table definition has a foreign key to another table, use that to join the tables.
+    - If you cannot find a relationship in the table definitions, only join on the columns that have the same name and data type.
+    - If you cannot find a valid relationship, ask the user to provide the column name to join.
+7. If you cannot find relevant tables, columns or relationships, stop and ask the user for more information.
+8. Once you have a syntactically correct SQL query, use the `run-sql-query` tool to execute the query.
+9. When running a query:
+    - Do not add `;` at the end of the query.
+    - Always provide a `LIMIT` clause to limit the number of rows returned, unless the user explicitly asks for all results.
+    - Always reference tables with SCHMEA.TABLE_NAME format. 
+10. After you run the query, analyse the results and return the answer in markdown format.
+12. Always show the user the SQL you ran to get the answer.
+13. Continue till you have accomplished the task.
+14. Show results as a table or a chart if possible.
+
+After finishing your task, ask the user relevant followup questions like "was the result okay, would you like me to fix any problems?"
+If the user says yes, get the previous query fix the problems.
+If the user wants to see the SQL, get it from the previous message. 
+
+Finally, here are a set of rules you MUST follow:
+<rules>
+- All SQL queries must be syntactically correct and valid for Db2 for i.
+- All SQL queries must use a valid table reference format (SCHEMA.TABLE_NAME).
+- Always call `describe-table` before creating and running a query.
+- Make sure your query accounts for duplicate records.
+- Make sure your query accounts for null values.
+- If you run a query, explain why you ran it.
+- **NEVER, EVER RUN CODE TO DELETE DATA OR ABUSE THE LOCAL SYSTEM.**
+- **Always use valid column references from the table definitions.**
+- ** DO NOT HALLUCINATE TABLES, COLUMNS OR DATA**
+</rules>
+"""
 
 
 # # Initialize empty notes dictionary for the server
@@ -33,7 +87,7 @@ def configure_logging():
     logging_enabled = os.environ.get("ENABLE_LOGGING", "true").lower() != "false"
     
     # Set up log file path
-    log_directory = os.path.join(os.getcwd(), "logs")
+    log_directory = os.path.join(Path.home(), ".mcp", "logs")
     os.makedirs(log_directory, exist_ok=True)
     log_filename = os.path.join(
         log_directory, f'db2i_mcp_server_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
@@ -86,8 +140,6 @@ def truncate_word(content: Any, *, length: int, suffix: str = "...") -> str:
 
 class Db2iDatabase:
     
-    
-
     def __init__(
         self,
         schema: str,
@@ -455,31 +507,59 @@ class Db2iDatabase:
 async def main():
     # Load environment variables
     load_dotenv()
-    # logger.debug("Loaded environment variables")
+    parser = argparse.ArgumentParser(description="Db2i MCP Server")
+    parser.add_argument("--use-env", action="store_true", help="Use environment variables for configuration")
+    parser.add_argument("--host", type=str, help="Host of the Db2i server (ignored if --use-env is set)")
+    parser.add_argument("--user", type=str, help="User for the Db2i server (ignored if --use-env is set)")
+    parser.add_argument("--password", type=str, help="Password for the Db2i server (ignored if --use-env is set)")
+    parser.add_argument("--port", type=int, default=8075, help="Port of the Db2i server (ignored if --use-env is set)")
+    parser.add_argument("--schema", type=str, help="Schema name (ignored if --use-env is set)")
+    parser.add_argument("--ignore-unauthorized", action="store_true", help="Ignore unauthorized access (optional)")
+    parser.add_argument("--ignore-tables", type=str, nargs="+", help="Tables to ignore (optional)")
+    parser.add_argument("--include-tables", type=str, nargs="+", help="Tables to include (optional)")
+    parser.add_argument("--custom-table-info", type=str, help="Custom table info (optional)")
+    parser.add_argument("--sample-rows-in-table-info", type=int, default=3, help="Number of sample rows in table info (optional, default: 3)")
+    parser.add_argument("--max-string-length", type=int, default=300, help="Max string length for truncation (optional, default: 300)")
+    args = parser.parse_args()
 
-    # Get database connection details
-    connection_details = {
-        "host": os.getenv("HOST"),
-        "user": os.getenv("DB_USER"),
-        "port": os.getenv("DB_PORT", 8075),
-        "password": os.getenv("PASSWORD"),
-        "ignoreUnauthorized": os.getenv("IGNORE_UNAUTHORIZED", True),
-    }
-    
-    # Log connection details (with password redacted)
-    safe_details = {k: (v if k != "password" else "***REDACTED***") for k, v in connection_details.items()}
-    # logger.info(f"DB connection config: {safe_details}")
+    # Get database connection details based on use_env flag
+    if args.use_env:
+        # Use environment variables
+        connection_details = {
+            "host": os.getenv("HOST"),
+            "user": os.getenv("DB_USER"),
+            "port": int(os.getenv("DB_PORT", "8075")),
+            "password": os.getenv("PASSWORD"),
+            "ignoreUnauthorized": os.getenv("IGNORE_UNAUTHORIZED", "true").lower() == "true",
+        }
+        schema = os.getenv("SCHEMA")
+    else:
+        # Use command line arguments
+        if not all([args.host, args.user, args.password, args.schema]):
+            raise ValueError("When not using environment variables, you must provide --host, --user, --password, and --schema")
 
-    # Get schema name
-    SCHEMA = os.getenv("SCHEMA")
-    # logger.info(f"Using schema: {SCHEMA}")
+        connection_details = {
+            "host": args.host,
+            "user": args.user,
+            "port": args.port,
+            "password": args.password,
+            "ignoreUnauthorized": args.ignore_unauthorized,
+        }
+        schema = args.schema
 
     # Initialize server
-    # logger.info("Initializing MCP Db2i server")
-    server = Server("db2i-mcp-server")
-    
+    server = Server(SERVER)
+
     # Initialize database connection
-    db = Db2iDatabase(SCHEMA, connection_details)
+    db = Db2iDatabase(
+        schema,
+        connection_details,
+        ignore_tables=args.ignore_tables,
+        include_tables=args.include_tables,
+        custom_table_info=args.custom_table_info,
+        sampler_rows_in_table_info=args.sample_rows_in_table_info,
+        max_string_length=args.max_string_length,
+    )
 
     @server.list_resources()
     async def handle_list_resources() -> list[types.Resource]:
@@ -529,6 +609,10 @@ async def main():
                         required=False,
                     )
                 ],
+            ),
+            types.Prompt(
+                name="query",
+                description="Create an SQL query to answer the user's question",
             )
         ]
 
@@ -540,27 +624,40 @@ async def main():
         Generate a prompt by combining arguments with server state.
         The prompt includes all current notes and can be customized via arguments.
         """
-        if name != "summarize-notes":
-            raise ValueError(f"Unknown prompt: {name}")
+        if name == "summarize-notes":
 
-        style = (arguments or {}).get("style", "brief")
-        detail_prompt = " Give extensive details." if style == "detailed" else ""
+            style = (arguments or {}).get("style", "brief")
+            detail_prompt = " Give extensive details." if style == "detailed" else ""
 
-        return types.GetPromptResult(
-            description="Summarize the current notes",
-            messages=[
-                types.PromptMessage(
-                    role="user",
-                    content=types.TextContent(
-                        type="text",
-                        text=f"Here are the current notes to summarize:{detail_prompt}\n\n"
-                        + "\n".join(
-                            f"- {name}: {content}" for name, content in notes.items()
+            return types.GetPromptResult(
+                description="Summarize the current notes",
+                messages=[
+                    types.PromptMessage(
+                        role="user",
+                        content=types.TextContent(
+                            type="text",
+                            text=f"Here are the current notes to summarize:{detail_prompt}\n\n"
+                            + "\n".join(
+                                f"- {name}: {content}" for name, content in notes.items()
+                            ),
                         ),
-                    ),
-                )
-            ],
-        )
+                    )
+                ],
+            )
+        elif name == "query":
+            return types.GetPromptResult(
+                description="Create an SQL query to answer the user's question",
+                messages=[
+                    types.PromptMessage(
+                        role="user",
+                        content=types.TextContent(
+                            type="text", text=QUERY_PROMPT
+                        )
+                    )
+                ]
+            )
+        else:
+            raise ValueError(f"Unknown prompt: {name}")
 
     @server.list_tools()
     async def handle_list_tools() -> list[types.Tool]:
@@ -627,7 +724,7 @@ async def main():
         Handle tool execution requests.
         Tools can modify server state and notify clients of changes.
         """
-        
+
         try:
             if name == "list-usable-tables":
                 usable_tables = db.get_usable_table_names()

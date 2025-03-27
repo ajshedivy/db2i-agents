@@ -20,6 +20,7 @@ async def main(server_path=None):
                 server_path,
                 "run",
                 "db2i-mcp-server",
+                "--use-env"
             ],
         )
     ) as (read, write):
