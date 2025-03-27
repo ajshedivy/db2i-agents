@@ -12,9 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Manually define uv packages
         id: set
-        working-directory: examples/mcp/
+        working-directory: examples
         run: |
-          PACKAGES=$(find . -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
+          PACKAGES=$(find mcp/ -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
           echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
 
   build:
