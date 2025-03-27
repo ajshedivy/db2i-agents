@@ -71,7 +71,7 @@ jobs:
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:
-          name: dist-${{ matrix.package }}
+          name: dist-${{ steps.extract.outputs.safe_name }}
           path: dist/
 
       - name: Publish to PyPI
