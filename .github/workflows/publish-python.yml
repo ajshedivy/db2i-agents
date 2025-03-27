@@ -68,6 +68,10 @@ jobs:
     permissions:
       id-token: write # Required for trusted publishing
     steps:
+      - name: Extract safe package name
+        id: extract
+        run: echo "safe_name=$(basename '${{ matrix.package }}')" >> $GITHUB_OUTPUT
+        
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:
