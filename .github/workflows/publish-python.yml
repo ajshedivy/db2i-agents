@@ -9,9 +9,13 @@ jobs:
     outputs:
       packages: ${{ steps.set.outputs.packages }}
     steps:
+      - uses: actions/checkout@v4
       - name: Manually define uv packages
         id: set
-        run: echo 'packages=["examples/mcp/db2i-mcp-server"]' >> $GITHUB_OUTPUT
+        working-directory: examples/mcp/
+        run: |
+          PACKAGES=$(find . -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
+          echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
 
   build:
     needs: [detect-packages]
