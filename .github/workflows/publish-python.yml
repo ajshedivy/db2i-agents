@@ -14,7 +14,7 @@ jobs:
         id: set
         working-directory: examples
         run: |
-          PACKAGES=$(find mcp/ -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
+          PACKAGES=$(find examples/mcp/ -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
           echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
 
   build:
