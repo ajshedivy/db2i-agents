@@ -22,7 +22,9 @@ The Db2i MCP Server provides a standardized interface for AI assistants to work 
 - Each note resource has a name, description and text/plain mimetype
 - Notes persist during the session for referring to important information
 
-### Prompts (In Progress)
+### Prompts
+- **query**: Executes a SQL query against the Db2 for i database
+  - Steps and rules for constructing the query to answer user questions
 
 (example for testing): The server generates prompts dynamically based on available notes:
 - **summarize-notes**: Creates summaries of all stored notes
@@ -238,6 +240,35 @@ Sample Data:
 ```
 
 
+### Parameters
+
+Here are the optional parameters you can pass to the server:
+```bash
+Db2i MCP Server
+
+options:
+  -h, --help            show this help message and exit
+  --use-env             Use environment variables for configuration
+  --host HOST           Host of the Db2i server (ignored if --use-env is set)
+  --user USER           User for the Db2i server (ignored if --use-env is set)
+  --password PASSWORD   Password for the Db2i server (ignored if --use-env is set)
+  --port PORT           Port of the Db2i server (ignored if --use-env is set)
+  --schema SCHEMA       Schema name (ignored if --use-env is set)
+  --ignore-unauthorized
+                        Ignore unauthorized access (optional)
+  --ignore-tables IGNORE_TABLES [IGNORE_TABLES ...]
+                        Tables to ignore (optional)
+  --include-tables INCLUDE_TABLES [INCLUDE_TABLES ...]
+                        Tables to include (optional)
+  --custom-table-info CUSTOM_TABLE_INFO
+                        Custom table info (optional)
+  --sample-rows-in-table-info SAMPLE_ROWS_IN_TABLE_INFO
+                        Number of sample rows in table info (optional, default: 3)
+  --max-string-length MAX_STRING_LENGTH
+                        Max string length for truncation (optional, default: 300)
+
+```
+
 
 
 ### Using with Claude Desktop
@@ -259,6 +290,7 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
         "PATH_TO_THIS_REPO/db2i-agents/examples/mcp/db2i-mcp-server",
         "run",
         "db2i-mcp-server"
+        "--use-env"
       ]
     }
   }

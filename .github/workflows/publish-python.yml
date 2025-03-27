@@ -1,0 +1,72 @@
+name: Publish Python Packages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  detect-packages:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.set.outputs.packages }}
+    steps:
+      - name: Manually define uv packages
+        id: set
+        run: echo 'packages=["examples/mcp/db2i-mcp-server"]' >> $GITHUB_OUTPUT
+
+  build:
+    needs: [detect-packages]
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+    name: Build ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ${{ matrix.package }}/.python-version
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.package }}
+        run: uv sync --frozen --all-extras --dev
+
+      - name: Run pyright
+        working-directory: ${{ matrix.package }}
+        run: uv run --frozen pyright
+
+      - name: Build package
+        working-directory: ${{ matrix.package }}
+        run: uv build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.package }}
+          path: ${{ matrix.package }}/dist/
+
+  publish:
+    needs: [build, detect-packages]
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+    name: Publish ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write # Required for trusted publishing
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-${{ matrix.package }}
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
