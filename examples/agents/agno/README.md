@@ -52,3 +52,8 @@ How many employees are in each department?
 Here is quick demo of the agent in debug mode to show the tool calls and thinking process:
 
 
+https://github.com/user-attachments/assets/4a865b3a-7f31-452f-9828-fc9536a2f0e9
+
+
+
+
