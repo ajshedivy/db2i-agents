@@ -1,114 +1,137 @@
+import argparse
 import asyncio
-import os
 from textwrap import dedent
+from typing import Optional
+
+from dotenv import dotenv_values
+from mcp import StdioServerParameters
 
 from agno.agent import Agent
+from agno.models.base import Model
 from agno.models.ollama import Ollama
+from agno.models.openai import OpenAIChat
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
-from rich.console import Console
-from rich.panel import Panel
-from rich.prompt import Prompt
-from rich.markdown import Markdown
-from dotenv import load_dotenv, dotenv_values
 
-# get path of agents directory
-db_path = "tmp/agents.db"
-
-server_path = os.path.abspath("db2i-agents/examples/mcp/db2i-mcp-server")
-print(f"Server path: {server_path}")
+from cli import CLIConfig, InteractiveCLI
 
 
-async def run_agent(message: str, agent: Agent, console: Console) -> None:
-    """Run the agent with the given message."""
+def get_model(model_id: str = None, prefer_ollama: bool = True) -> Model:
+    env = dotenv_values()
+    try:
+        # Determine model type based on preference and available credentials
+        if prefer_ollama or env.get("OPENAI_API_KEY") is None:
+            # Use Ollama
+            ollama_model = model_id if model_id else "qwen2.5:latest"
+            return Ollama(id=ollama_model)
+        else:
+            # Use OpenAI
+            openai_model = (
+                model_id if model_id and model_id.startswith("gpt") else "gpt-4o"
+            )
+            return OpenAIChat(openai_model)
 
-    # Create a custom callback to format the response with rich
-    async def rich_formatter(content: str):
-        if content.strip():
-            md = Markdown(content)
-            console.print(md)
-
-    await agent.aprint_response(message, stream=True, callback=rich_formatter)
-
-
-async def interactive_cli() -> None:
-    """Run an interactive CLI session with the DB2i agent."""
-    console = Console()
-
-    console.print(
-        Panel.fit(
-            "[bold blue]DB2i Database Assistant CLI[/bold blue]\n"
-            "Type [bold yellow]'exit'[/bold yellow], [bold yellow]'quit'[/bold yellow], or [bold yellow]Ctrl+C[/bold yellow] to end the conversation",
-            title="DB2i Agent",
-            border_style="blue",
-        )
-    )
-
-    server_params = StdioServerParameters(
-        command="uvx",
-        args=[
-            "db2i-mcp-server",
-            "--use-env"
-        ],
-        env= dotenv_values()
-    )
-
-    # Create a client session to connect to the MCP server
-    async with MCPTools(server_params=server_params) as mcp_tools:
-        agent = Agent(
-            model=Ollama(id="qwen2.5:latest"),  # OpenAIChat(id="gpt-4o"),
-            tools=[mcp_tools],
-            storage=SqliteAgentStorage(table_name="db2i_mcp", db_file=db_path),
-            instructions=dedent(
-                """\
-                You are a Db2i Database assistant. Help users answer questions about the database.
-                here are the tools you can use:
-                - `list-usable-tables`: List the tables in the database.
-                - `describe-table`: Describe a table in the database.
-                - `run-sql-query`: Run a SQL query on the database.
-                
-                When a user asks a question, you can use the tools to answer it. Follow these steps:
-                1. Identify the user's question and determine if it can be answered using the tools.
-                2. always call `list-usable-tables` first to get the list of tables in the database.
-                3. Once you have the list of tables, you can use `describe-table` to get more information about a specific table.
-                4. If an SQL query is needed, use the table references and column information from `list-usable-tables` and `describe-table` to construct the query.
-                    a. DO NOT HALLUCINATE table names or column names.
-                5. Use `run-sql-query` to execute the SQL query and get the results.
-                6. Format the results in a user-friendly way and return them to the user.
-
-                \
-            """
-            ),
-            markdown=True,
-            show_tool_calls=True,
-            add_history_to_messages=True,
-            num_history_responses=3,
-            read_chat_history=True,
-            debug_mode=True,
-        )
-
+    except Exception as e:
+        print(f"Error initializing model: {e}")
+        # Fallback to basic Ollama model
         try:
-            while True:
-                user_input = Prompt.ask("\n[bold green]>[/bold green]")
-                if user_input.lower() in ["exit", "quit"]:
-                    console.print("[italic]Ending conversation. Goodbye![/italic]")
-                    break
+            return Ollama(id="qwen2.5:latest")
+        except:
+            # Ultimate fallback
+            return Ollama()
 
-                if user_input.strip():
-                    console.print(
-                        Panel(
-                            f"[cyan]{user_input}[/cyan]",
-                            title="You",
-                            border_style="green",
-                        )
-                    )
-                    console.print(Panel("", title="DB2i Agent", border_style="blue"))
-                    await run_agent(user_input, agent, console)
-        except KeyboardInterrupt:
-            console.print("\n[italic]Ending conversation. Goodbye![/italic]")
+
+def create_db2i_agent(
+    db_path: str = "tmp/agents.db",
+    model_id: Optional[str] = None,
+    prefer_ollama: Optional[bool] = True,
+    debug_mode: bool = True,
+) -> Agent:
+    """Create and configure a DB2i agent with MCP tools."""
+
+    # Create the agent
+    agent = Agent(
+        model=get_model(model_id, prefer_ollama),
+        tools=[],  # attach mcp_tools later
+        storage=SqliteAgentStorage(table_name="db2i_mcp", db_file=db_path),
+        instructions=dedent(
+            """\
+            You are a Db2i Database assistant. Help users answer questions about the database.
+            here are the tools you can use:
+            - `list-usable-tables`: List the tables in the database.
+            - `describe-table`: Describe a table in the database.
+            - `run-sql-query`: Run a SQL query on the database.
+            
+            When a user asks a question, you can use the tools to answer it. Follow these steps:
+            1. Identify the user's question and determine if it can be answered using the tools.
+            2. always call `list-usable-tables` first to get the list of tables in the database.
+            3. Once you have the list of tables, you can use `describe-table` to get more information about a specific table.
+            4. If an SQL query is needed, use the table references and column information from `list-usable-tables` and `describe-table` to construct the query.
+                a. DO NOT HALLUCINATE table names or column names.
+            5. Use `run-sql-query` to execute the SQL query and get the results.
+            6. Format the results in a user-friendly way and return them to the user.
+            \
+        """
+        ),
+        markdown=True,
+        show_tool_calls=True,
+        add_history_to_messages=True,
+        num_history_responses=3,
+        read_chat_history=True,
+        debug_mode=debug_mode,
+    )
+
+    return agent
+
+
+async def run_db2i_cli(
+    debug_mode: bool = False, prefer_ollama: bool = True, model_id: Optional[str] = None
+) -> None:
+    """Run the DB2i interactive CLI."""
+    db_path = "tmp/agents.db"
+
+    # Configure the CLI
+    config = CLIConfig(
+        title="DB2i Database Assistant CLI", agent_title="DB2i Agent", db_path=db_path
+    )
+
+    # Create the agent and CLI
+    async with MCPTools(
+        server_params=StdioServerParameters(
+            command="uvx", args=["db2i-mcp-server", "--use-env"], env=dotenv_values()
+        )
+    ) as mcp_tools:
+        agent = create_db2i_agent(
+            db_path=db_path,
+            model_id=model_id,
+            debug_mode=debug_mode,
+            prefer_ollama=prefer_ollama,
+        )
+        agent.tools.append(mcp_tools)
+
+        cli = InteractiveCLI(agent=agent, config=config)
+        await cli.start()
 
 
 # Example usage
 if __name__ == "__main__":
-    asyncio.run(interactive_cli())
+    parser = argparse.ArgumentParser(
+        "uv run agent.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "--openai", action="store_true", help="Use gpt-4o model from OpenAI"
+    )
+    parser.add_argument("--model-id", default="qwen2.5:latest", help="Use Ollama model")
+    parser.add_argument(
+        "--debug", action="store_true", default=False, help="Enable debug mode"
+    )
+
+    args = parser.parse_args()
+
+    if args.openai:
+        prefer_ollama = False
+        asyncio.run(run_db2i_cli(args.debug, prefer_ollama=False))
+    else:
+        asyncio.run(
+            run_db2i_cli(args.debug, model_id=args.model_id if args.model_id else None)
+        )
