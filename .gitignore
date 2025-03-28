@@ -11,3 +11,4 @@ wheels/
 .env
 
 logs/
+tmp/
