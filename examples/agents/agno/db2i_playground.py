@@ -1,17 +1,38 @@
+import argparse
+import os
 from textwrap import dedent
 
 from dotenv import dotenv_values
 from mcp import StdioServerParameters
 
 from agno.agent import Agent
+from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat
 from agno.playground import Playground, serve_playground_app
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
 from agno.utils.log import log_debug
+from cli import get_model
 
 server_path = "/Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/mcp/db2i-mcp-server"
 agent_storage: str = "tmp/agents.db"
+
+# Use environment variables instead of module globals for configuration
+# This allows the configuration to persist across module reloads
+if "DB2I_USE_OPENAI" not in os.environ:
+    os.environ["DB2I_USE_OPENAI"] = "false"
+if "DB2I_MODEL_ID" not in os.environ:
+    os.environ["DB2I_MODEL_ID"] = "qwen2.5:latest"
+if "DB2I_DEBUG" not in os.environ:
+    os.environ["DB2I_DEBUG"] = "false"
+
+# Helper function to access config with defaults
+def get_config():
+    return {
+        "use_openai": os.environ["DB2I_USE_OPENAI"].lower() == "true",
+        "model_id": os.environ["DB2I_MODEL_ID"],
+        "debug": os.environ["DB2I_DEBUG"].lower() == "true"
+    }
 
 
 async def get_tools() -> StdioServerParameters:
@@ -27,12 +48,15 @@ async def get_tools() -> StdioServerParameters:
     return tools
 
 
-def get_agent(tools: MCPTools) -> None:
+def get_agent(tools: MCPTools, config) -> None:
 
     # Create a client session to connect to the MCP server
     agent = Agent(
         name="Db2i Agent",
-        model=OpenAIChat(id="gpt-4o"),
+        model=get_model(
+            model_id=config["model_id"], 
+            prefer_ollama=not config["use_openai"]
+        ),
         tools=[tools],
         storage=SqliteAgentStorage(table_name="db2i_playground", db_file=agent_storage),
         instructions=dedent(
@@ -89,10 +113,14 @@ async def initialize_tools_on_startup():
 # Non-async init_app function that returns the app
 def init_app():
     """Return a Playground app with lazy initialization of tools."""
+    config = get_config()
     # Create a placeholder agent that will be initialized with real tools on first use
     placeholder_agent = Agent(
         name="Db2i Agent",
-        model=OpenAIChat(id="gpt-4o"),
+        model=get_model(
+            model_id=config["model_id"], 
+            prefer_ollama=not config["use_openai"]
+        ),
         storage=SqliteAgentStorage(table_name="db2i_playground", db_file=agent_storage),
         markdown=True,
         show_tool_calls=True,
@@ -107,7 +135,7 @@ def init_app():
         global tools
         tools = await initialize_tools_on_startup()
         # Update the agent with the initialized tools
-        playground.agents[0] = get_agent(tools)
+        playground.agents[0] = get_agent(tools, config)
 
     # Add shutdown event to clean up tools
     @app.on_event("shutdown")
@@ -118,5 +146,30 @@ def init_app():
 
 
 if __name__ == "__main__":
-    # Remove factory=True as it's not needed
+    parser = argparse.ArgumentParser(
+        "uv run db2i_playground.py",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--use-openai",
+        action="store_true",
+        default=False,
+        help="Use gpt-4o model from OpenAI",
+    )
+    parser.add_argument("--model-id", default="qwen2.5:latest", help="Use Ollama model")
+    parser.add_argument(
+        "--debug", action="store_true", default=False, help="Enable debug mode"
+    )
+
+    args = parser.parse_args()
+
+    # Update environment variables with CLI args
+    os.environ["DB2I_USE_OPENAI"] = str(args.use_openai).lower()
+    os.environ["DB2I_MODEL_ID"] = args.model_id
+    os.environ["DB2I_DEBUG"] = str(args.debug).lower()
+
+    # Print configuration for debugging
+    config = get_config()
+    print(f"Configuration: {config}")
+    
     serve_playground_app("db2i_playground:init_app", factory=True)

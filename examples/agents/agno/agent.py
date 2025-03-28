@@ -7,38 +7,9 @@ from dotenv import dotenv_values
 from mcp import StdioServerParameters
 
 from agno.agent import Agent
-from agno.models.base import Model
-from agno.models.ollama import Ollama
-from agno.models.openai import OpenAIChat
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
-
-from cli import CLIConfig, InteractiveCLI
-
-
-def get_model(model_id: str = None, prefer_ollama: bool = True) -> Model:
-    env = dotenv_values()
-    try:
-        # Determine model type based on preference and available credentials
-        if prefer_ollama or env.get("OPENAI_API_KEY") is None:
-            # Use Ollama
-            ollama_model = model_id if model_id else "qwen2.5:latest"
-            return Ollama(id=ollama_model)
-        else:
-            # Use OpenAI
-            openai_model = (
-                model_id if model_id and model_id.startswith("gpt") else "gpt-4o"
-            )
-            return OpenAIChat(openai_model)
-
-    except Exception as e:
-        print(f"Error initializing model: {e}")
-        # Fallback to basic Ollama model
-        try:
-            return Ollama(id="qwen2.5:latest")
-        except:
-            # Ultimate fallback
-            return Ollama()
+from cli import CLIConfig, InteractiveCLI, get_model
 
 
 def create_db2i_agent(
@@ -119,7 +90,7 @@ if __name__ == "__main__":
         "uv run agent.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "--openai", action="store_true", help="Use gpt-4o model from OpenAI"
+        "--openai", action="store_true", default=False, help="Use gpt-4o model from OpenAI"
     )
     parser.add_argument("--model-id", default="qwen2.5:latest", help="Use Ollama model")
     parser.add_argument(

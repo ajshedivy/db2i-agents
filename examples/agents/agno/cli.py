@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from dotenv import dotenv_values
+
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -9,6 +11,31 @@ from rich.prompt import Prompt
 from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat
+from agno.models.base import Model
+
+def get_model(model_id: str = None, prefer_ollama: bool = True) -> Model:
+    env = dotenv_values()
+    try:
+        # Determine model type based on preference and available credentials
+        if prefer_ollama or env.get("OPENAI_API_KEY") is None:
+            # Use Ollama
+            ollama_model = model_id if model_id else "qwen2.5:latest"
+            return Ollama(id=ollama_model)
+        else:
+            # Use OpenAI
+            openai_model = (
+                model_id if model_id and model_id.startswith("gpt") else "gpt-4o"
+            )
+            return OpenAIChat(openai_model)
+
+    except Exception as e:
+        print(f"Error initializing model: {e}")
+        # Fallback to basic Ollama model
+        try:
+            return Ollama(id="qwen2.5:latest")
+        except:
+            # Ultimate fallback
+            return Ollama()
 
 
 @dataclass

@@ -54,6 +54,58 @@ Here is quick demo of the agent in debug mode to show the tool calls and thinkin
 
 https://github.com/user-attachments/assets/4a865b3a-7f31-452f-9828-fc9536a2f0e9
 
+## Run the Db2i Agent Web Playground
+
+Agno provides a UI for interacting with your agents, completely open source. It’s a simple interface that allows you to chat with your agents, view their memory, knowledge, and more.
+
+### Getting started
+
+To run the Agent UI locally, cd to `agent-ui` and start the ui server:
+```bash
+cd db2i-agents/examples/agents/agno/agent-ui
+npm run dev
+```
+
+Open http://localhost:3000 to view the Agent UI
+
+![alt text](images/agent-ui-homepage.png)
+
+### Connect Db2i Agent
+
+The agent UI needs to connect to a playground server, which we can run locally. 
+
+In another terminal, run the db2 playground server:
+
+1. navigate to the `db2i-agents` directory:
+   ```bash
+   cd db2i-agents/examples/agents/agno
+   ```
+2. run the server:
+   ```bash
+   uv run db2i_playground.py
+   ```
+3. (Optional) Use OpenAI:
+   ```bash
+   export OPENAI_API_KEY=sk-***
+   ```
+   Run playground with `--use-openai` flag:
+   ```bash
+    uv run db2i_playground.py --use-openai
+    ```
+
+### View the playground
+
+- Open http://localhost:3000 to view the Agent UI
+- Select the localhost:7777 endpoint and start chatting with the db2i agent!
+  
+![alt text](images/image2.png)
+
+
+## Db2i Agent Workspace (In progress)
+
+coming soon!
+
+
 
 
 
