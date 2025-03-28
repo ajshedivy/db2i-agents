@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "agno>=1.2.5",
+    "fastapi[standard]>=0.115.12",
     "mapepire-python>=0.2.0",
     "mcp>=1.6.0",
     "ollama>=0.4.7",
