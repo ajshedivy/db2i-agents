@@ -30,13 +30,27 @@ Install the dependencies:
     ```bash
     ollama pull qwen2.5:latest
     ```
-3. **Run the CLI:**
+3. **Setup environment variables:**
+    ```bash
+    cp .env.example .env
+    ```
+    Fill out the `.env` file with your Mapepire credentials:
+
+    ```env
+    HOST=your_db2i_host
+    DB_USER=your_username
+    PORT=8076               # Default port for Mapepire
+    PASSWORD=your_password
+    SCHEMA=SAMPLE           # Or your preferred schema
+    ```
+
+4. **Run the CLI:**
     ```bash
     uv run agent.py
     ```
 ![alt text](images/image.png)
 
-4. **Chat wth the agent**
+1. **Chat wth the agent**
 
 
 ### Demo
