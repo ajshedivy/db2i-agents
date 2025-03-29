@@ -63,7 +63,7 @@ async def run_db2i_cli(
 
     # Configure the CLI
     config = CLIConfig(
-        title="DB2i Database Assistant CLI", agent_title="DB2i Agent", db_path=db_path
+        title="Db2i Database Assistant CLI", agent_title="DB2i Agent", db_path=db_path
     )
 
     # Create the agent and CLI

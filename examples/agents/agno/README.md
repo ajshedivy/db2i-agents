@@ -24,7 +24,7 @@ Install the dependencies:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/ajshedivy/db2i-agents.git
-   cd db2i-agents/examples/agents/langchain
+   cd db2i-agents/examples/agents/agno
    ```
 2. **Prepare Ollama model:**
     ```bash
@@ -50,7 +50,7 @@ Install the dependencies:
     ```
 ![alt text](images/image.png)
 
-1. **Chat wth the agent**
+5. **Chat wth the agent**
 
 
 ### Demo
