@@ -115,9 +115,44 @@ In another terminal, run the db2 playground server:
 ![alt text](images/image2.png)
 
 
-## Db2i Agent Workspace (In progress)
+## Db2i Agent Workspace
 
-coming soon!
+Check out this repo to run a [Db2 for i agent application](https://github.com/ajshedivy/agent-app-agno) built with the Agno framework! 
+
+
+## Mapepire AI Integration (WIP)
+
+Mapepire AI is an AI platform for building tools to interact with your Db2 for i database. It provides an easy way to create SQL based tools that can seamlessly integrate with your LLM applications.
+
+To test Mapepire AI tools, follow the instructions below:
+1. Configure tools and generate MCP server token
+2. Add MCP server token to `.env` file
+    ```sh
+    cd db2i-agents/examples/agents/agno
+    cp .env.example .env
+    ```
+    fill out the `.env` file with your Mapepire credentials:
+    ```ini
+    MAPEPIRE_AI_MCP_URL="http://localhost:8080/sse?token=YOUR_TOKEN"
+
+    HOST=X
+    DB_USER=X
+    PASSWORD=X
+    PORT=8076
+    SCHEMA=SAMPLE
+    READONLY=True
+    ```
+3. pull Ollama model (if not already done):
+    ```bash
+    ollama pull qwen2.5:latest
+    ```
+4. Run the agent:
+    ```bash
+    uv run mapepire_ai.py --debug
+    ```
+
+### Demo
+
 
 
 
