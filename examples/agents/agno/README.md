@@ -156,5 +156,9 @@ To test Mapepire AI tools, follow the instructions below:
 
 
 
+https://github.com/user-attachments/assets/970ccc8a-67e2-4c50-b3d1-ef13608a880b
+
+
+
 
 
