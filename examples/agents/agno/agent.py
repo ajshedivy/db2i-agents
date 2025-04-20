@@ -18,7 +18,7 @@ def create_db2i_agent(
     prefer_ollama: Optional[bool] = True,
     debug_mode: bool = True,
 ) -> Agent:
-    """Create and configure a DB2i agent with MCP tools."""
+    """Create and configure a Db2i agent with MCP tools."""
 
     # Create the agent
     agent = Agent(
@@ -58,12 +58,12 @@ def create_db2i_agent(
 async def run_db2i_cli(
     debug_mode: bool = False, prefer_ollama: bool = True, model_id: Optional[str] = None
 ) -> None:
-    """Run the DB2i interactive CLI."""
+    """Run the Db2i interactive CLI."""
     db_path = "tmp/agents.db"
 
     # Configure the CLI
     config = CLIConfig(
-        title="Db2i Database Assistant CLI", agent_title="DB2i Agent", db_path=db_path
+        title="Db2i Database Assistant CLI", agent_title="Db2i Agent", db_path=db_path
     )
 
     # Create the agent and CLI

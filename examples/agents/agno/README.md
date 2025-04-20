@@ -1,6 +1,6 @@
 # Agno Db2i Agent
 
-A collection of agents for interacting with DB2i databases using the Agno framework. This package includes a command-line interface and a web-based playground for database exploration and querying.
+A collection of agents for interacting with Db2i databases using the Agno framework. This package includes a command-line interface and a web-based playground for database exploration and querying.
 
 ## Prerequisites
 

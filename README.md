@@ -3,11 +3,11 @@
    
 - [🤖 Db2 for i AI Agents Cookbook](#-db2-for-i-ai-agents-cookbook)
   - [🧠 What are AI Agents?](#-what-are-ai-agents)
-  - [📊 Agent Framework Comparison](#-agent-framework-comparison)
   - [📂 Repository Structure](#-repository-structure)
   - [📋 Requirements](#-requirements)
   - [🚀 Getting Started](#-getting-started)
   - [🔥 Quickstart](#-quickstart)
+  - [📊 Agent Framework Comparison](#-agent-framework-comparison)
   - [🌟 Highlighted Demos](#-highlighted-demos)
     - [LangChain](#langchain)
     - [MCP Server in Continue:](#mcp-server-in-continue)
@@ -33,16 +33,6 @@ AI agents are autonomous or semi-autonomous software entities powered by large l
 - 🔄 Learn and adapt from feedback and experience
 
 Unlike basic LLM applications, agents can maintain context, use specialized tools, chain together operations, and solve complex problems that require multiple steps and data interactions.
-
-## 📊 Agent Framework Comparison
-
-| Framework | Languages | Implementation Status | DB2 Access Method | Supports MCP | LLM Providers | Tool Integration |
-|:----------|:----------|:----------------------|:------------------|:-------------|:--------------|:----------------|
-| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Anthropic 🧠<br>Ollama 🦙 | Medium 🟡 |
-| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | - | - |
-| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | In Progress 🚧 | Mapepire 🔌 | Yes ✅ | - | Implemetation: hard 💀 <br> integration: easy 😊   |
-| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | - | - |
-| [🧩 Agno](examples/agents/agno/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | Yes ✅ | - | - |
 
 ## 📂 Repository Structure
 
@@ -93,6 +83,16 @@ cd examples/agents/langchain
 uv run main.py --chain --question "how many employees are there?"
 ```
 More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+
+## 📊 Agent Framework Comparison
+
+| Framework | Languages | Implementation Status | Db2i Access Method | Supports MCP | Description |
+|:----------|:----------|:----------------------|:------------------|:-------------|:--------------|
+| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Popular framework for developing applications powered by LLMs  |
+| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | An open protocol that standardizes how applications provide context to LLMs. |
+| [🧩 Agno](examples/agents/agno/) | Python ✅ | Complete ✅  | Mapepire 🔌 | Yes ✅ | A lightweight library for building Agents with memory, knowledge, tools and reasoning. |
+| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | An open-source ecosystem that empowers developers to discover, run, and compose AI agents from any framework. |
+| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | Fast and flexible Python Multi-Agent automation framework |
 
 ## 🌟 Highlighted Demos
 
