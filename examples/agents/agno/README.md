@@ -46,11 +46,39 @@ Install the dependencies:
 
 4. **Run the CLI:**
     ```bash
-    uv run agent.py
+    usage: uv run agent.py [-h] --provider {ollama,openai,watsonx} [--model-id MODEL_ID] [--debug] [--stream]
+
+    options:
+    -h, --help            show this help message and exit
+    --provider {ollama,openai,watsonx}
+                            Model provider (default: None)
+    --model-id MODEL_ID   Use Ollama model (default: qwen2.5:latest)
+    --debug               Enable debug mode (default: False)
+    --stream              Enable streaming (default: False)
     ```
+    Run with `Ollama`:
+    ```bash
+    uv run agent.py --provider ollama --model-id qwen2.5:latest --debug
+    ```
+
 ![alt text](images/image.png)
 
 5. **Chat wth the agent**
+
+### Run with Watsonx
+
+To run the agent with Watsonx, you need to set up your environment variables in the `.env` file.
+```env
+#watsonx
+IBM_WATSONX_API_KEY=
+IBM_WATSONX_PROJECT_ID=
+IBM_WATSONX_BASE_URL=https://us-south.ml.cloud.ibm.com
+IBM_WATSONX_MODEL_ID=meta-llama/llama-3-3-70b-instruct
+```
+Then run the agent with the following command:
+```bash
+uv run agent.py --provider watsonx --debug
+```
 
 
 ### Demo

@@ -14,15 +14,15 @@ from cli import CLIConfig, InteractiveCLI, get_model
 
 def create_db2i_agent(
     db_path: str = "tmp/agents.db",
+    provider: str = "ollama",
     model_id: Optional[str] = None,
-    prefer_ollama: Optional[bool] = True,
     debug_mode: bool = True,
 ) -> Agent:
     """Create and configure a Db2i agent with MCP tools."""
 
     # Create the agent
     agent = Agent(
-        model=get_model(model_id, prefer_ollama),
+        model=get_model(provider, model_id),
         tools=[],  # attach mcp_tools later
         storage=SqliteAgentStorage(table_name="db2i_mcp", db_file=db_path),
         instructions=dedent(
@@ -56,7 +56,7 @@ def create_db2i_agent(
 
 
 async def run_db2i_cli(
-    debug_mode: bool = False, prefer_ollama: bool = True, model_id: Optional[str] = None
+    debug_mode: bool = False, provider: str = "ollama", model_id: Optional[str] = None, stream: bool = False
 ) -> None:
     """Run the Db2i interactive CLI."""
     db_path = "tmp/agents.db"
@@ -74,13 +74,13 @@ async def run_db2i_cli(
     ) as mcp_tools:
         agent = create_db2i_agent(
             db_path=db_path,
+            provider=provider,
             model_id=model_id,
-            debug_mode=debug_mode,
-            prefer_ollama=prefer_ollama,
+            debug_mode=debug_mode
         )
         agent.tools.append(mcp_tools)
 
-        cli = InteractiveCLI(agent=agent, config=config)
+        cli = InteractiveCLI(agent=agent, config=config, stream=stream)
         await cli.start()
 
 
@@ -90,19 +90,16 @@ if __name__ == "__main__":
         "uv run agent.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "--openai", action="store_true", default=False, help="Use gpt-4o model from OpenAI"
+        "--provider", type=str, required=True, choices=["ollama", "openai", "watsonx"], help="Model provider"
     )
     parser.add_argument("--model-id", default="qwen2.5:latest", help="Use Ollama model")
     parser.add_argument(
         "--debug", action="store_true", default=False, help="Enable debug mode"
     )
+    parser.add_argument(
+        "--stream", action="store_true", help="Enable streaming", default=False
+    )
 
     args = parser.parse_args()
-
-    if args.openai:
-        prefer_ollama = False
-        asyncio.run(run_db2i_cli(args.debug, prefer_ollama=False))
-    else:
-        asyncio.run(
-            run_db2i_cli(args.debug, model_id=args.model_id if args.model_id else None)
-        )
+    
+    asyncio.run(run_db2i_cli(debug_mode=args.debug, provider=args.provider, model_id=args.model_id, stream=args.stream))

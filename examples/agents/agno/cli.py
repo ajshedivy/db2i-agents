@@ -12,30 +12,32 @@ from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat
 from agno.models.base import Model
+from agno.models.ibm import WatsonX
 
-def get_model(model_id: str = None, prefer_ollama: bool = True) -> Model:
+
+def get_model(provider: str, model_id: str = None) -> Model:
     env = dotenv_values()
-    try:
-        # Determine model type based on preference and available credentials
-        if prefer_ollama or env.get("OPENAI_API_KEY") is None:
-            # Use Ollama
+    match provider:
+        case "ollama":
             ollama_model = model_id if model_id else "qwen2.5:latest"
             return Ollama(id=ollama_model)
-        else:
-            # Use OpenAI
+        case "openai":
             openai_model = (
                 model_id if model_id and model_id.startswith("gpt") else "gpt-4o"
             )
-            return OpenAIChat(openai_model)
+            if env.get("OPENAI_API_KEY") is not None:
+                return OpenAIChat(id=openai_model)
+        case "watsonx":
+            watsonx_model = env.get("IBM_WATSONX_MODEL_ID")
 
-    except Exception as e:
-        print(f"Error initializing model: {e}")
-        # Fallback to basic Ollama model
-        try:
+            return WatsonX(
+                id=watsonx_model,
+                url=env.get("IBM_WATSONX_BASE_URL"),
+                api_key=env.get("IBM_WATSONX_API_KEY"),
+                project_id=env.get("IBM_WATSONX_PROJECT_ID"),
+            )
+        case _:
             return Ollama(id="qwen2.5:latest")
-        except:
-            # Ultimate fallback
-            return Ollama()
 
 
 @dataclass
@@ -60,11 +62,13 @@ class InteractiveCLI:
         agent: Agent,
         config: Optional[CLIConfig] = None,
         console: Optional[Console] = None,
+        stream: bool = False
     ):
         """Initialize the CLI with an agent and optional configuration."""
         self.agent = agent
         self.config = config or CLIConfig()
         self.console = console or Console()
+        self.stream = stream
         self._model_choices = [
             ("Qwen 2.5 (Ollama)", lambda: Ollama(id="qwen2.5:latest")),
             ("GPT-4o (OpenAI)", lambda: OpenAIChat(id="gpt-4o")),
@@ -81,7 +85,7 @@ class InteractiveCLI:
 
         await self.agent.aprint_response(
             message,
-            stream=True,
+            stream=self.stream,
             callback=rich_formatter,
             markdown=True,
             show_full_reasoning=True,
