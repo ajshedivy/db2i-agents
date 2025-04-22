@@ -12,35 +12,44 @@ from agno.playground import Playground, serve_playground_app
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
 from agno.utils.log import log_debug
-from cli import get_model
+from utils.cli import get_model
+from agno.tools.reasoning import ReasoningTools
 
 server_path = "/Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/mcp/db2i-mcp-server"
 agent_storage: str = "tmp/agents.db"
 
 # Use environment variables instead of module globals for configuration
 # This allows the configuration to persist across module reloads
-if "DB2I_USE_OPENAI" not in os.environ:
-    os.environ["DB2I_USE_OPENAI"] = "false"
+if "DB2I_PROVIDER" not in os.environ:
+    os.environ["DB2I_PROVIDER"] = "ollama"
 if "DB2I_MODEL_ID" not in os.environ:
     os.environ["DB2I_MODEL_ID"] = "qwen2.5:latest"
 if "DB2I_DEBUG" not in os.environ:
     os.environ["DB2I_DEBUG"] = "false"
+if "DB2I_STREAM" not in os.environ:
+    os.environ["DB2I_STREAM"] = "false"
 
 # Helper function to access config with defaults
 def get_config():
     return {
-        "use_openai": os.environ["DB2I_USE_OPENAI"].lower() == "true",
+        "provider": os.environ["DB2I_PROVIDER"],
         "model_id": os.environ["DB2I_MODEL_ID"],
-        "debug": os.environ["DB2I_DEBUG"].lower() == "true"
+        "debug": os.environ["DB2I_DEBUG"].lower() == "true",
+        "stream": os.environ["DB2I_STREAM"].lower() == "true"
     }
 
 
 async def get_tools() -> StdioServerParameters:
     """Run the filesystem agent with the given message."""
+    
+    env_vars = dotenv_values()
+    server_args = ["db2i-mcp-server", "--use-env"]
+    if "IGNORED_TABLES" in env_vars and env_vars["IGNORED_TABLES"]:
+        server_args.extend(["--ignore-tables", env_vars["IGNORED_TABLES"]])
 
     # MCP parameters for the Filesystem server accessed via `npx`
     server_params = StdioServerParameters(
-        command="uvx", args=["db2i-mcp-server", "--use-env"], env=dotenv_values()
+        command="uvx", args=server_args, env=env_vars
     )
 
     tools = MCPTools(server_params=server_params)
@@ -54,10 +63,10 @@ def get_agent(tools: MCPTools, config) -> None:
     agent = Agent(
         name="Db2i Agent",
         model=get_model(
-            model_id=config["model_id"], 
-            prefer_ollama=not config["use_openai"]
+            provider=config["provider"],
+            model_id=config["model_id"]
         ),
-        tools=[tools],
+        tools=[ReasoningTools(add_instructions=True), tools],
         storage=SqliteAgentStorage(table_name="db2i_playground", db_file=agent_storage),
         instructions=dedent(
             """\
@@ -81,6 +90,7 @@ def get_agent(tools: MCPTools, config) -> None:
         ),
         markdown=True,
         show_tool_calls=True,
+        debug_mode=config["debug"],
     )
 
     return agent
@@ -118,12 +128,13 @@ def init_app():
     placeholder_agent = Agent(
         name="Db2i Agent",
         model=get_model(
-            model_id=config["model_id"], 
-            prefer_ollama=not config["use_openai"]
+            provider=config["provider"],
+            model_id=config["model_id"]
         ),
         storage=SqliteAgentStorage(table_name="db2i_playground", db_file=agent_storage),
         markdown=True,
         show_tool_calls=True,
+        debug_mode=config["debug"],
     )
 
     playground = Playground(agents=[placeholder_agent])
@@ -151,22 +162,27 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--use-openai",
-        action="store_true",
-        default=False,
-        help="Use gpt-4o model from OpenAI",
+        "--provider", 
+        type=str, 
+        required=True, 
+        choices=["ollama", "openai", "watsonx"], 
+        help="Model provider"
     )
     parser.add_argument("--model-id", default="qwen2.5:latest", help="Use Ollama model")
     parser.add_argument(
         "--debug", action="store_true", default=False, help="Enable debug mode"
     )
+    parser.add_argument(
+        "--stream", action="store_true", help="Enable streaming", default=False
+    )
 
     args = parser.parse_args()
 
     # Update environment variables with CLI args
-    os.environ["DB2I_USE_OPENAI"] = str(args.use_openai).lower()
+    os.environ["DB2I_PROVIDER"] = args.provider
     os.environ["DB2I_MODEL_ID"] = args.model_id
     os.environ["DB2I_DEBUG"] = str(args.debug).lower()
+    os.environ["DB2I_STREAM"] = str(args.stream).lower()
 
     # Print configuration for debugging
     config = get_config()

@@ -10,7 +10,7 @@ from mcp import StdioServerParameters
 from agno.agent import Agent
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
-from cli import CLIConfig, InteractiveCLI, get_model
+from utils.cli import CLIConfig, InteractiveCLI, get_model
 
 
 def create_db2i_agent(

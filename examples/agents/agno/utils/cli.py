@@ -26,7 +26,7 @@ def get_model(provider: str, model_id: str = None) -> Model:
                 model_id if model_id and model_id.startswith("gpt") else "gpt-4o"
             )
             if env.get("OPENAI_API_KEY") is not None:
-                return OpenAIChat(id=openai_model)
+                return OpenAIChat(id=openai_model, api_key=env.get("OPENAI_API_KEY"))
         case "watsonx":
             watsonx_model = env.get("IBM_WATSONX_MODEL_ID")
 

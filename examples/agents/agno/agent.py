@@ -9,7 +9,8 @@ from mcp import StdioServerParameters
 from agno.agent import Agent
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools.mcp import MCPTools
-from cli import CLIConfig, InteractiveCLI, get_model
+from utils.cli import CLIConfig, InteractiveCLI, get_model
+from agno.tools.reasoning import ReasoningTools
 
 
 def create_db2i_agent(
@@ -23,7 +24,7 @@ def create_db2i_agent(
     # Create the agent
     agent = Agent(
         model=get_model(provider, model_id),
-        tools=[],  # attach mcp_tools later
+        tools=[ReasoningTools(add_instructions=True)],  # attach mcp_tools later
         storage=SqliteAgentStorage(table_name="db2i_mcp", db_file=db_path),
         instructions=dedent(
             """\
@@ -49,6 +50,7 @@ def create_db2i_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         read_chat_history=True,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
     )
 

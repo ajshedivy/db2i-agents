@@ -1,7 +1,7 @@
 import asyncio
 from agno.agent import Agent
 from agno.models.ollama import Ollama
-from cli import InteractiveCLI, CLIConfig
+from utils.cli import InteractiveCLI, CLIConfig
 
 async def main():
     # Create a simple agent with Ollama
