@@ -70,12 +70,11 @@ async def run_db2i_cli(
     server_args = ["db2i-mcp-server", "--use-env"]
     if "IGNORED_TABLES" in env_vars and env_vars["IGNORED_TABLES"]:
         server_args.extend(["--ignore-tables", env_vars["IGNORED_TABLES"]])
-    print(server_args)
 
     # Create the agent and CLI
     async with MCPTools(
         server_params=StdioServerParameters(
-            command="uvx", args=["db2i-mcp-server", "--use-env"], env=env_vars
+            command="uvx", args=server_args, env=env_vars
         )
     ) as mcp_tools:
         agent = create_db2i_agent(
