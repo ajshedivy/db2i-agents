@@ -1,0 +1,18 @@
+--  Generate SQL
+--  Version:                   V7R4M0 190621
+--  Generated on:              05/01/25 14:21:03
+--  Relational Database:       IHOST
+--  Standards Option:          Db2 for i
+
+CREATE OR REPLACE TABLE SAMPLE2.IN_TRAY (
+RECEIVED TIMESTAMP DEFAULT NULL ,
+"SOURCE" CHAR(8) CCSID 37 DEFAULT NULL ,
+SUBJECT CHAR(64) CCSID 37 DEFAULT NULL ,
+NOTE_TEXT VARCHAR(3000) CCSID 37 DEFAULT NULL )
+
+RCDFMT IN_TRAY    ;
+3 sample rows from IN_TRAY:
+RECEIVED	SOURCE	SUBJECT	NOTE_TEXT
+1988-12-25 17:12:30.000000	BADAMSON	FWD: Fantastic year! 4th Quarter Bonus.	To: JWALKER  Cc: QUINTANA, NICHOLLS    Jim,  Looks like our hard work has paid off. I have some g...
+1988-12-23 08:53:58.000000	ISTERN	FWD: Fantastic year! 4th Quarter Bonus.	To: Dept_D11    Congratulations on a job well done. Enjoy this year's bonus.    Irv    <Forwardin...
+1988-12-22 14:07:21.136421	CHAAS	Fantastic year! 4th Quarter Bonus.	To: All_Managers    Our 4th quarter results are in. We pulled together as a team and exceeded our...

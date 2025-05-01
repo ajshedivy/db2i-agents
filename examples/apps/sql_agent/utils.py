@@ -121,24 +121,21 @@ def sidebar_widget() -> None:
         st.markdown("#### 🏆 Sample Queries")
         if st.button("📋 Show Tables"):
             add_message("user", "Which tables do you have access to?")
-        if st.button("🥇 Most Race Wins"):
-            add_message("user", "Which driver has the most race wins?")
-
-        if st.button("🏆 Constructor Champs"):
-            add_message("user", "Which team won the most Constructors Championships?")
-
-        if st.button("⏳ Longest Career"):
+        if st.button("👥 Department Managers"):
+            add_message("user", "Show me all department managers with their department names.")
+        if st.button("💰 Highest Salaries"):
+            add_message("user", "Who are the top 5 highest paid employees?")
+        if st.button("📊 Project Activities"):
             add_message(
                 "user",
-                "Tell me the name of the driver with the longest racing career? Also tell me when they started and when they retired.",
+                "List all projects with their activities and responsible employees.",
             )
-        if st.button("📈 Races per Year"):
-            add_message("user", "Show me the number of races per year.")
-
-        if st.button("🔍 Team Performance"):
+        if st.button("📝 Employee Projects"):
+            add_message("user", "How many projects is each employee working on?")
+        if st.button("🔍 Cross-Department"):
             add_message(
                 "user",
-                "Write a query to identify the drivers that won the most races per year from 2010 onwards and the position of their team that year.",
+                "Find employees working on projects outside of their own department.",
             )
 
         st.markdown("---")

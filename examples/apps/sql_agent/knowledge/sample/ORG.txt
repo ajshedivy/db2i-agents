@@ -1,0 +1,19 @@
+--  Generate SQL
+--  Version:                   V7R4M0 190621
+--  Generated on:              05/01/25 14:21:05
+--  Relational Database:       IHOST
+--  Standards Option:          Db2 for i
+
+CREATE OR REPLACE TABLE SAMPLE2.ORG (
+DEPTNUMB SMALLINT NOT NULL ,
+DEPTNAME VARCHAR(14) CCSID 37 DEFAULT NULL ,
+MANAGER SMALLINT DEFAULT NULL ,
+DIVISION VARCHAR(10) CCSID 37 DEFAULT NULL ,
+"LOCATION" VARCHAR(13) CCSID 37 DEFAULT NULL )
+
+RCDFMT ORG        ;
+3 sample rows from ORG:
+DEPTNUMB	DEPTNAME	MANAGER	DIVISION	LOCATION
+10	Head Office	160	Corporate	New York
+15	New England	50	Eastern	Boston
+20	Mid Atlantic	10	Eastern	Washington

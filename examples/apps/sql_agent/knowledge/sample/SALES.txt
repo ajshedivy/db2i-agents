@@ -1,0 +1,18 @@
+--  Generate SQL
+--  Version:                   V7R4M0 190621
+--  Generated on:              05/01/25 14:21:09
+--  Relational Database:       IHOST
+--  Standards Option:          Db2 for i
+
+CREATE OR REPLACE TABLE SAMPLE2.SALES (
+SALES_DATE DATE DEFAULT NULL ,
+SALES_PERSON FOR COLUMN SALES00001 VARCHAR(15) CCSID 37 DEFAULT NULL ,
+REGION VARCHAR(15) CCSID 37 DEFAULT NULL ,
+SALES INTEGER DEFAULT NULL )
+
+RCDFMT SALES      ;
+3 sample rows from SALES:
+SALES_DATE	SALES_PERSON	REGION	SALES
+12/31/95	LUCCHESSI	Ontario-South	1
+12/31/95	LEE	Ontario-South	3
+12/31/95	LEE	Quebec	1
