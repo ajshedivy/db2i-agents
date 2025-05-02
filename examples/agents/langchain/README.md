@@ -368,7 +368,7 @@ You can deploy a local LangGraph app server to run a ReAct Db2i Agent.
 
    - LangGraph Studio Web UI: https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
 
-   ![alt text](image.png)
+   ![alt text](images/image.png)
 
 5. You can now interact with the Db2i Agent using the LangGraph Studio UI:
 
