@@ -44,7 +44,11 @@ Unlike basic LLM applications, agents can maintain context, use specialized tool
     - `langchain/`: LangChain framework demos
   - `mcp/`: Model Context Protocol (MCP) Db2i server and client examples
     - `db2i-mcp-server/`: MCP server implementation
+  - `apps/`: Complete application examples built on top of agents
+    - `sql_agent_with_knowledge/`: SQL agent with integrated knowledge base
     
+- `concepts/`: Explorations of high-level agent concepts
+  
 - `shared/`: Common utilities and components used across demos
 
 - `docs/`: Additional documentation and guides
