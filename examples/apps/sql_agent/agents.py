@@ -3,32 +3,17 @@
 This advanced example shows how to build a sophisticated text-to-SQL system that
 leverages Reasoning Agents to provide deep insights into any data.
 
-Example queries to try:
-- "Who are the top 5 drivers with the most race wins?"
-- "Compare Mercedes vs Ferrari performance in constructors championships"
-- "Show me the progression of fastest lap times at Monza"
-- "Which drivers have won championships with multiple teams?"
-- "What tracks have hosted the most races?"
-- "Show me Lewis Hamilton's win percentage by season"
-
-Examples with table joins:
-- "How many races did the championship winners win each year?"
-- "Compare the number of race wins vs championship positions for constructors in 2019"
-- "Show me Lewis Hamilton's race wins and championship positions by year"
-- "Which drivers have both won races and set fastest laps at Monaco?"
-- "Show me Ferrari's race wins and constructor championship positions from 2015-2020"
-
 View the README for instructions on how to run the application.
 """
 
 import json
+from contextlib import asynccontextmanager
 from pathlib import Path
 from textwrap import dedent
 from typing import Optional
-from contextlib import asynccontextmanager
 
 from agno.agent import Agent
-from agno.embedder.openai import OpenAIEmbedder
+from agno.embedder.ollama import OllamaEmbedder
 from agno.knowledge.combined import CombinedKnowledgeBase
 from agno.knowledge.json import JSONKnowledgeBase
 from agno.knowledge.text import TextKnowledgeBase
@@ -36,20 +21,16 @@ from agno.models.anthropic import Claude
 from agno.models.google import Gemini
 from agno.models.groq import Groq
 from agno.models.openai import OpenAIChat
-from agno.storage.agent.postgres import PostgresAgentStorage
 from agno.storage.sqlite import SqliteStorage
 from agno.tools.file import FileTools
 from agno.tools.reasoning import ReasoningTools
-from agno.tools.sql import SQLTools
-from agno.vectordb.pgvector import PgVector
+from agno.utils.log import logger
 from agno.vectordb.lancedb import LanceDb
 from agno.vectordb.search import SearchType
-from agno.embedder.ollama import OllamaEmbedder
-from agno.tools.mcp import MCPTools
-from agno.utils.log import logger
 from dotenv import dotenv_values
+from agno.models.ollama import Ollama
 
-from Db2iTools import Db2iTools
+from db2i_tools import Db2iTools
 
 env = dotenv_values()
 
@@ -214,9 +195,9 @@ async def sql_agent_session(
     Yields:
         A configured SQL Agent with MCP tools ready to use
     """
-    from mcp import StdioServerParameters
     from agno.tools.mcp import MCPTools
     from dotenv import dotenv_values
+    from mcp import StdioServerParameters
 
     # Get environment variables
     if env_vars is None:
@@ -293,7 +274,7 @@ def get_sql_agent(
         model_id: Model identifier in format 'provider:model_name'
     """
     # Parse model provider and name
-    provider, model_name = model_id.split(":")
+    provider, model_name = model_id.split(":", 1)
 
     # Select appropriate model class based on provider
     if provider == "openai":
@@ -304,6 +285,8 @@ def get_sql_agent(
         model = Claude(id=model_name)
     elif provider == "groq":
         model = Groq(id=model_name)
+    elif provider == "ollama":
+        model = Ollama(id=model_name)
     else:
         raise ValueError(f"Unsupported model provider: {provider}")
 

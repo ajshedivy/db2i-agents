@@ -105,6 +105,7 @@ class Db2iDatabase:
         with connect(self._server_config) as conn:
             with conn.execute(sql, options) as cursor:
                 if cursor.has_results:
+                    cursor.fetchmany
                     if fetch == "all":
                         result = cursor.fetchall()
                     elif fetch == "one":
@@ -277,7 +278,7 @@ class Db2iDatabase:
         self,
         sql: str,
         include_columns: bool = False,
-        fetch: Literal["all", "one"] = "all",
+        fetch: Union[Literal["all", "one"], int] = "all",
         parameters: Optional[Dict[str, Any]] = None,
     ) -> ResultRow | str | ResultSet | list:
         """Execute a SQL command and return a string representing the results.
@@ -425,7 +426,7 @@ class Db2iTools(Toolkit):
             logger.error(f"Error getting table schema: {e}")
             return f"Error getting table schema: {e}"
 
-    def run_sql_query(self, query: str, limit: Optional[int] = 10) -> str:
+    def run_sql_query(self, query: str, limit: Union[Literal["all", "one"], int] = "all") -> str:
         """Use this function to run a SQL query and return the result.
 
         Args:
@@ -438,12 +439,7 @@ class Db2iTools(Toolkit):
         """
         try:
             log_debug(f"Running SQL query on Db2i: {query}")
-            if limit is not None:
-                # Add FETCH FIRST n ROWS ONLY if limit is provided and query doesn't already have it
-                if "FETCH FIRST" not in query.upper() and "LIMIT" not in query.upper():
-                    query = f"{query.rstrip(';')} FETCH FIRST {limit} ROWS ONLY"
-
-            result = self.db2i_database.run_no_throw(query, include_columns=True)
+            result = self.db2i_database.run_no_throw(query, include_columns=True, fetch=limit)
             return str(result)
         except Exception as e:
             logger.error(f"Error running query: {e}")

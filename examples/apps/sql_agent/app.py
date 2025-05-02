@@ -49,6 +49,9 @@ def main() -> None:
         "gemini-2.5-pro": "google:gemini-2.5-pro-preview-03-25",
         "llama-4-scout": "groq:meta-llama/llama-4-scout-17b-16e-instruct",
         "gpt-4o": "openai:gpt-4o",
+        "qwen3:30b-a3b": "ollama:qwen3:30b-a3b",
+        "qwen3:8b": "ollama:qwen3:8b",
+        "qwen2.5": "ollama:qwen2.5"
     }
     selected_model = st.sidebar.selectbox(
         "Select a model",
@@ -57,6 +60,7 @@ def main() -> None:
         key="model_selector",
     )
     model_id = model_options[selected_model]
+    logger.info(f"model id: {model_id}")
 
     ####################################################################
     # Initialize Agent
