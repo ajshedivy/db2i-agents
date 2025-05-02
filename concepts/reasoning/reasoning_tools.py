@@ -18,11 +18,11 @@ from textwrap import dedent
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools.reasoning import ReasoningTools
+from agno.models.ollama import Ollama
 
-from utils.cli import get_model
 
 reasoning_agent = Agent(
-    model=get_model(provider="watsonx"),
+    model=Ollama(id="qwen.2.5"),
     tools=[ReasoningTools(add_instructions=True)],
     instructions=dedent("""\
         You are an expert problem-solving assistant with strong analytical skills! 🧠
