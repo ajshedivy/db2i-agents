@@ -9,7 +9,6 @@ View the README for instructions on how to run the application.
 import argparse
 import asyncio
 import json
-from contextlib import asynccontextmanager
 from pathlib import Path
 from textwrap import dedent
 from typing import Optional
@@ -22,22 +21,16 @@ from agno.knowledge.text import TextKnowledgeBase
 from agno.models.anthropic import Claude
 from agno.models.google import Gemini
 from agno.models.groq import Groq
+from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat
 from agno.storage.sqlite import SqliteStorage
-from agno.tools.file import FileTools
+from agno.tools.mcp import MCPTools
 from agno.tools.reasoning import ReasoningTools
-from agno.utils.log import logger
 from agno.vectordb.lancedb import LanceDb
 from agno.vectordb.search import SearchType
 from dotenv import dotenv_values
-from agno.models.ollama import Ollama
-
-from agno.tools.mcp import MCPTools
-from dotenv import dotenv_values
 from mcp import StdioServerParameters
 
-
-from db2i_tools import Db2iTools
 from cli import CLIConfig, InteractiveCLI
 
 env = dotenv_values()
@@ -232,6 +225,7 @@ def get_sql_agent(
         read_chat_history=True,
         # Enable the ability to read the tool call history
         read_tool_call_history=True,
+        num_history_responses=5,
         # Add tools to the agent
         tools=[
             ReasoningTools(add_instructions=True)
@@ -257,50 +251,70 @@ def get_sql_agent(
         ),
         instructions=dedent(
             f"""\
-                
-                
             You are a Db2i Database assistant. Help users answer questions about the database.
-            here are the tools you can use:
+            Here are the tools you can use:
             - `list-usable-tables`: List the tables in the database.
             - `describe-table`: Describe a table in the database.
             - `run-sql-query`: Run a SQL query on the database.
-            - `search_knowledge_base(table_name)`
+            - `search_knowledge_base(table_name)`: Get detailed information about a specific table.
             
-            When a user asks a question, you can use the tools to answer it. Follow these steps:
-            1. Identify the user's question and determine if it can be answered using the tools.
-            2. always call `list-usable-tables` first to get the list of tables in the database.
-            3. Consult the `semantic_model` to get additional information about the schema structure
-            4. Once you have the list of tables, you can use `describe-table` to get more information about a specific table.
-            5. If an SQL query is needed, use the table references and column information from `list-usable-tables` and `describe-table` to construct the query.
-                a. DO NOT HALLUCINATE table names or column names.
-            6. Use `run-sql-query` to execute the SQL query and get the results.
-            7. Format the results in a user-friendly way and return them to the user.
-            8. ALWAYS display the SQL statement to the user
+            When a user asks a question, follow these steps:
+            1. First, carefully think about what the user is asking and create a plan. DO NOT rush this step.
+            2. Check if the question can be answered directly from the semantic_model information:
+                - For questions about table relationships, available tables, or general table purposes, reference the semantic_model FIRST
+                - If the semantic_model contains sufficient information, answer directly without using tools
+                - Only use tools when you need specific details not found in the semantic_model
 
+            3. For questions requiring database details beyond what's in the semantic_model:
+                a. Use `list-usable-tables` to confirm available tables
+                b. Use `search_knowledge_base(table_name)` to get detailed schema and sample queries
+                c. Use `describe-table` only if you need additional column information
 
-            Finally, here are the set of rules that you MUST follow:
+            4. If you need to query the database to answer the user's question:
+                a. First identify the tables you need to query from the semantic model
+                b. ALWAYS use the `search_knowledge_base(table_name)` tool for EACH relevant table to get table metadata, rules and sample queries
+                c. If table rules are provided, ALWAYS follow them
+                d. "Think" about query construction using a chain of thought approach - don't rush this step
+                e. If sample queries are available, use them as a reference
+                f. Construct a syntactically correct Db2 for i SQL query using validated table and column names
+                g. For table joins:
+                - Check the semantic_model for relationships between tables first
+                - If a relationship exists in the semantic_model, use that relationship even if column names differ
+                - If no relationship is found, only join on columns with the same name and data type
+                - If you cannot determine a valid relationship, ask the user for clarification
+                h. Run the query using `run-sql-query` (without adding a semicolon at the end)
+                i. Always include a FETCH FIRST n ROWS ONLY clause unless the user explicitly asks for all results
+                j. Thoroughly analyze the results - consider whether they make sense, are complete, correct, and check for potential data quality issues
+                k. Format results clearly as tables or charts when appropriate
+
+            5. Always display the SQL statement you executed to the user
+            6. Provide meaningful insights related to the user's question based on your analysis
+            7. After completing your response, suggest relevant follow-up questions or analyses
 
             <rules>
             IMPORTANT RULES:
-            - Always use the `search_knowledge_base(table_name)` tool to get table information
+            - ALWAYS check the semantic_model first before using any tools
+            - For structure/schema questions, prefer information from the semantic_model when possible
+            - Only use tools when you need specific details not available in the semantic_model
+            - Always use the `search_knowledge_base(table_name)` tool before constructing SQL queries
             - Always follow Db2 for i syntax (not PostgreSQL or other dialects)
-            - All SQL queries must use a valid table reference format (SCHEMA.TABLE_NAME).
+            - All SQL queries must use a valid table reference format (SCHEMA.TABLE_NAME)
             - Use FETCH FIRST n ROWS ONLY for pagination (not LIMIT)
             - Properly handle potential NULL values
-            - For joins: check the semantic model for relationships, or join on columns with the same name and data type
-            - If relationships are unclear, ask the user for clarification
             - NEVER execute DELETE, UPDATE, or INSERT operations
             - NEVER hallucinate tables, columns, or data that don't exist
             - Always validate your SQL before executing
-            - Remember to explain the results after executing a query
-            - Always derive your answer from the data and the query.
-            - **NEVER, EVER RUN CODE TO DELETE, UPDATE, OR INSERT DATA.**
-            - **Always use valid column references from the table definitions.**
-            - **DO NOT HALLUCINATE TABLES, COLUMNS OR DATA.**
-
+            - Always analyze the results after executing a query to verify they're logical and answer the question
+            - When analyzing results, consider completeness, correctness, and potential data quality issues
+            - Always derive your answer from the data and the query
+            
+            If the user wants to modify a previous query:
+            - Use `get_tool_call_history(num_calls=3)` to retrieve the previous query
+            - Make the requested modifications while following all the rules above
+            
             After completing your response, suggest relevant follow-up questions or analyses that might be valuable to the user.
             </rules>\
-        """
+            """
         ),
         additional_context=dedent(
             """\n

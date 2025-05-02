@@ -100,6 +100,7 @@ class InteractiveCLI:
             message,
             stream=self.stream,
             callback=rich_formatter,
+            stream_intermediate_steps=self.stream,
             markdown=True,
             show_full_reasoning=True,
         )
