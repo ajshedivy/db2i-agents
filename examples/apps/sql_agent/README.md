@@ -1,12 +1,15 @@
 # SQrL: A Text2SQL Reasoning Agent
 
-SQrL is an advanced text-to-SQL system that leverages Reasoning Agents to provide deep insights into any data. The system works with IBM Db2 for i sample dataset, which contains enterprise data including employee information, department structure, project management, and business operations.
+SQrL is an advanced text-to-SQL system that leverages Reasoning Agents to provide deep insights into data. The system works with IBM Db2 for i sample dataset, which contains enterprise data including employee information, department structure, project management, and business operations.
 
-The agent uses Reasoning Agents to search for table metadata and rules, enabling it to write and run better SQL queries. This process, called `Dynamic Few Shot Prompting`, is a technique that allows the agent to dynamically search for few shot examples to improve its performance.
+This demo showcases the power of combining semantic models with agent knowledge to improve SQL query generation and analysis.
 
-SQrL also "thinks" before it acts. It will think about the user's question, and then decide to search its knowledge base before writing and running the SQL query.
+## Features
 
-SQrL also "analyzes" the result of the SQL query, which yield much better results.
+- **Semantic Model Integration**: Uses a pre-defined semantic model to understand table relationships and data structure
+- **Dynamic Knowledge Retrieval**: Searches knowledge base for relevant information about tables and columns
+- **Advanced Reasoning**: "Thinks" before constructing queries, following a chain-of-thought approach
+- **Result Analysis**: Analyzes query results for insights and data quality issues
 
 > Note: Fork and clone the repository if needed
 
@@ -34,16 +37,14 @@ The `uv run` command automatically creates a virtual environment and manages dep
 
 ### 2. Load the knowledge base
 
-The knowledge base contains table metadata, rules and sample queries, which are used by the Agent to improve responses. This data is stored in the `knowledge/` folder and is used by the Agent at run-time to search for sample queries and rules.
-
-The following command creates embeddings for the knowledge base and stores them in a vector database. The knowledge base is stored in the `tmp/lancedb` directory.
+The knowledge base contains table metadata, rules and sample queries, which are used by the Agent to improve responses.
 
 ```shell
 # Basic usage - loads knowledge from knowledge/sample directory
-uv run load_knowledge.py
+uv run python load_knowledge.py
 
 # With options to specify directory and recreate knowledge
-# uv run load_knowledge.py --destination knowledge/sample --recreate
+# uv run python load_knowledge.py --destination knowledge/sample --recreate
 ```
 
 Available options for load_knowledge.py:
@@ -51,13 +52,9 @@ Available options for load_knowledge.py:
 - `--recreate`: Overwrite existing files if destination directory already exists
 - `--no-load`: Skip loading knowledge into agent (default: False, knowledge is loaded)
 
-We recommend adding the following to enhance the agent's capabilities:
-  - Add `table_rules` and `column_rules` to the table metadata. The Agent is prompted to follow them. This is useful when you want to guide the Agent to always query date in a particular format, or avoid certain columns.
-  - Add sample SQL queries to the `knowledge/sample_queries.sql` file. This will give the Assistant a head start on how to write complex queries.
-
 ### 3. Storage and Persistence
 
-The application uses SQLite for storage, configured in the agents.py file:
+The application uses SQLite for storage, configured in the agent.py file:
 
 ```python
 # Database connection configuration
@@ -71,43 +68,98 @@ agent_storage = SqliteStorage(
 )
 ```
 
-This SQLite database stores:
-- Agent conversations and history
-- Session information
-- Tool call history
-
-The knowledge base is stored using LanceDb in the tmp/lancedb directory for vector search capabilities.
+This SQLite database stores conversation history and agent session information.
 
 ### 4. Export API Keys
 
-We recommend using claude-3-7-sonnet for this task, but you can use any Model you like.
-
 ```shell
+# Choose one or more of these providers
 export ANTHROPIC_API_KEY=***
-```
-
-Other API keys are optional, but if you'd like to test:
-
-```shell
 export OPENAI_API_KEY=***
 export GOOGLE_API_KEY=***
 export GROQ_API_KEY=***
 ```
 
-### 5. Run SQL Agent
+### 5. Run SQL Agent CLI
+
+You can run the SQL Agent directly using the agent.py script. The default model is `ollama:qwen2.5:latest`, but you can specify other models as needed:
 
 ```shell
-# Start the Streamlit app using uv run
-uv run streamlit run app.py
+# pull the ollama model
+ollama pull qwen2.5
+
+# Basic usage with default model (Ollama qwen2.5)
+uv run agent.py
+
+# With another model
+uv run agent.py --model-id gpt-4o
+
+# With debug mode enabled
+uv run agent.py --debug
+
+# With streaming responses
+uv run agent.py --stream
 ```
 
-The app lets you:
-- Select different language models (OpenAI, Anthropic, Google, etc.)
+Available command-line options:
+- `--model-id`: Specify which model to use (default: ollama:qwen2.5:latest)
+  - Available models: 
+    - `o4-mini`
+    - `claude-3-7-sonnet`
+    - `gpt-4.1`
+    - `o3`
+    - `gemini-2.5-pro`
+    - `gpt-4o`
+    - `qwen3:30b-a3b`
+    - `qwen3:8b`
+    - `qwen2.5`
+- `--debug`: Enable debug mode for more verbose logging
+- `--stream`: Enable streaming responses to see the agent's thoughts as they're generated
+
+The CLI lets you:
 - Ask natural language questions about the IBM Db2i sample dataset
 - View SQL queries generated by the agent
 - See query results and analysis
+- Access conversation history
 
-- Open [localhost:8501](http://localhost:8501) to view the SQL Agent.
+## Semantic Model
 
-### 6. Message us on [discord](https://agno.link/discord) if you have any questions
+The agent uses a pre-defined semantic model to understand the database structure. This model includes:
+
+```json
+{
+  "dataset_overview": {
+    "organizational_structure": ["DEPARTMENT", "ORG"],
+    "personnel_data": ["EMPLOYEE", "STAFF", "EMP_PHOTO", "EMP_RESUME"],
+    "project_management": ["PROJECT", "PROJACT", "ACT", "EMPPROJACT"],
+    "business_operations": ["SALES", "IN_TRAY", "CL_SCHED"]
+  },
+  "tables": [
+    {
+      "table_name": "DEPARTMENT",
+      "table_description": "The department table describes each department in the enterprise and identifies its manager and the department that it reports to.",
+      "Use Case": "Use this table when analyzing organizational structure, department hierarchies, or when needing information about department managers."
+    },
+    // Additional tables...
+  ]
+}
+```
+
+## Enhancing the Agent
+
+You can improve the agent's capabilities by:
+
+1. **Enriching the Semantic Model**: Add more table relationships and business context
+2. **Adding Table Rules**: Define rules in table metadata to guide query construction
+3. **Creating Sample Queries**: Add examples to knowledge/sample_queries.sql to demonstrate complex query patterns
+
+## Example Prompts
+
+Start with simple questions and progress to more complex ones:
+
+- "What tables are available in the database?"
+- "Show me the structure of the EMPLOYEE table."
+- "Find all employees who work in the RESEARCH department."
+- "Which department has the highest average salary?"
+- "Show me all projects that are currently active and their managers."
 
