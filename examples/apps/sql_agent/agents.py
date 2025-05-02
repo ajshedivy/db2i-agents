@@ -6,6 +6,8 @@ leverages Reasoning Agents to provide deep insights into any data.
 View the README for instructions on how to run the application.
 """
 
+import argparse
+import asyncio
 import json
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -30,7 +32,13 @@ from agno.vectordb.search import SearchType
 from dotenv import dotenv_values
 from agno.models.ollama import Ollama
 
+from agno.tools.mcp import MCPTools
+from dotenv import dotenv_values
+from mcp import StdioServerParameters
+
+
 from db2i_tools import Db2iTools
+from cli import CLIConfig, InteractiveCLI
 
 env = dotenv_values()
 
@@ -166,103 +174,10 @@ semantic_model_str = json.dumps(semantic_model, indent=2)
 # *******************************
 
 
-@asynccontextmanager
-async def sql_agent_session(
-    model_id: str = "openai:gpt-4o",
-    user_id: Optional[str] = None,
-    session_id: Optional[str] = None,
-    debug_mode: bool = True,
-    name: str = "SQL Agent",
-    env_vars: Optional[dict] = None,
-):
-    """Create an SQL agent with MCP tools as a context manager.
-
-    This function creates a temporary agent for a single request, with MCP tools
-    properly initialized. It handles connection setup and cleanup automatically.
-
-    The agent maintains conversation context between requests through the session_id.
-    By using the same session_id, follow-up questions will have access to the full
-    conversation history, allowing for more natural conversational interactions.
-
-    Args:
-        model_id: The model ID in format 'provider:model_name'
-        user_id: Optional user identifier
-        session_id: Optional session ID for continuity between requests
-        debug_mode: Enable debug logging
-        name: Agent name
-        env_vars: Environment variables for the MCP server
-
-    Yields:
-        A configured SQL Agent with MCP tools ready to use
-    """
-    from agno.tools.mcp import MCPTools
-    from dotenv import dotenv_values
-    from mcp import StdioServerParameters
-
-    # Get environment variables
-    if env_vars is None:
-        env_vars = dotenv_values()
-
-    # Create the agent first (without MCP tools)
-    # Using the same session_id ensures conversation continuity
-    agent = get_sql_agent(
-        name=name,
-        user_id=user_id,
-        model_id=model_id,
-        session_id=session_id,  # Critical for maintaining conversation context
-        debug_mode=debug_mode,
-    )
-
-    # Log that we're using an existing session
-    if session_id:
-        logger.info(
-            f"Created agent with existing session ID: {session_id} for conversation continuity"
-        )
-
-        # CRITICAL: Make sure the agent loads the session data from the database
-        # This ensures the agent has access to the conversation history
-        agent.load_session()
-
-    # Set up MCP tools
-    server_args = ["db2i-mcp-server", "--use-env"]
-    mcp_tools = None
-
-    try:
-        # Initialize MCP tools and add to agent
-        mcp_tools = MCPTools(
-            server_params=StdioServerParameters(
-                command="uvx", args=server_args, env=env_vars
-            ),
-            exclude_tools=["describe-table", "list-usable-tables"],
-        )
-
-        # Enter the context manager for MCPTools
-        await mcp_tools.__aenter__()
-
-        # Add MCP tools to the agent
-        agent.tools.append(mcp_tools)
-
-        # Yield the fully configured agent
-        yield agent
-
-    finally:
-        # Always clean up MCP tools and remove from agent
-        if mcp_tools is not None:
-            # Remove MCP tools from agent
-            if mcp_tools in agent.tools:
-                agent.tools.remove(mcp_tools)
-
-            # Close MCP tools context
-            try:
-                await mcp_tools.__aexit__(None, None, None)
-            except Exception as e:
-                logger.warning(f"Error closing MCP tools: {e}")
-
-
 def get_sql_agent(
     name: str = "SQL Agent",
     user_id: Optional[str] = None,
-    model_id: str = "openai:gpt-4o",
+    model_id: str = "qwen2.5",
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
@@ -273,8 +188,22 @@ def get_sql_agent(
         debug_mode: Enable debug logging
         model_id: Model identifier in format 'provider:model_name'
     """
+    model_options = {
+        "o4-mini": "openai:o4-mini",
+        "claude-3-7-sonnet": "anthropic:claude-3-7-sonnet-latest",
+        "gpt-4.1": "openai:gpt-4.1",
+        "o3": "openai:o3",
+        "gemini-2.5-pro": "google:gemini-2.5-pro-preview-03-25",
+        "llama-4-scout": "groq:meta-llama/llama-4-scout-17b-16e-instruct",
+        "gpt-4o": "openai:gpt-4o",
+        "qwen3:30b-a3b": "ollama:qwen3:30b-a3b",
+        "qwen3:8b": "ollama:qwen3:8b",
+        "qwen2.5": "ollama:qwen2.5"
+    }
+    
+    model_config = model_options.get(model_id, "ollama:qwen2.5")
     # Parse model provider and name
-    provider, model_name = model_id.split(":", 1)
+    provider, model_name = model_config.split(":", 1)
 
     # Select appropriate model class based on provider
     if provider == "openai":
@@ -305,18 +234,7 @@ def get_sql_agent(
         read_tool_call_history=True,
         # Add tools to the agent
         tools=[
-            FileTools(base_dir=output_dir),
-            ReasoningTools(add_instructions=True, add_few_shot=True),
-            Db2iTools(
-                env["SCHEMA"],
-                {
-                    "host": env["HOST"],
-                    "user": env["DB_USER"],
-                    "password": env["PASSWORD"],
-                    "port": 8076,
-                },
-                describe_table=False,
-            ),
+            ReasoningTools(add_instructions=True)
         ],
         debug_mode=debug_mode,
         description=dedent(
@@ -339,61 +257,48 @@ def get_sql_agent(
         ),
         instructions=dedent(
             f"""\
-            You are a SQL expert focused on writing precise, efficient queries.
-
-            When a user messages you, determine if you need query the database or can respond directly.
-            If you can respond directly, do so.
-
-            If you need to query the database to answer the user's question, follow these steps:
-            1. First identify the tables you need to query from the semantic model.
-            2. Then, ALWAYS use the `search_knowledge_base(table_name)` tool to get table metadata, rules and sample queries.
-            3. If table rules are provided, ALWAYS follow them.
-            4. Then, "think" about query construction, don't rush this step.
-            5. Follow a chain of thought approach before writing SQL, ask clarifying questions where needed.
-            6. If sample queries are available, use them as a reference.
-            7. If you need more information about the table, use the `describe_table` tool.
-            8. Then, using all the information available, create one single syntactically correct Db2 for i query to accomplish your task.
-            9. If you need to join tables, check the `semantic_model` for the relationships between the tables.
-                - If the `semantic_model` contains a relationship between tables, use that relationship to join the tables even if the column names are different.
-                - If you cannot find a relationship in the `semantic_model`, only join on the columns that have the same name and data type.
-                - If you cannot find a valid relationship, ask the user to provide the column name to join.
-            10. If you cannot find relevant tables, columns or relationships, stop and ask the user for more information.
-            11. Once you have a syntactically correct query, run it using the `run_sql_query` function.
-            12. When running a query:
-                - Do not add a `;` at the end of the query.
-                - Always provide a limit unless the user explicitly asks for all results.
-            13. After you run the query, "analyze" the results and return the answer in markdown format.
-            14. Make sure to always "analyze" the results of the query before returning the answer.
-            15. You Analysis should Reason about the results of the query, whether they make sense, whether they are complete, whether they are correct, could there be any data quality issues, etc.
-            16. It is really important that you "analyze" and "validate" the results of the query.
-            17. Always show the user the SQL you ran to get the answer.
-            18. Continue till you have accomplished the task.
-            19. Show results as a table or a chart if possible.
-
-            After finishing your task, ask the user relevant followup questions like "was the result okay, would you like me to fix any problems?"
-            If the user says yes, get the previous query using the `get_tool_call_history(num_calls=3)` function and fix the problems.
-            If the user wants to see the SQL, get it using the `get_tool_call_history(num_calls=3)` function.
+                
+                
+            You are a Db2i Database assistant. Help users answer questions about the database.
+            here are the tools you can use:
+            - `list-usable-tables`: List the tables in the database.
+            - `describe-table`: Describe a table in the database.
+            - `run-sql-query`: Run a SQL query on the database.
+            - `search_knowledge_base(table_name)`
+            
+            When a user asks a question, you can use the tools to answer it. Follow these steps:
+            1. Identify the user's question and determine if it can be answered using the tools.
+            2. always call `list-usable-tables` first to get the list of tables in the database.
+            3. Consult the `semantic_model` to get additional information about the schema structure
+            4. Once you have the list of tables, you can use `describe-table` to get more information about a specific table.
+            5. If an SQL query is needed, use the table references and column information from `list-usable-tables` and `describe-table` to construct the query.
+                a. DO NOT HALLUCINATE table names or column names.
+            6. Use `run-sql-query` to execute the SQL query and get the results.
+            7. Format the results in a user-friendly way and return them to the user.
+            8. ALWAYS display the SQL statement to the user
 
 
             Finally, here are the set of rules that you MUST follow:
 
             <rules>
-            - All SQL queries must be syntactically correct and valid for Db2 for IBM i.
+            IMPORTANT RULES:
+            - Always use the `search_knowledge_base(table_name)` tool to get table information
+            - Always follow Db2 for i syntax (not PostgreSQL or other dialects)
             - All SQL queries must use a valid table reference format (SCHEMA.TABLE_NAME).
-            - Always use the `search_knowledge_base(table_name)` tool to get table information before using `describe-table`.
-            - Always call `describe-table` before creating and running a query.
-            - Use Db2 for i specific functions like LISTAGG, REGEXP_COUNT, or DATE functions when needed.
-            - For pagination, use FETCH FIRST n ROWS ONLY instead of LIMIT.
-            - Use CONCAT or || for string concatenation in Db2 for i.
-            - When working with dates, use Db2 for i date formats and functions (DATE, TIMESTAMP).
-            - Remember that Db2 for i uses VALUES clause for literal row construction, not the PostgreSQL syntax.
-            - Make sure your query accounts for duplicate records.
-            - Make sure your query accounts for null values.
-            - If you run a query, explain why you ran it.
+            - Use FETCH FIRST n ROWS ONLY for pagination (not LIMIT)
+            - Properly handle potential NULL values
+            - For joins: check the semantic model for relationships, or join on columns with the same name and data type
+            - If relationships are unclear, ask the user for clarification
+            - NEVER execute DELETE, UPDATE, or INSERT operations
+            - NEVER hallucinate tables, columns, or data that don't exist
+            - Always validate your SQL before executing
+            - Remember to explain the results after executing a query
             - Always derive your answer from the data and the query.
             - **NEVER, EVER RUN CODE TO DELETE, UPDATE, OR INSERT DATA.**
             - **Always use valid column references from the table definitions.**
             - **DO NOT HALLUCINATE TABLES, COLUMNS OR DATA.**
+
+            After completing your response, suggest relevant follow-up questions or analyses that might be valuable to the user.
             </rules>\
         """
         ),
@@ -411,3 +316,54 @@ def get_sql_agent(
         """
         ),
     )
+    
+    
+    
+async def run_db2i_cli(
+    debug_mode: bool = False, model_id: Optional[str] = None, stream: bool = False
+) -> None:
+    """Run the Db2i interactive CLI."""
+    db_path = "tmp/agents.db"
+
+    # Configure the CLI
+    config = CLIConfig(
+        title="Db2i Database Assistant CLI", agent_title="Db2i Agent", db_path=db_path
+    )
+    
+    env_vars = dotenv_values()
+    server_args = ["db2i-mcp-server", "--use-env"]
+    if "IGNORED_TABLES" in env_vars and env_vars["IGNORED_TABLES"]:
+        server_args.extend(["--ignore-tables", env_vars["IGNORED_TABLES"]])
+
+    # Create the agent and CLI
+    async with MCPTools(
+        server_params=StdioServerParameters(
+            command="uvx", args=server_args, env=env_vars
+        )
+    ) as mcp_tools:
+        agent = get_sql_agent(
+            model_id=model_id,
+            debug_mode=debug_mode
+        )
+        agent.tools.append(mcp_tools)
+
+        cli = InteractiveCLI(agent=agent, config=config, stream=stream)
+        await cli.start()
+
+
+# Example usage
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        "uv run agent.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("--model-id", default="ollama:qwen2.5:latest", help="Use Ollama model")
+    parser.add_argument(
+        "--debug", action="store_true", default=False, help="Enable debug mode"
+    )
+    parser.add_argument(
+        "--stream", action="store_true", help="Enable streaming", default=False
+    )
+
+    args = parser.parse_args()
+    
+    asyncio.run(run_db2i_cli(debug_mode=args.debug, model_id=args.model_id, stream=args.stream))

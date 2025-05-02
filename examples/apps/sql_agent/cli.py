@@ -16,7 +16,10 @@ from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat
 from agno.models.base import Model
-from agno.models.ibm import WatsonX
+try:
+    from agno.models.ibm import WatsonX
+except ImportError:
+    pass
 
 
 def get_model(provider: str, model_id: str = None) -> Model:
