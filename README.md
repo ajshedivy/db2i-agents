@@ -155,7 +155,7 @@ This simple approach helps you manage database credentials and API keys across m
    # IBM_WATSONX_BASE_URL=
    # IBM_WATSONX_MODEL_ID=
    ```
-   > 💡 **Note**: If you are using OpenAI, Anthropic, watonx, etc, set the API keys in the central config (config/.env.central) to make it easier to test withj multiple models
+   > 💡 **Note**: If you are using OpenAI, Anthropic, watonx, etc, set the API keys in the central config (config/.env.central) to make it easier to test with multiple models
 ### Setup Ollama (recommended)
 
    1. Install [Ollama](https://ollama.com/) on your system. This is a local LLM model provider that allows you to run models like Llama 3.1, Qwen 2.5, etc.
