@@ -46,7 +46,6 @@ uv run get_employee_info_agent.py
 > 💡 **Note**: This example requires your `OPENAI_API_KEY` to be set in the central config. 
 
 
-or
 
 ```bash
 uv run mcp_simple.py
