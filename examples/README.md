@@ -59,13 +59,19 @@ This repository is organized into four main categories:
 
 These work with the IBM SAMPLE database (created with `CALL QSYS.CREATE_SQL_SAMPLE('SAMPLE')`) and demonstrate basic AI agent capabilities in simple, single-file implementations.
 
+![alt text](images/image2.png)
+
 ### IBM i Services Examples
 
 These showcase how AI agents can interact with IBM i Services (SQL interfaces to system information). Examples include PTF (Program Temporary Fix) information retrieval, Integrated File System (IFS) interaction, and Java Virtual Machine (JVM) monitoring.
 
+![alt text](images/image1.png)
+
 ### Performance Monitoring Examples
 
 These examples demonstrate how to use AI agents to monitor, analyze, and visualize system performance metrics. They provide both lightweight dashboards and comprehensive performance analysis with AI-powered recommendations.
+
+![alt text](images/image.png)
 
 ### Complete Applications
 

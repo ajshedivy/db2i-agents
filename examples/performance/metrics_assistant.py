@@ -253,12 +253,12 @@ agent = Agent(
 )
 
 if __name__ == "__main__":
-    # agent.print_response(
-    #     "What's the current system performance status? Are there any bottlenecks?", 
-    #     stream=True
-    # )
-    
     agent.print_response(
-        "What's the current system HTTP Server status? Are there any bottlenecks?", 
+        "What's the current system performance status? Are there any bottlenecks?", 
         stream=True
     )
+    
+    # agent.print_response(
+    #     "What's the current system HTTP Server status? Are there any bottlenecks?", 
+    #     stream=True
+    # )
