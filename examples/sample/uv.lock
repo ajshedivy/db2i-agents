@@ -1659,6 +1659,7 @@ dependencies = [
     { name = "db2i-tools" },
     { name = "mapepire-python" },
     { name = "mcp" },
+    { name = "ollama" },
     { name = "sqlalchemy" },
 ]
 
@@ -1669,6 +1670,7 @@ requires-dist = [
     { name = "db2i-tools", editable = "../../frameworks/agents/langchain/db2i-tools" },
     { name = "mapepire-python", specifier = ">=0.2.0" },
     { name = "mcp", specifier = ">=1.8.1" },
+    { name = "ollama", specifier = ">=0.4.8" },
     { name = "sqlalchemy", specifier = ">=2.0.40" },
 ]
 

@@ -8,6 +8,7 @@ dependencies = [
     "db2i-tools",
     "mapepire-python>=0.2.0",
     "mcp>=1.8.1",
+    "ollama>=0.4.8",
     "sqlalchemy>=2.0.40",
 ]
 
