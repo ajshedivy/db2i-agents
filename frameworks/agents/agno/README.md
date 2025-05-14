@@ -24,7 +24,7 @@ Install the dependencies:
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/ajshedivy/db2i-agents.git
-   cd db2i-agents/examples/agents/agno
+   cd db2i-agents/frameworks/agents/agno
    ```
 2. **Prepare Ollama model:**
     ```bash
@@ -32,9 +32,10 @@ Install the dependencies:
     ```
 3. **Setup environment variables:**
     ```bash
-    cp .env.example .env
+    # Copy the central env file or create a .env file and update it with your database connection details
+    cp ../../../config/.env.central .env
     ```
-    Fill out the `.env` file with your Mapepire credentials:
+    or manually create the `.env` file with your Mapepire credentials:
 
     ```env
     HOST=your_db2i_host
@@ -104,7 +105,7 @@ Agno provides a UI for interacting with your agents, completely open source. Itâ
 
 To run the Agent UI locally, cd to `agent-ui` and start the ui server:
 ```bash
-cd db2i-agents/examples/agents/agno/agent-ui
+cd db2i-agents/frameworks/agents/agno/agent-ui
 npm run dev
 ```
 
@@ -120,7 +121,7 @@ In another terminal, run the db2 playground server:
 
 1. navigate to the `db2i-agents` directory:
    ```bash
-   cd db2i-agents/examples/agents/agno
+   cd db2i-agents/frameworks/agents/agno
    ```
 2. run the server:
    ```bash
@@ -156,7 +157,7 @@ To test Mapepire AI tools, follow the instructions below:
 1. Configure tools and generate MCP server token
 2. Add MCP server token to `.env` file
     ```sh
-    cd db2i-agents/examples/agents/agno
+    cd db2i-agents/frameworks/agents/agno
     cp .env.example .env
     ```
     fill out the `.env` file with your Mapepire credentials:

@@ -64,7 +64,7 @@ The server implements the following database interaction tools:
 
 Create a `.env` file with your DB2 for i connection details:
 ```base
-cd examples/mcp/db2i-mcp-server
+cd frameworks/mcp/db2i-mcp-server
 cp .env.example .env
 ```
 
@@ -106,7 +106,7 @@ SCHEMA=SAMPLE
 Run the client script:
 
 ```bash
-cd examples/mcp/db2i-mcp-server
+cd frameworks/mcp/db2i-mcp-server
 uv run client.py
 ```
 
@@ -287,7 +287,7 @@ To use with [Claude Desktop](https://claude.ai/desktop), add the server configur
       "command": "uv",
       "args": [
         "--directory",
-        "PATH_TO_THIS_REPO/db2i-agents/examples/mcp/db2i-mcp-server",
+        "PATH_TO_THIS_REPO/db2i-agents/frameworks/mcp/db2i-mcp-server",
         "run",
         "db2i-mcp-server"
         "--use-env"
@@ -351,7 +351,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/mcp/db2i-mcp-server run db2i-mcp-server
+npx @modelcontextprotocol/inspector uv --directory /Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/frameworks/mcp/db2i-mcp-server run db2i-mcp-server
 ```
 
 Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.

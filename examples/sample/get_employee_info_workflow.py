@@ -21,11 +21,7 @@ from db2i_tools.tools import QuerySQLDatabaseTool
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
 from langchain_anthropic import ChatAnthropic
-from langgraph.graph import START, StateGraph
-from langchain import hub
-from langgraph.prebuilt import create_react_agent
 
-from db2i_tools.toolkit import Db2iDatabaseToolkit
 
 
 class State(TypedDict):
@@ -46,7 +42,7 @@ def load_connection():
     connection_details = {
         "host": os.getenv("HOST"),
         "user": os.getenv("DB_USER"),
-        "port": os.getenv("PORT", 8075),
+        "port": os.getenv("DB_PORT", 8076),
         "password": os.getenv("PASSWORD"),
         "schema": os.getenv("SCHEMA"),
     }
@@ -80,7 +76,9 @@ def write_query(state, test_tables, llm):
                 Database schema:
                 {test_tables}
                 
-                Generate a clear and efficient SQL query that answers the user's question."""
+                Generate a clear and efficient SQL query that answers the user's question.
+                
+                ONLY generate an SQL statement."""
             ),
             ("human", "{question}"),
         ]
@@ -194,39 +192,6 @@ def run_chain(args, db, llm):
     print("=" * 50)
     print("✅ Process completed successfully")
     
-    
-def run_agent(args, db, llm):
-    print("🔄 Running LangChain agent...")
-    
-    # configure system message
-    print("📝 Configuring system message...")
-    # prompt_template = hub.pull("langchain-ai/sql-agent-system-prompt")
-
-    # assert len(prompt_template.messages) == 1
-    # prompt_template.messages[0].pretty_print()
-    system_message = get_system_message()
-    
-    # get database tool
-    print("🔧 Initializing database toolkit...")
-    toolkit = Db2iDatabaseToolkit(db=db, llm=llm)
-
-    tools = toolkit.get_tools()
-    for tool in tools:
-        print(f"🔧 Tool: {tool.name}")
-    
-    # create agent executor
-    print("🚀 Creating agent executor...")
-    agent_executor = create_react_agent(llm, tools, prompt=system_message + " DO NOT use ; at the end of the query.")
-    
-    # run agent
-    print("🔄 Running agent...")
-    for step in agent_executor.stream(
-        {"messages": [{"role": "user", "content": args.question}]},
-        stream_mode="values",
-    ):
-        step["messages"][-1].pretty_print()
-    
-    print("✅ LangChain agent completed successfully")
 
 
 def main():
@@ -235,8 +200,7 @@ def main():
     
     parser = argparse.ArgumentParser(description="Db2i Agent with LangChain")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--chain", action="store_true", help="Run the LangChain workflow")
-    group.add_argument("--agent", action="store_true", help="Run the LangChain agent")
+    group.add_argument("--chain", action="store_true", default=True, help="Run the LangChain workflow")
     parser.add_argument("--question", type=str, required=True, help="The question to ask the agent")
     parser.add_argument("--model", type=str, default="llama3.1", help="The Ollama model to use (default: llama3.1)")
     args = parser.parse_args()
@@ -255,7 +219,7 @@ def main():
 
     # Initialize database
     print("🗄️  Initializing database connection...")
-    db = Db2iDatabase(schema=schema, server_config=config, ignore_tables=['EMPLOYEES'])
+    db = Db2iDatabase(schema=schema, server_config=config)
     print("✅ Database connection initialized")
     
     # Get LLM
@@ -263,8 +227,6 @@ def main():
     
     if args.chain:
         run_chain(args, db, llm)
-    elif args.agent:
-        run_agent(args, db, llm)
     else:
         print("Invalid arguments. Please specify --chain or --agent")
 
