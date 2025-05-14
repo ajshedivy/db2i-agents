@@ -41,6 +41,8 @@ This repository is organized into four main categories:
 
 ### Quick Start
 
+> 💡 **Note**: Make sure to setup your central `.env` file [here](../README.md#configure-mapepire-and-api-keys) first
+
 1. First, run the setup script to pull the environment file into the examples directory:
    ```bash
    cd examples/ # Navigate to the examples directory
