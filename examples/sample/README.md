@@ -38,7 +38,6 @@ This directory contains simple, single-file examples that demonstrate AI agents 
    OPENAI_API_KEY=your_openai_api_key
    ```
    this will overwrite the `.env` file created in the parent directory.
-   ```
 
 ### Running an Example
 
