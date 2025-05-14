@@ -31,7 +31,7 @@ This repository helps you explore and implement AI agents that work with Db2 for
 
 ## 💡 Agentic Patterns for Db2 for i
 
-![alt text](image-1.png)
+![alt text](docs/image-1.png)
 
 ### 🧠 What is Agentic AI?
 
