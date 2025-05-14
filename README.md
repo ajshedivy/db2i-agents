@@ -73,42 +73,42 @@ Each demo has its own README with specific setup instructions. Python examples u
    ```
 3. navtivate to the example you want to run:
    ```bash
-   cd examples/agents/langchain
+   cd frameworks/agents/langchain
    ```
 4. Follow the setup instructions in the README for that example.
 
 
 ## 🔥 Quickstart
 
-To get started with the the Db2 for i Agent examples, I recommend starting with the [LangChain](examples/agents/langchain/) framework. Which offers a complete implementation and a good starting point for understanding how to build AI agents that interact with Db2 for i databases.
+To get started with the the Db2 for i Agent examples, I recommend starting with the [LangChain](frameworks/agents/langchain/) framework. Which offers a complete implementation and a good starting point for understanding how to build AI agents that interact with Db2 for i databases.
 
 ```bash
-cd examples/agents/langchain
+cd frameworks/agents/langchain
 uv run main.py --chain --question "how many employees are there?"
 ```
-More on the LangChain framework can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+More on the LangChain framework can be found in the [LangChain README](frameworks/agents/langchain/README.md#-running-the-example).
 
 ## 📊 Agent Framework Comparison
 
 | Framework | Languages | Implementation Status | Db2i Access Method | Supports MCP | Description |
 |:----------|:----------|:----------------------|:------------------|:-------------|:--------------|
-| [🔗 LangChain](examples/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Popular framework for developing applications powered by LLMs  |
-| [🏗️ MCP](examples/mcp/) | Python ✅<br>TypeScript ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | An open protocol that standardizes how applications provide context to LLMs. |
-| [🧩 Agno](examples/agents/agno/) | Python ✅ | Complete ✅  | Mapepire 🔌 | Yes ✅ | A lightweight library for building Agents with memory, knowledge, tools and reasoning. |
-| [🐝 BeeAI](examples/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | An open-source ecosystem that empowers developers to discover, run, and compose AI agents from any framework. |
-| [👥 CrewAI](examples/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | Fast and flexible Python Multi-Agent automation framework |
+| [🔗 LangChain](frameworks/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Popular framework for developing applications powered by LLMs  |
+| [🏗️ MCP](frameworks/mcp/) | Python ✅<br>TypeScript ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | An open protocol that standardizes how applications provide context to LLMs. |
+| [🧩 Agno](frameworks/agents/agno/) | Python ✅ | Complete ✅  | Mapepire 🔌 | Yes ✅ | A lightweight library for building Agents with memory, knowledge, tools and reasoning. |
+| [🐝 BeeAI](frameworks/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | An open-source ecosystem that empowers developers to discover, run, and compose AI agents from any framework. |
+| [👥 CrewAI](frameworks/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | Fast and flexible Python Multi-Agent automation framework |
 
 ## 🌟 Highlighted Demos
 
 ### LangChain
 https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
 
-More on LangChain can be found in the [LangChain README](examples/agents/langchain/README.md#-running-the-example).
+More on LangChain can be found in the [LangChain README](frameworks/agents/langchain/README.md#-running-the-example).
 
 ### MCP Server in Continue:
 https://github.com/user-attachments/assets/f72f2982-0b0c-4da0-b488-59ae7f311fde
 
-More on the MCP server can be found in the [MCP README](examples/mcp/README.md#-getting-started).
+More on the MCP server can be found in the [MCP README](frameworks/mcp/README.md#-getting-started).
 
 ## 🛠️ Mapepire Setup
 

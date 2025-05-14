@@ -80,7 +80,9 @@ def write_query(state, test_tables, llm):
                 Database schema:
                 {test_tables}
                 
-                Generate a clear and efficient SQL query that answers the user's question."""
+                Generate a clear and efficient SQL query that answers the user's question.
+                
+                ONLY generate an SQL statement."""
             ),
             ("human", "{question}"),
         ]

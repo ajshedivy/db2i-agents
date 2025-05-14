@@ -15,7 +15,7 @@ from agno.utils.log import log_debug
 from utils.cli import get_model
 from agno.tools.reasoning import ReasoningTools
 
-server_path = "/Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/mcp/db2i-mcp-server"
+server_path = "/Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/frameworks/mcp/db2i-mcp-server"
 agent_storage: str = "tmp/agents.db"
 
 # Use environment variables instead of module globals for configuration
