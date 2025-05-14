@@ -21,19 +21,24 @@ This directory contains simple, single-file examples that demonstrate AI agents 
 
 ### Environment Setup
 
-1. Navigate to the sample directory:
+1. **Important**: First, run the environment setup script from the parent directory:
    ```bash
-   cd examples/sample
+   cd ../examples/ # Navigate to the examples directory 
+   ./setup_env.sh
+   cd sample
    ```
+   This will create a `.env` file template in the examples directory.
 
-2. Copy the central env file or create a .env file and update it with your database connection details:
-   ```bash
-   ../setup_env.sh
+2. (Optional) create the `.env` file in the `sample` directory with your specific credentials:
    ```
-   or
-
-   Create a .env with your favorite text editor in the `examples/sample` directory
-
+   HOST=your_ibmi_host
+   DB_USER=your_username
+   PASSWORD=your_password
+   DB_PORT=your_db_port
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+   this will overwrite the `.env` file created in the parent directory.
+   ```
 
 ### Running an Example
 

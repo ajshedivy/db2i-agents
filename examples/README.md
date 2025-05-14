@@ -33,11 +33,15 @@ This repository is organized into three main categories:
 
 ### Quick Start
 
-1. Choose an example that fits your needs
-2. Navigate to its directory
-3. Set up your environment variables (copy `.env.sample` to `.env` and edit)
-4. Install dependencies: `uv sync`
-5. Run the example: `uv run <script_name>.py`
+1. First, run the setup script to pull the environment file into the examples directory:
+   ```bash
+   cd examples/ # Navigate to the examples directory
+   ./setup_env.sh
+   ```
+
+2. Choose an example directory
+3. Navigate to its directory
+4. Run the example: `uv run <script_name>.py`
 
 ## 📚 Example Categories Explained
 
