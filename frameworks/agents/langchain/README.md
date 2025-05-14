@@ -57,21 +57,13 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/ajshedivy/db2i-agents.git
-   cd db2i-agents/examples/agents/langchain
+   cd db2i-agents/frameworks/agents/langchain
    ```
 
-2. **Create and activate a virtual environment using uv:**
+2. **(Optional)Create and activate a virtual environment using uv:**
    ```bash
    uv venv
-   ```
-
-3. **Install dependencies:**
-   ```bash
    uv sync
-   ```
-
-4. **(Optional) Activate the virtual environment:**
-   ```bash
    source .venv/bin/activate  # On Linux/macOS
    # OR
    .venv\Scripts\activate  # On Windows
@@ -120,7 +112,7 @@ options:
 ```
 
 ```bash
-cd examples/agents/langchain
+cd frameworks/agents/langchain
 uv run main.py --chain --question "how many employees are there?"
 ```
 
@@ -217,7 +209,7 @@ uv run main.py --agent --question "how many employees are there?"
    🔄 Running LangChain agent...
    📝 Configuring system message...
    🔧 Initializing database toolkit...
-   /Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/examples/agents/langchain/db2i_tools/tools.py:142: LangChainDeprecationWarning: The class `LLMChain` was deprecated in LangChain 0.1.17 and will be removed in 1.0. Use :meth:`~RunnableSequence, e.g., `prompt | llm`` instead.
+   /Users/adamshedivy/Documents/IBM/sandbox/oss/ai/db2i-ai/db2i-agents/frameworks/agents/langchain/db2i_tools/tools.py:142: LangChainDeprecationWarning: The class `LLMChain` was deprecated in LangChain 0.1.17 and will be removed in 1.0. Use :meth:`~RunnableSequence, e.g., `prompt | llm`` instead.
    values["llm_chain"] = LLMChain(
    🔧 Tool: sql_db_query
    🔧 Tool: sql_db_schema
@@ -339,9 +331,9 @@ uv run main.py --agent --question "how many employees are there?"
 
 You can deploy a local LangGraph app server to run a ReAct Db2i Agent. 
 
-1. nativate to the `examples/agents/langchain/app` directory:
+1. nativate to the `frameworks/agents/langchain/app` directory:
    ```bash
-   cd examples/agents/langchain/app
+   cd frameworks/agents/langchain/app
    ```
 2. Copy the `.env.example` file to `.env` and fill in the required environment variables. Make sure to copy over your Mapepire credientials to the new `.env` file in the `app` directory.
 

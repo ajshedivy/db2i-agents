@@ -218,6 +218,43 @@ wheels = [
 ]
 
 [[package]]
+name = "db2i-tools"
+version = "0.1.0"
+source = { editable = "db2i-tools" }
+dependencies = [
+    { name = "dotenv" },
+    { name = "ipykernel" },
+    { name = "langchain" },
+    { name = "langchain-anthropic" },
+    { name = "langchain-core" },
+    { name = "langchain-ollama" },
+    { name = "langchainhub" },
+    { name = "langgraph" },
+    { name = "langgraph-cli", extra = ["inmem"] },
+    { name = "langgraph-sdk" },
+    { name = "mapepire-python" },
+    { name = "pydantic" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "ipykernel", specifier = ">=6.29.5" },
+    { name = "langchain", specifier = ">=0.3.20" },
+    { name = "langchain-anthropic", specifier = ">=0.3.9" },
+    { name = "langchain-core", specifier = ">=0.3.43" },
+    { name = "langchain-ollama", specifier = ">=0.2.3" },
+    { name = "langchainhub", specifier = ">=0.1.21" },
+    { name = "langgraph", specifier = ">=0.3.5" },
+    { name = "langgraph-cli", extras = ["inmem"], specifier = ">=0.1.76" },
+    { name = "langgraph-sdk", specifier = ">=0.1.55" },
+    { name = "mapepire-python", specifier = ">=0.2.0" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "pytest", specifier = ">=8.3.5" },
+]
+
+[[package]]
 name = "debugpy"
 version = "1.8.13"
 source = { registry = "https://pypi.org/simple" }
@@ -585,6 +622,7 @@ name = "langchain-db2i"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "db2i-tools" },
     { name = "dotenv" },
     { name = "ipykernel" },
     { name = "langchain" },
@@ -602,6 +640,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "db2i-tools", editable = "db2i-tools" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "langchain", specifier = ">=0.3.20" },
