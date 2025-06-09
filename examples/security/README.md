@@ -49,7 +49,7 @@ uv run security_assistant.py
 You can customize the CLI with these options:
 
 ```bash
-uv run security_assistant.py --model-id openai:gpt-4o --stream --debug
+uv run security_assistant.py --model-id ollama:qwen2.5 --stream --debug
 ```
 
 > 💡 **Note**: By default, this example uses OpenAI's GPT-4.1 model. You can specify a different model with `--model-id`.
@@ -84,6 +84,11 @@ Follow these steps to run the playground:
    ```bash
    uv run playground.py
    ```
+
+
+
+https://github.com/user-attachments/assets/9e63dfea-0f17-4742-8038-9fbe5692b7fb
+
 
 
 
