@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
+from agno.models.ollama import Ollama
 from agno.tools import tool
 from dotenv import load_dotenv
 from mapepire_python import connect
