@@ -59,27 +59,16 @@ uv run security_assistant.py --model-id openai:gpt-4o --stream --debug
 Once the CLI is running, you can use these commands:
 
 ```
-check exposed profiles   - Check for user profiles with insufficient security
-list vulnerabilities     - List all security vulnerabilities
-fix profiles             - Generate commands to fix security issues
-analyze security         - Get comprehensive security analysis
-exit                     - Exit the application
+What tools do you have access to.  - list the tools the agent can use
+check exposed profiles             - Check for user profiles with insufficient security
+how can I fix the profiles         - Generate commands to fix security issues
+fix them for me                    - Allow the agent to fix the vulnerabilities
+exit                               - Exit the application
 ```
 
-## 🔍 Example Details
 
-### 🛡️ Security Assistant
+https://github.com/user-attachments/assets/e0a69c85-3f5e-430e-ab8c-cbd3faf3ab24
 
-This example demonstrates:
-- Creating an interactive CLI using the Agno framework
-- Connecting to IBM i using Mapepire
-- Using SQL services to analyze vulnerabilities on the system
-- Providing recommendations and fixes for security issues
-
-Key security checks include:
-- User profiles with insufficient public authority
-- Generating corrective SQL statements
-- Applying security fixes automatically
 
 ### 📝 Security Agent Playground
 
