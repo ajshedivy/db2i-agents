@@ -67,7 +67,11 @@ exit                               - Exit the application
 ```
 
 
-https://github.com/user-attachments/assets/e0a69c85-3f5e-430e-ab8c-cbd3faf3ab24
+
+
+https://github.com/user-attachments/assets/a0b1e772-78d7-4b7b-8156-a8fb7fad939b
+
+
 
 
 ### 📝 Security Agent Playground
@@ -87,7 +91,10 @@ Follow these steps to run the playground:
 
 
 
-https://github.com/user-attachments/assets/9e63dfea-0f17-4742-8038-9fbe5692b7fb
+
+https://github.com/user-attachments/assets/8e7d932b-f47d-4446-95c7-655693b12005
+
+
 
 
 
