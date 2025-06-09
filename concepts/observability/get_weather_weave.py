@@ -1,14 +1,11 @@
-import random
-import os
+import weave
+import requests
 from agno.agent import Agent
-from agno.models.openai import OpenAIChat
 from agno.models.ollama import Ollama
 from agno.tools import tool
-from dotenv import load_dotenv
-import requests
 
-load_dotenv()
-
+# Initialize Weave with your project name
+weave.init("db2i-agents")
 
 @tool(show_result=True, stop_after_tool_call=True)
 def get_weather(city: str) -> str:
@@ -26,10 +23,13 @@ def get_weather(city: str) -> str:
     result = f"{temp_f} °F, {desc} in {city.capitalize()}"
     return result
 
+# Create and configure the agent
+agent = Agent(model=Ollama(id="qwen2.5"),tools=[get_weather], markdown=True, debug_mode=True)
 
-agent = Agent(
-    model=Ollama(id="devstral"), #OpenAIChat(id="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY")),
-    tools=[get_weather],
-    markdown=True,
-)
-agent.print_response("What is the weather in Rochester MN?", stream=True)
+# Define a function to run the agent, decorated with weave.op()
+@weave.op()
+def run(content: str):
+    return agent.run(content)
+
+# Use the function to log a model call
+run("what is the weather like in Split, Croatia?")

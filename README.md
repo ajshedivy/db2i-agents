@@ -69,10 +69,15 @@ This repository is organized into three main sections:
   - [`concepts/memory/`](concepts/memory/): How agents remember past interactions
   - [`concepts/reasoning/`](concepts/reasoning/): How agents think through problems
   - [`concepts/tools/`](concepts/tools/): What agents can do with your systems
+  - [`concepts/agents/`](concepts/agents/): Examples of agent implementations
+  - [`concepts/observability/`](concepts/observability/): Monitoring and logging agent actions
 
 - **☕ [`examples/`](examples/)**: Simple demonstrations and complete applications
   - [`examples/sample/`](examples/sample/): Quick single-file examples to get started
   - [`examples/ibmi-services/`](examples/ibmi-services/): Working with IBM i services
+  - [`examples/performance/`](examples/performance/): Performance monitoring tools
+  - [`examples/security/`](examples/security/): Security assessment and remediation
+  - [`examples/sql_services/`](examples/sql_services/): SQL services exploration
   - [`examples/apps/`](examples/apps/): Full applications like SQL agents with knowledge bases
 
 - **📄 [`docs/`](docs/)**: Additional documentation and guides

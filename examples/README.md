@@ -4,17 +4,20 @@ This directory contains practical, ready-to-run examples that demonstrate how to
 
 ## 🧪 Example Categories
 
-This repository is organized into four main categories:
+This repository is organized into several main categories:
 
 1. **`sample/`**: Quick examples using the IBM SAMPLE database
 2. **`ibmi-services/`**: Examples that interact with IBM i Services
 3. **`performance/`**: Tools for monitoring and analyzing system performance
-4. **`apps/`**: Complete applications with multiple components
+4. **`security/`**: Security assessment and remediation tools
+5. **`sql_services/`**: SQL services exploration and interaction
+6. **`apps/`**: Complete applications with multiple components
 
 ## 📋 Current Examples
 
 ### Sample Database Examples
-- 👥 [Employee Information Retrieval](sample/get_employee_info.py) - Simple agent that queries employee data from the SAMPLE database 
+- 👥 [Employee Information Retrieval](sample/get_employee_info_agent.py) - Simple agent that queries employee data from the SAMPLE database 
+- 🔄 [Employee Info Workflow](sample/get_employee_info_workflow.py) - LangChain workflow for employee data analysis
 - 🔌 [Simple MCP Database Client](sample/mcp_simple.py) - Basic MCP client for database queries
 
 ### IBM i Services Examples
@@ -25,8 +28,16 @@ This repository is organized into four main categories:
 - ☕ [JVM Performance Monitor](ibmi-services/java/jvm_assistant.py) - Monitor and optimize Java Virtual Machines on IBM i
 
 ### Performance Monitoring Examples
-- 📊 [System Metrics Dashboard](performance/metrics_golf.py) - Lightweight system metrics dashboard for quick performance monitoring
-- 📈 [Performance Metrics Assistant](performance/metrics_assistant.py) - AI-powered performance analysis and recommendations
+- 📈 [Metrics Assistant CLI](performance/metrics_assistant_cli.py) - Interactive CLI for monitoring system performance metrics
+- 🔍 [SQL Examples RAG](performance/sql_examples_rag.py) - Retrieval-augmented generation for SQL performance examples
+
+### Security Examples
+- 🛡️ [Security Assistant](security/security_assistant.py) - Interactive CLI for analyzing security vulnerabilities
+- 📝 [Security Agent Playground](security/playground.py) - Testing environment for security analysis capabilities
+
+### SQL Services Examples
+- 🗃️ [SQL Services Agent](sql_services/sql_services_agent.py) - Interactive CLI for exploring IBM i SQL services
+- 📓 [SQL Services Info Notebook](sql_services/sql_services_info.ipynb) - Jupyter notebook demonstrating SQL services queries
 
 ### Complete Applications
 - 🧠 [SQL Agent with Knowledge Base](apps/sql_agent_with_knowledge/) - Interactive SQL assistant with built-in database knowledge
@@ -69,9 +80,15 @@ These showcase how AI agents can interact with IBM i Services (SQL interfaces to
 
 ### Performance Monitoring Examples
 
-These examples demonstrate how to use AI agents to monitor, analyze, and visualize system performance metrics. They provide both lightweight dashboards and comprehensive performance analysis with AI-powered recommendations.
+These examples demonstrate how to use AI agents to monitor and analyze system performance using SQL services. The interactive CLI provides real-time metrics and insights into system resources, memory usage, and job performance.
 
-![alt text](images/image.png)
+### Security Examples
+
+These tools help analyze and remediate security vulnerabilities on IBM i systems. The security assistant identifies issues like exposed user profiles and provides automatic fix generation with proper authority settings.
+
+### SQL Services Examples
+
+These examples showcase how to interact with IBM i SQL services using AI agents. They provide tools for exploring available services, executing queries, and getting intelligent interpretations of the results.
 
 ### Complete Applications
 
@@ -87,6 +104,8 @@ examples/
 │   ├── ifs/                 # Integrated File System tools
 │   └── java/                # Java and JVM monitoring tools
 ├── performance/             # Performance monitoring examples
+├── security/                # Security assessment tools
+├── sql_services/            # SQL services examples
 └── apps/                    # Complete application examples
     └── sql_agent_with_knowledge/ # SQL agent with knowledge base
 ```
@@ -95,8 +114,9 @@ examples/
 
 If you're new to AI agents with Db2 for i, we recommend this learning path:
 
-1. Start with 👥 [Employee Information Retrieval](sample/get_employee_info.py) to understand basic agent concepts
+1. Start with 👥 [Employee Information Retrieval](sample/get_employee_info_agent.py) to understand basic agent concepts
 2. Try the 🔍 [Basic PTF Information Retrieval](ibmi-services/ptf/get_ptf_info.py) to see how agents can work with system information
-3. Explore the 📂 [IFS File Reader](ibmi-services/ifs/read_stream_file.py) and 💾 [IFS Storage Analyzer](ibmi-services/ifs/storage_assistant.py) to learn how agents can work with the file system
-4. Check out the 📊 [System Metrics Dashboard](performance/metrics_golf.py) to see how agents can monitor system performance
-5. Explore the 🧠 [SQL Agent with Knowledge Base](apps/sql_agent_with_knowledge/) to learn about more complex implementations
+3. Explore the 📂 [IFS File Reader](ibmi-services/ifs/read_stream_file.py) to learn how agents can work with the file system
+4. Check out the 📈 [Metrics Assistant CLI](performance/metrics_assistant_cli.py) to see how agents can monitor system performance
+5. Try the 🛡️ [Security Assistant](security/security_assistant.py) to learn about security assessment
+6. Explore the 🧠 [SQL Agent with Knowledge Base](apps/sql_agent_with_knowledge/) to learn about more complex implementations
