@@ -49,7 +49,7 @@ uv run security_assistant.py
 You can customize the CLI with these options:
 
 ```bash
-uv run security_assistant.py --model-id openai:gpt-4o --stream --debug
+uv run security_assistant.py --model-id ollama:qwen2.5 --stream --debug
 ```
 
 > 💡 **Note**: By default, this example uses OpenAI's GPT-4.1 model. You can specify a different model with `--model-id`.
@@ -59,27 +59,20 @@ uv run security_assistant.py --model-id openai:gpt-4o --stream --debug
 Once the CLI is running, you can use these commands:
 
 ```
-check exposed profiles   - Check for user profiles with insufficient security
-list vulnerabilities     - List all security vulnerabilities
-fix profiles             - Generate commands to fix security issues
-analyze security         - Get comprehensive security analysis
-exit                     - Exit the application
+What tools do you have access to.  - list the tools the agent can use
+check exposed profiles             - Check for user profiles with insufficient security
+how can I fix the profiles         - Generate commands to fix security issues
+fix them for me                    - Allow the agent to fix the vulnerabilities
+exit                               - Exit the application
 ```
 
-## 🔍 Example Details
 
-### 🛡️ Security Assistant
 
-This example demonstrates:
-- Creating an interactive CLI using the Agno framework
-- Connecting to IBM i using Mapepire
-- Using SQL services to analyze vulnerabilities on the system
-- Providing recommendations and fixes for security issues
 
-Key security checks include:
-- User profiles with insufficient public authority
-- Generating corrective SQL statements
-- Applying security fixes automatically
+https://github.com/user-attachments/assets/a0b1e772-78d7-4b7b-8156-a8fb7fad939b
+
+
+
 
 ### 📝 Security Agent Playground
 
@@ -95,6 +88,14 @@ Follow these steps to run the playground:
    ```bash
    uv run playground.py
    ```
+
+
+
+
+https://github.com/user-attachments/assets/8e7d932b-f47d-4446-95c7-655693b12005
+
+
+
 
 
 
