@@ -73,12 +73,6 @@ This repository is organized into three main sections:
   - [`concepts/observability/`](concepts/observability/): Monitoring and logging agent actions
 
 - **☕ [`examples/`](examples/)**: Simple demonstrations and complete applications
-  - [`examples/sample/`](examples/sample/): Quick single-file examples to get started
-  - [`examples/ibmi-services/`](examples/ibmi-services/): Working with IBM i services
-  - [`examples/performance/`](examples/performance/): Performance monitoring tools
-  - [`examples/security/`](examples/security/): Security assessment and remediation
-  - [`examples/sql_services/`](examples/sql_services/): SQL services exploration
-  - [`examples/apps/`](examples/apps/): Full applications like SQL agents with knowledge bases
 
 - **📄 [`docs/`](docs/)**: Additional documentation and guides
 
@@ -189,8 +183,9 @@ Pull Ollama model:
 
    Run the example:
    ```bash
-   cd examples/sample
-   ../setup_env.sh    # copy central env file
+   cd examples/
+   ./setup_env.sh    # copy central env file
+   cd agents/sample/
    uv run get_employee_info_workflow.py --chain --question "how many employees are there?"
    ```
 
