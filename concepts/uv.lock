@@ -218,6 +218,7 @@ dependencies = [
     { name = "ollama" },
     { name = "openai" },
     { name = "prompt-toolkit" },
+    { name = "rich" },
     { name = "sqlalchemy" },
     { name = "weave" },
 ]
@@ -232,6 +233,7 @@ requires-dist = [
     { name = "ollama", specifier = ">=0.4.8" },
     { name = "openai", specifier = ">=1.78.1" },
     { name = "prompt-toolkit", specifier = ">=3.0.51" },
+    { name = "rich", specifier = ">=14.0.0" },
     { name = "sqlalchemy", specifier = ">=2.0.40" },
     { name = "weave", specifier = ">=0.51.47" },
 ]

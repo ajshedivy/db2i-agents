@@ -1,0 +1,24 @@
+[project]
+name = "examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "agno>=1.6.0",
+    "anthropic>=0.54.0",
+    "db2-shared-utils",
+    "db2i-tools",
+    "fastapi[standard]>=0.115.12",
+    "ipykernel>=6.29.5",
+    "mapepire-python>=0.2.0",
+    "mcp>=1.9.3",
+    "ollama>=0.5.1",
+    "openai>=1.86.0",
+    "rich>=14.0.0",
+    "weave>=0.51.52",
+]
+
+[tool.uv.sources]
+db2-shared-utils = { path = "../shared", editable = true }
+db2i-tools = { path = "../frameworks/agents/langchain/db2i-tools" }
