@@ -4,7 +4,7 @@ requires-python = ">=3.12"
 
 [[package]]
 name = "agno"
-version = "1.5.0"
+version = "1.6.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "docstring-parser" },
@@ -20,9 +20,9 @@ dependencies = [
     { name = "typer" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b7/1e/f09bbbd9845e831e86e7acb43709b2e087c79daa7b09f2e9beb957213222/agno-1.5.0.tar.gz", hash = "sha256:5c866e0b14eb476b1852d01cdb28efa6ff72c2cc36efbcf963ad44e16a111ca8", size = 551654 }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/8b/20a6d88f0740d7a17c45016048cb4d278eb5c78a2f75c443a566159420fd/agno-1.6.2.tar.gz", hash = "sha256:f78492021e84ef3ec730d502a89963d11f42cbefd872dfe1f353975489dd9cc9", size = 635136 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/87/8c/7861edb89071184357373c5af1bde129177b2629aa1866c04653737bd9ef/agno-1.5.0-py3-none-any.whl", hash = "sha256:d8be7e645888c266c199bab98e9140bf345b9a57a82081dc18f3b3478a594b3d", size = 726667 },
+    { url = "https://files.pythonhosted.org/packages/72/b9/45456c06f034553327ddcd2e8db6fd224144d0fd2e62fd1e7b07acc18353/agno-1.6.2-py3-none-any.whl", hash = "sha256:7f831893f7b70a931438390650843096da92f42961b5ce63660b35a79a94d0a7", size = 851217 },
 ]
 
 [[package]]
@@ -129,7 +129,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agno", specifier = ">=1.5.0" },
+    { name = "agno", specifier = ">=1.6.0" },
     { name = "ibm-watsonx-ai", specifier = ">=1.3.13" },
     { name = "ollama", specifier = ">=0.4.8" },
     { name = "openai", specifier = ">=1.78.1" },

@@ -92,16 +92,16 @@ Full applications that demonstrate more complex AI agent scenarios, including th
 
 ```
 examples/
-├── agents/                  # AI agent examples organized by category
-│   ├── sample/             # Examples using the SAMPLE database
-│   ├── performance/        # Performance monitoring examples
-│   ├── security/           # Security assessment tools
-│   └── services/           # Examples using IBM i services
-│       ├── ifs/            # Integrated File System tools
-│       ├── java/           # Java and JVM monitoring tools
-│       └── ptf/            # PTF information services
-└── apps/                   # Complete application examples
-    └── sql_agent_with_knowledge/ # SQL agent with knowledge base
+├── agents/                     # AI agent examples organized by category
+│   ├── sample/                 # Examples using the SAMPLE database
+│   ├── performance/            # Performance monitoring examples
+│   ├── security/               # Security assessment tools
+│   └── services/               # Examples using IBM i services
+│       ├── ifs/                # Integrated File System tools
+│       ├── java/               # Java and JVM monitoring tools
+│       └── ptf/                # PTF information services
+└── apps/                       # Complete application examples
+    └── sql_agent_with_knowledge/   # SQL agent with knowledge base
 ```
 
 ## 📚 Learning Path

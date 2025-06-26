@@ -1,0 +1,46 @@
+{
+  "checks": [
+    {
+      "name": "audit_journal_existence_count",
+      "description": "Count of systems without audit journal",
+      "sql": "select count(*) from qsys2.security_info where audit_journal_exists <> 'YES'",
+      "type": "count"
+    },
+    {
+      "name": "audit_journal_existence_status",
+      "description": "Audit journal existence status check",
+      "sql": "SELECT audit_journal_exists, CASE WHEN audit_journal_exists = 'YES' THEN 'QSYS/QAUDJRN exists' ELSE 'QSYS/QAUDJRN does not exist' END as QAUDJRN_health_check FROM qsys2.security_info",
+      "type": "status"
+    },
+    {
+      "name": "audit_journaling_enabled",
+      "description": "Check if audit journaling is enabled",
+      "sql": "select auditing_control, CASE WHEN (select 1 from qsys2.security_info where auditing_control like '%AUDLVL%') = 1 THEN 'QAUDCTL has audit journing enabled' ELSE 'QAUDCTL does not have audit journing enabled' END as QAUDCTL_health_check from qsys2.security_info",
+      "type": "status"
+    },
+    {
+      "name": "authorization_failure_entries",
+      "description": "Check if IBM i is configured to generate AF entries",
+      "sql": "select count(*) as \"AF_enabled?\" from qsys2.security_info where (auditing_control like '%*AUDLVL%') and ((auditing_level like '%*AUTFAIL%') or (auditing_level like '%*AUDLVL2%' and auditing_level_extension like '%*AUTFAIL%'))",
+      "type": "count"
+    },
+    {
+      "name": "current_audit_journal_receiver",
+      "description": "Get current audit journal receiver",
+      "sql": "with aj(aj_lib, aj_rcv) as (select audit_journal_receiver_library, audit_journal_receiver from qsys2.security_info) select * from aj",
+      "type": "info"
+    },
+    {
+      "name": "earliest_audit_data",
+      "description": "Find earliest available audit data timestamp",
+      "sql": "with aj(aj_lib, aj_rcv) as (select audit_journal_receiver_library, audit_journal_receiver from qsys2.security_info) select timestamp(jj.attach_timestamp, 0) as earliest_online_audit_data from aj, lateral (select * from qsys2.journal_receiver_info where journal_receiver_library = aj_lib and left(journal_receiver_name, 6) = left(aj_rcv, 6) order by attach_timestamp limit 1) jj",
+      "type": "timestamp"
+    },
+    {
+      "name": "security_changes_auditing",
+      "description": "Check if security changes are being audited",
+      "sql": "select case when count(*) = 1 then 'Audit journal includes security changes' else 'Security changes are not being audited, review the audit journal configuration' end as audit_journal_configuration_for_security from qsys2.security_info where (auditing_control like '%*AUDLVL%') and (((auditing_level like '%*SECURITY%') or (auditing_level like '%*SECRUN%'))) or (auditing_level like '%*AUDLVL2%' and ((auditing_level like '%*SECURITY%') or (auditing_level like '%*SECRUN%')))",
+      "type": "status"
+    }
+  ]
+}

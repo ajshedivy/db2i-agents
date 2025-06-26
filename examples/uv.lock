@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "agno"
-version = "1.6.0"
+version = "1.6.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "docstring-parser" },
@@ -24,9 +24,9 @@ dependencies = [
     { name = "typer" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/f7/929efc39cf7970fc5158884dce8e1e3e6f9551f14aeb85016c1882eb7347/agno-1.6.0.tar.gz", hash = "sha256:4b98f012756aca9353747d133f43b6fec715dc26ab84f36f85ebc4cc2abadf68", size = 629988 }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/8b/20a6d88f0740d7a17c45016048cb4d278eb5c78a2f75c443a566159420fd/agno-1.6.2.tar.gz", hash = "sha256:f78492021e84ef3ec730d502a89963d11f42cbefd872dfe1f353975489dd9cc9", size = 635136 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/c7/44659586df1b255189d8a35a0c08479474099f6cc67aa8ffb24ee8dd0d3d/agno-1.6.0-py3-none-any.whl", hash = "sha256:310914c3710bbaa20ce7a72158641a44535c2598d8867d0c688b4e2f4fa2a997", size = 843972 },
+    { url = "https://files.pythonhosted.org/packages/72/b9/45456c06f034553327ddcd2e8db6fd224144d0fd2e62fd1e7b07acc18353/agno-1.6.2-py3-none-any.whl", hash = "sha256:7f831893f7b70a931438390650843096da92f42961b5ce63660b35a79a94d0a7", size = 851217 },
 ]
 
 [[package]]
@@ -331,7 +331,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agno", specifier = ">=1.5.0" },
+    { name = "agno", specifier = ">=1.6.0" },
     { name = "ibm-watsonx-ai", specifier = ">=1.3.13" },
     { name = "ollama", specifier = ">=0.4.8" },
     { name = "openai", specifier = ">=1.78.1" },
@@ -489,7 +489,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agno", specifier = ">=1.6.0" },
+    { name = "agno", specifier = "==1.6.2" },
     { name = "anthropic", specifier = ">=0.54.0" },
     { name = "db2-shared-utils", editable = "../shared" },
     { name = "db2i-tools", virtual = "../frameworks/agents/langchain/db2i-tools" },

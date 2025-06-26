@@ -113,4 +113,7 @@ ptf_agent = Agent(
     markdown=True,
     debug_mode=False,
 )
-# ptf_agent.print_response("Are there any PTF group updates available?", stream=True)
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(ptf_agent.aprint_response("Are there any PTF group updates available?", stream=True))
