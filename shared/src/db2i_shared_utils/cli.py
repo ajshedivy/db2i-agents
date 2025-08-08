@@ -3,7 +3,7 @@ import os
 from typing import Optional
 import argparse
 
-from dotenv import dotenv_values, load_dotenv
+from dotenv import dotenv_values, load_dotenv, find_dotenv
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -21,19 +21,13 @@ from agno.models.ibm import WatsonX
 
 
 def get_model(model_id: str = None) -> Model:
-    env_paths = [
-        ".env",  # Current directory
-        "../.env",  # Parent directory
-        "../../.env",  # Two levels up
-        "../../../config/.env.central",  # Central config
-    ]
-    
+    # Use find_dotenv() to automatically locate the nearest .env file
+    dotenv_path = find_dotenv()
     env = {}
-    for path in env_paths:
-        if os.path.exists(path):
-            load_dotenv(path)
-            env.update(dotenv_values(path))
-            break
+    
+    if dotenv_path:
+        load_dotenv(dotenv_path)
+        env.update(dotenv_values(dotenv_path))
     
     # Also load from system environment as fallback
     env.update(os.environ)

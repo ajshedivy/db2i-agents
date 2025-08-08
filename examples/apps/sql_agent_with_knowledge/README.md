@@ -26,10 +26,13 @@ Install the dependencies:
 - Pull Ollama models:
     ```bash
     ollama pull qwen3:8b
+    # OR try the new recommended model for better performance:
+    ollama pull gpt-oss:20b
 
     # model used for embeddings
     ollama pull openhermes
     ```
+    > 💡 **Recommended**: Try `gpt-oss:20b` for excellent general performance!
 
 The `uv run` command automatically creates a virtual environment and manages dependencies.
 
@@ -87,9 +90,14 @@ You can run the SQL Agent directly using the agent.py script. The default model 
 ```shell
 # pull the ollama model
 ollama pull qwen2.5
+# OR pull the recommended model:
+ollama pull gpt-oss:20b
 
 # Basic usage with default model (Ollama qwen2.5)
 uv run agent.py
+
+# With recommended gpt-oss model
+uv run agent.py --model-id ollama:gpt-oss:20b
 
 # With another model
 uv run agent.py --model-id gpt-4o

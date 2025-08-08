@@ -27,7 +27,17 @@ Here is a sneak peek of the Db2i Agent in action 👀:
 https://github.com/user-attachments/assets/54c7335e-da98-4c92-ba8d-66836c39f79d
 
 
+## 🚨 Before You Start
 
+**Have you completed the main setup?** This framework requires the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
 
 ## 🔍 Overview
 
@@ -45,22 +55,24 @@ The codebase contains several tools that can be used with Langchain's agent fram
 - Python 3.12 or later
 - [uv](https://github.com/astral-sh/uv) package manager
 - Access to a Db2i database instance
+- **✅ Completed main repository setup** (see above)
 
-### Setting Up Your Environment
+### Framework-Specific Setup
 
-Install uv if you haven't already:
+Since you've completed the main setup, you can now run LangChain agents directly:
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-1. **Clone the repository:**
+1. **Navigate to the LangChain directory:**
    ```bash
-   git clone https://github.com/ajshedivy/db2i-agents.git
-   cd db2i-agents/frameworks/agents/langchain
+   cd frameworks/agents/langchain
    ```
 
-2. **(Optional)Create and activate a virtual environment using uv:**
+2. **Verify your setup:**
+   ```bash
+   # Your root .env file should already contain your database credentials
+   # The framework will automatically find and use it
+   ```
+
+3. **(Optional) Create a virtual environment:**
    ```bash
    uv venv
    uv sync
@@ -68,20 +80,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
    # OR
    .venv\Scripts\activate  # On Windows
    ```
-
-5. **Set up environment variables:**
-   
-   Create a `.env` file in the project root with the following content:
-
-   ```
-   HOST=your_db2i_host
-   DB_USER=your_username
-   PORT=8076               # Default port for Mapepire
-   PASSWORD=your_password
-   SCHEMA=SAMPLE           # Or your preferred schema
-   ```
-
-   These environment variables are required for connecting to your Db2i database.
 
 
 ## 🚀 Running the CLI Example
@@ -322,7 +320,11 @@ uv run main.py --agent --question "how many employees are there?"
 > I am using Anthropic, but you can also use Ollama by passing `--model` flag:
 >  ```bash
 >  uv run main.py --chain --question "how many employees are there?" --model llama3.1:latest
+>  # OR try the new recommended model for better performance:
+>  uv run main.py --chain --question "how many employees are there?" --model gpt-oss:20b
 >  ```
+>  💡 **Recommended**: Try `gpt-oss:20b` for excellent general performance with Ollama!
+>  
 >  This example also assumes that you have the `SAMPLE` database set up on your Db2i instance. More info: [SAMPLE database setup](../../../README.md#-sample-database)
 >
 
@@ -331,11 +333,12 @@ uv run main.py --agent --question "how many employees are there?"
 
 You can deploy a local LangGraph app server to run a ReAct Db2i Agent. 
 
-1. nativate to the `frameworks/agents/langchain/app` directory:
+1. Navigate to the `frameworks/agents/langchain/app` directory:
    ```bash
    cd frameworks/agents/langchain/app
    ```
-2. Copy the `.env.example` file to `.env` and fill in the required environment variables. Make sure to copy over your Mapepire credientials to the new `.env` file in the `app` directory.
+
+2. The app will automatically use your root `.env` file for database credentials. 
 
 3. Run the server:
    ```bash

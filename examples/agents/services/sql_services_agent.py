@@ -8,7 +8,7 @@ from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.tools import tool
 from agno.tools.mcp import MCPTools
 from agno.tools.reasoning import ReasoningTools
-from dotenv import dotenv_values, load_dotenv
+from dotenv import dotenv_values, load_dotenv, find_dotenv
 from mapepire_python import connect
 from mcp import StdioServerParameters
 from pep249 import QueryParameters, DataError
@@ -18,7 +18,7 @@ from db2i_shared_utils.cli import get_model, CLIConfig, InteractiveCLI
 import argparse
 import json
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 credentials = {
     "host": os.getenv("HOST"),

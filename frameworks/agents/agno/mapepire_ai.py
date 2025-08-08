@@ -4,7 +4,7 @@ from textwrap import dedent
 from typing import Optional
 import os
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mcp import StdioServerParameters
 
 from agno.agent import Agent
@@ -134,7 +134,7 @@ if __name__ == "__main__":
         "--debug", action="store_true", default=False, help="Enable debug mode"
     )
     
-    load_dotenv()
+    load_dotenv(find_dotenv())
 
     args = parser.parse_args()
 

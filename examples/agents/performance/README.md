@@ -2,6 +2,18 @@
 
 This directory contains examples that demonstrate how to use AI agents to monitor and analyze IBM i system performance. These examples leverage SQL services to provide insights into system metrics, resource usage, and performance optimization opportunities.
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** These examples require the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## 📋 Available Examples
 
 | Example | Description | Difficulty |
@@ -13,32 +25,27 @@ This directory contains examples that demonstrate how to use AI agents to monito
 
 ## 🚀 Running the Examples
 
-### Prerequisites
+Since you've completed the main setup, you can run these performance examples directly:
 
-- Python 3.9+
-- The `uv` package manager
-- Access to a Db2 for i database with appropriate permissions
-- Mapepire service running on your IBM i system
+### 📊 Optional: Weave Observability Setup
 
-### Environment Setup
+For enhanced observability and tracing of your AI agents, you can optionally set up Weave:
 
-1. **Important**: First, run the environment setup script from the parent directory:
+1. **Install Weave:**
    ```bash
-   cd ../../examples/ # Navigate to the examples directory 
-   ./setup_env.sh
-   cd agents/performance
+   pip install weave
    ```
-   This will create a `.env` file template in the examples directory.
 
-2. (Optional) create the `.env` file in the `performance` directory with your specific credentials:
+2. **Get your Weights & Biases API key** from [WandB Dashboard](https://wandb.ai/authorize)
+
+3. **Add to your root `.env` file:**
+   ```env
+   WANDB_API_KEY=your_wandb_api_key
    ```
-   HOST=your_ibmi_host
-   DB_USER=your_username
-   PASSWORD=your_password
-   DB_PORT=your_db_port
-   OPENAI_API_KEY=your_openai_api_key
-   ```
-   this will overwrite the `.env` file created in the parent directory.
+
+4. **Learn more** about Weave integration at [docs.agno.com/observability/weave](https://docs.agno.com/observability/weave)
+
+> 💡 **Note**: Weave setup is completely optional. The examples work without it, but Weave provides valuable insights into agent behavior, token usage, and performance metrics.
 
 ### Running the Metrics Assistant CLI
 
@@ -52,9 +59,13 @@ You can customize the CLI with these options:
 
 ```bash
 uv run metrics_assistant_cli.py --model-id openai:gpt-4o --stream --debug
+# OR try with the recommended Ollama model:
+uv run metrics_assistant_cli.py --model-id ollama:gpt-oss:20b --stream --debug
 ```
 
 > 💡 **Note**: By default, this example uses OpenAI's GPT-4.1 model. You can specify a different model with `--model-id`.
+> 
+> **Recommended**: Try `ollama:gpt-oss:20b` for excellent performance with local models!
 
 ### Example CLI Commands
 

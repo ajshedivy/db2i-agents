@@ -6,7 +6,7 @@ from agno.models.openai import OpenAIChat
 from agno.utils.log import logger
 from agno.utils.pprint import pprint_run_response
 from agno.workflow import Workflow
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import os
 from mapepire_python import connect
 from pep249 import QueryParameters, ResultSet
@@ -14,7 +14,7 @@ import json
 from pydantic import BaseModel, Field
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # Database connection credentials
 credentials = {

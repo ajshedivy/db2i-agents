@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "agno==1.6.2",
+    "agno==1.7.8",
     "anthropic>=0.54.0",
     "db2-shared-utils",
     "db2i-tools",

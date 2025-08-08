@@ -3,10 +3,10 @@ from unittest.mock import patch, MagicMock
 import pytest
 from .database import Db2iDatabase
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 def load_connection():
-    load_dotenv()
+    load_dotenv(find_dotenv())
     connection_details = {
         "host": os.getenv("HOST"),
         "user": os.getenv("DB_USER"),

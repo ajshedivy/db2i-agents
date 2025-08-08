@@ -1,9 +1,9 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 
 def test_mapepire():
-    load_dotenv()
+    load_dotenv(find_dotenv())
     connection_details = {
         "host": os.getenv("HOST"),
         "user": os.getenv("DB_USER"),

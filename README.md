@@ -7,13 +7,15 @@
   - [📂 Repository Structure](#-repository-structure)
   - [📋 Requirements](#-requirements)
   - [🚀 Getting Started](#-getting-started)
-    - [🛠️ Mapepire Database Access](#️-mapepire-database-access)
-      - [Why Mapepire? ✨](#why-mapepire-)
-      - [Setting Up Mapepire](#setting-up-mapepire)
-    - [Configure Mapepire and API keys](#configure-mapepire-and-api-keys)
-    - [Setup Ollama (recommended)](#setup-ollama-recommended)
-  - [Install `uv` - a fast Python package manager](#install-uv---a-fast-python-package-manager)
-  - [🔥 Quickstart - Run an example](#-quickstart---run-an-example)
+    - [Step 1: 🛠️ Start Mapepire on IBM i](#step-1-️-start-mapepire-on-ibm-i)
+    - [Step 2: 📝 Setup Environment](#step-2--setup-environment)
+    - [Step 3: 📦 Install uv Package Manager](#step-3--install-uv-package-manager)
+    - [Step 4: 🤖 Choose Your AI Model Provider](#step-4--choose-your-ai-model-provider)
+      - [🏠 Local Models (Recommended for Getting Started)](#-local-models-recommended-for-getting-started)
+      - [📊 Model Recommendations](#-model-recommendations)
+      - [☁️ Cloud Providers (Optional)](#️-cloud-providers-optional)
+  - [🔥 Quickstart - Run Your First Agent](#-quickstart---run-your-first-agent)
+    - [🚀 Next Steps: Explore More Examples](#-next-steps-explore-more-examples)
   - [🧩 Explore Agent Frameworks](#-explore-agent-frameworks)
     - [Getting Started with Frameworks](#getting-started-with-frameworks)
   - [🧠 Agent Concepts](#-agent-concepts)
@@ -85,111 +87,114 @@ This repository is organized into three main sections:
 
 ## 🚀 Getting Started
 
-### 🛠️ Mapepire Database Access
+Get up and running with Db2 for i AI agents in 4 simple steps:
 
-[Mapepire](https://mapepire-ibmi.github.io/) is a modern database connector for IBM i that makes it easy for AI agents to work with your Db2 data. Think of it as a bridge between AI and your database. 🌉
+### Step 1: 🛠️ Start Mapepire on IBM i
 
-#### Why Mapepire? ✨
+[Mapepire](https://mapepire-ibmi.github.io/) is a modern database connector that makes it easy for AI agents to work with your Db2 data. 🌉
 
-- **Simple connection**: Works over standard ports - no special setup needed
-- **Secure**: Supports proper authentication and SSL 🔒
-- **Full-featured**: Handles all SQL operations and IBM i data types
-- **AI-friendly**: Designed to work well with language models 🤖
+On your IBM i system, install and start Mapepire:
+```bash
+yum install service-commander
+yum install mapepire
+sc start mapepire
+```
 
-#### Setting Up Mapepire
+That's it! Mapepire runs on port 8076 by default and provides secure, AI-friendly database access.
 
-1. Install on your IBM i system:
-   ```bash
-   yum install service-commander
-   yum install mapepire
-   ```
+### Step 2: 📝 Setup Environment
 
-2. Start the service:
-   ```bash
-   sc start mapepire
-   ```
-
-That's it! Mapepire runs on port 8076 by default. 🎉
-
-### Configure Mapepire and API keys
-
-Create a central `.env` file in the `config/` directory with your database connection details. This file can be used by all examples and frameworks in this repository.
-
-This simple approach helps you manage database credentials and API keys across multiple examples without duplicating sensitive information.
-
-1. Clone the repository:
+1. Clone this repository:
    ```bash
    git clone https://github.com/ajshedivy/db2i-agents.git
+   cd db2i-agents
    ```
 
-2. Navigate to the `config/` directory:
-   ```bash
-   cd db2i-agents/config
-   ```
-3. Create your central configuration file:
+2. Create your `.env` file from the provided template:
    ```bash
    # Copy the template file
-   cp env.sample .env.central
+   cp env.sample .env
    ```
-4. Edit with your credentials and API keys:
+
+3. Edit the `.env` file with your actual credentials:
    ```bash
-   nano .env.central  # or use your preferred editor
+   vim .env  # or use your preferred editor
    ```
-
-   ```env
-   # Db2 for i database credentials
-   # Copy this file to .env.central and update with your credentials
-
-   # Database connection settings
-   HOST=your_host_name
-   DB_USER=your_username
-   PASSWORD=your_password
-   DB_PORT=8076
-   SCHEMA=SAMPLE
-   READONLY=TRUE
-
-   # AI provider API keys (uncomment and add your keys as needed)
-   # OPENAI_API_KEY=
-   # ANTHROPIC_API_KEY=
-   # IBM_WATSONX_API_KEY=
-   # IBM_WATSONX_PROJECT_ID=
-   # IBM_WATSONX_BASE_URL=
-   # IBM_WATSONX_MODEL_ID=
-   ```
-   > 💡 **Note**: If you are using OpenAI, Anthropic, watonx, etc, set the API keys in the central config (config/.env.central) to make it easier to test with multiple models
-### Setup Ollama (recommended)
-
-   1. Install [Ollama](https://ollama.com/) on your system. This is a local LLM model provider that allows you to run models like Llama 3.1, Qwen 2.5, etc.
    
-   2. Pull the model you want to use, For the agent examples I use `llama3.1` and `qwen2.5`:
-      ```bash
-      ollama pull llama3.1
-      ollama pull qwen2.5:latest
-      ```
-
-## Install `uv` - a fast Python package manager
-
+   Update the following values in `.env`:
    ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-   More details on `uv` can be found in the [uv documentation](https://docs.astral.sh/uv/)
-
-## 🔥 Quickstart - Run an example
-
-Pull Ollama model:
-   ```bash
-   ollama pull llama3.1
+   HOST=your_actual_host_name
+   DB_USER=your_actual_username  
+   PASSWORD=your_actual_password
+   # Uncomment and add API keys for cloud providers if needed
    ```
 
-   Run the example:
+### Step 3: 📦 Install uv Package Manager
+
+Install `uv` - a fast Python package manager that handles all dependencies:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Step 4: 🤖 Choose Your AI Model Provider
+
+#### 🏠 Local Models (Recommended for Getting Started)
+
+**Ollama** - Run AI models locally, no API keys needed!
+
+1. Install Ollama from [ollama.com](https://ollama.com/)
+2. Pull recommended models:
    ```bash
-   cd examples/
-   ./setup_env.sh    # copy central env file
-   cd agents/sample/
-   uv run get_employee_info_workflow.py --chain --question "how many employees are there?"
+   ollama pull llama3.1        # Great for general tasks
+   ollama pull qwen2.5:latest  # Excellent for coding
    ```
 
-   More examples can be found in the [`examples/`](examples/) directory.
+#### 📊 Model Recommendations
+
+| Model | Best For | Size | Performance |
+|-------|----------|------|-------------|
+| `llama3.1` | General AI tasks, conversations | 4.9GB | Balanced speed/quality |
+| `qwen2.5:latest` | Code generation, SQL queries | 4.7GB | Fast, code-focused |
+| `gpt-oss:20b` | GPT-like experience locally | 14GB | **NEW** - Great general model |
+| `llama3.1:70b` | Complex reasoning, production | 40GB | Highest quality |
+| `qwen3-coder:latest` | Code generation, SQL queries | 19GB | Fast, code-focused |
+
+> 💡 **New Model**: [`gpt-oss`](https://ollama.com/library/gpt-oss) provides a GPT-like experience running locally - great for users familiar with OpenAI's models!
+
+#### ☁️ Cloud Providers (Optional)
+
+For production use or specific model requirements:
+
+| Provider | Best For | Setup |
+|----------|----------|--------|
+| **OpenAI** | GPT-4, production reliability | Add `OPENAI_API_KEY` to .env |
+| **Anthropic** | Claude models, long conversations | Add `ANTHROPIC_API_KEY` to .env |  
+| **IBM watsonx** | Enterprise compliance | Add `IBM_WATSONX_*` keys to .env |
+
+> 💡 **Tip**: Start with Ollama for learning, then upgrade to cloud providers for production workloads.
+
+## 🔥 Quickstart - Run Your First Agent
+
+Ready to see AI agents in action? Run this simple example:
+
+```bash
+# Navigate to examples directory
+cd examples/agents/sample/
+
+# Run an agent that queries your database
+uv run get_employee_info_workflow.py --chain --question "how many employees are there?"
+```
+
+🎉 That's it! The agent will connect to your database, understand your question, write SQL, and provide an answer.
+
+### 🚀 Next Steps: Explore More Examples
+
+Head to the [`examples/`](examples/) directory to discover:
+- **Simple agents**: Basic database queries and analysis
+- **Advanced workflows**: Multi-step reasoning and complex tasks  
+- **Complete applications**: Ready-to-use AI-powered tools
+
+Each example includes detailed documentation and can be run with a single `uv run` command!
 
 ## 🧩 Explore Agent Frameworks
 

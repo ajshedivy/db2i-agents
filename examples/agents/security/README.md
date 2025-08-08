@@ -2,6 +2,18 @@
 
 This directory contains examples that demonstrate how to use AI agents to analyze and improve security on IBM i systems. These examples leverage SQL services to identify and address security vulnerabilities.
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** These examples require the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## 📋 Available Examples
 
 | Example | Description | Difficulty |
@@ -13,32 +25,7 @@ This directory contains examples that demonstrate how to use AI agents to analyz
 
 ## 🚀 Running the Examples
 
-### Prerequisites
-
-- Python 3.9+
-- The `uv` package manager
-- Access to a Db2 for i database with appropriate permissions
-- Mapepire service running on your IBM i system
-
-### Environment Setup
-
-1. **Important**: First, run the environment setup script from the parent directory:
-   ```bash
-   cd ../../examples/ # Navigate to the examples directory 
-   ./setup_env.sh
-   cd agents/security
-   ```
-   This will create a `.env` file template in the examples directory.
-
-2. (Optional) create the `.env` file in the `security` directory with your specific credentials:
-   ```
-   HOST=your_ibmi_host
-   DB_USER=your_username
-   PASSWORD=your_password
-   DB_PORT=your_db_port
-   OPENAI_API_KEY=your_openai_api_key
-   ```
-   this will overwrite the `.env` file created in the parent directory.
+Since you've completed the main setup, you can run these security examples directly:
 
 ### Running the Security Assistant
 
@@ -52,9 +39,13 @@ You can customize the CLI with these options:
 
 ```bash
 uv run security_assistant.py --model-id ollama:qwen2.5 --stream --debug
+# OR try the new recommended model:
+uv run security_assistant.py --model-id ollama:gpt-oss:20b --stream --debug
 ```
 
 > 💡 **Note**: By default, this example uses OpenAI's GPT-4.1 model. You can specify a different model with `--model-id`.
+> 
+> **Recommended**: Try `ollama:gpt-oss:20b` for excellent performance with local models!
 
 ### Example CLI Commands
 

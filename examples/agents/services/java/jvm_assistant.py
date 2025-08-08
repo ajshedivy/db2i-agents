@@ -6,13 +6,13 @@ from typing import Any, Dict, Optional, List
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools import tool
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters
 from agno.storage.sqlite import SqliteStorage
 
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 credentials = {
     "host": os.getenv("HOST"),

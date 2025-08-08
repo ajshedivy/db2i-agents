@@ -9,16 +9,18 @@ from agno.models.openai import OpenAIChat
 from agno.tools import tool
 from agno.tools.reasoning import ReasoningTools
 from db2i_shared_utils.cli import CLIConfig, InteractiveCLI, get_model
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters
 from agno.storage.sqlite import SqliteStorage
 import weave
 
-weave.init("db2i-agents")
-
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
+
+# Initialize Weave for observability if API key is provided
+if os.getenv("WANDB_API_KEY"):
+    weave.init("db2i-agents")
 
 # Database connection credentials
 credentials = {

@@ -5,12 +5,12 @@ from typing import Any, Dict, Optional
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools import tool
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # Database connection credentials
 credentials = {

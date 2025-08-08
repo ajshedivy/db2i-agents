@@ -26,9 +26,9 @@ from agno.tools import FunctionCall, tool
 from rich.console import Console
 from rich.pretty import pprint
 from rich.prompt import Prompt
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # This is the console instance used by the print_response method
 # We can use this to stop and restart the live display and ask for user confirmation

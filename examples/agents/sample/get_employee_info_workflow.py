@@ -13,7 +13,7 @@ import os
 import argparse
 from textwrap import dedent
 from typing_extensions import TypedDict, Annotated
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 from db2i_tools.database import Db2iDatabase
 from db2i_tools.tools import QuerySQLDatabaseTool
@@ -213,7 +213,7 @@ def main():
 
     # Load environment variables
     print("⚙️  Loading environment variables...")
-    load_dotenv()
+    load_dotenv(find_dotenv())
     config = load_connection()
     schema = os.getenv("SCHEMA")
 

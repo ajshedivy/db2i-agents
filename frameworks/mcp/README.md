@@ -2,6 +2,18 @@
 
 This repository contains a Db2i MCP server and client examples that enable AI assistants to interact with DB2 for i databases through the Model Context Protocol (MCP). 🤖💬
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** The MCP server requires the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## 🔍 What is MCP?
 
 The Model Context Protocol (MCP) is a communication protocol that enhances AI assistants with additional capabilities by enabling them to interact with external tools and access structured data. MCP allows AI models to:
@@ -30,16 +42,18 @@ mcp/
 
 ## 🚦 Getting Started
 
+Since you've completed the main setup, you can now configure the MCP server:
+
 ### 1. 🔧 Set Up the Db2i MCP Server
 
-The `db2i-mcp-server` directory contains the core MCP server that connects to your DB2 for i database. This server must be setup and configured for any client examples to work.
+The `db2i-mcp-server` directory contains the core MCP server that connects to your DB2 for i database.
 
 ```bash
-cd db2i-mcp-server
+cd frameworks/mcp/db2i-mcp-server
 ```
 
-Follow the detailed setup instructions in the [server README](./db2i-mcp-server/README.md) to:
-1. 📝 Configure your DB2 for i connection details (.env file)
+The MCP server has its own `.env` file for specific configuration. Follow the detailed setup instructions in the [server README](./db2i-mcp-server/README.md) to:
+1. 📝 Configure the MCP-specific .env file 
 2. 🧪 Test your connection
 3. 🚀 Start the server
 

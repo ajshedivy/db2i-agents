@@ -55,7 +55,7 @@ def confirmation_hook(
 
     return result
 
-load_dotenv()
+load_dotenv(override=True)
 
 credentials = {
     "host": os.getenv("HOST"),
@@ -98,8 +98,8 @@ def run_sql_statement(
     show_result=False,
     stop_after_tool_call=False
 )
-def get_ptf_currency() -> str:
-    return run_sql_statement(sql=ptf_currency)
+def get_ptf_currency(sql=ptf_currency) -> str:
+    return run_sql_statement(sql=sql)
 
 
 ptf_agent = Agent(
@@ -108,12 +108,13 @@ ptf_agent = Agent(
     storage=SqliteStorage(
         table_name="ptf_agent_sessions", db_file="tmp/data.db", auto_upgrade_schema=True
     ),
-    model=OpenAIChat(id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY")),
+    model=OpenAIChat(id="o4-mini", api_key=os.getenv("OPENAI_API_KEY")), #Ollama(id="gpt-oss:20b"), 
     tools=[get_ptf_currency],
     markdown=True,
     debug_mode=False,
+    show_tool_calls=True
 )
 
 if __name__ == '__main__':
     import asyncio
-    asyncio.run(ptf_agent.aprint_response("Are there any PTF group updates available?", stream=True))
+    asyncio.run(ptf_agent.aprint_response("Are there any PTF group updates available?", stream=False))

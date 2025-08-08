@@ -2,6 +2,18 @@
 
 This directory contains simple, single-file examples that demonstrate AI agents interacting with the IBM SAMPLE database. These examples are designed to help you get started quickly with AI agents for Db2 for i.
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** These examples require the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## 📋 Available Examples
 
 | Example | Description | Difficulty |
@@ -12,32 +24,7 @@ This directory contains simple, single-file examples that demonstrate AI agents 
 
 ## 🚀 Running the Examples
 
-### Prerequisites
-
-- Python 3.9+
-- The `uv` package manager
-- Access to a Db2 for i database with the SAMPLE schema
-- Mapepire service running on your IBM i system
-
-### Environment Setup
-
-1. **Important**: First, run the environment setup script from the parent directory:
-   ```bash
-   cd ../../examples/ # Navigate to the examples directory 
-   ./setup_env.sh
-   cd agents/sample
-   ```
-   This will create a `.env` file template in the examples directory.
-
-2. (Optional) create the `.env` file in the `sample` directory with your specific credentials:
-   ```
-   HOST=your_ibmi_host
-   DB_USER=your_username
-   PASSWORD=your_password
-   DB_PORT=your_db_port
-   OPENAI_API_KEY=your_openai_api_key
-   ```
-   this will overwrite the `.env` file created in the parent directory.
+Since you've completed the main setup, you can run these sample examples directly:
 
 ### Running the Examples
 
@@ -80,6 +67,8 @@ uv run get_employee_info_workflow.py --interactive
 ```
 
 > 💡 **Note**: This example uses Ollama by default with the llama3.1 model. Make sure you have Ollama installed and the model available, or specify a different model with `--model modelname`.
+> 
+> **Recommended**: Try `gpt-oss:20b` for better performance: `--model ollama:gpt-oss:20b`
 
 ## 🔍 Example Details
 

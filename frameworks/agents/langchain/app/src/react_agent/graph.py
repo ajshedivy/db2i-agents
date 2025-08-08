@@ -167,7 +167,7 @@ def get_system_message():
 
 
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import os
 from langchain import hub
 
@@ -186,7 +186,7 @@ def load_connection():
     }
     return connection_details
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 config = load_connection()
 SCHEMA = os.getenv("SCHEMA")

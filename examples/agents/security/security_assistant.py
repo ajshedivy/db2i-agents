@@ -5,10 +5,10 @@ from typing import Optional
 
 from agent import profile_security_agent
 from db2i_shared_utils.cli import CLIConfig, InteractiveCLI, get_model
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # Database connection credentials
 credentials = {

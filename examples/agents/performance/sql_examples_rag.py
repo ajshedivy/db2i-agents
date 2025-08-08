@@ -1,12 +1,12 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from agno.agent import Agent
 from agno.knowledge.markdown import MarkdownKnowledgeBase
 from agno.vectordb.pgvector import PgVector
 from agno.models.openai import OpenAIChat
 
-load_dotenv()
+load_dotenv(find_dotenv())
 db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
 
 

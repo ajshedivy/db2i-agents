@@ -3,10 +3,10 @@ from textwrap import dedent
 from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.tools import tool
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 creds = {
     k: os.getenv(v)
@@ -41,7 +41,7 @@ def get_ptf_currency():
 
 
 Agent(
-    model=Ollama(id="qwen3:8b"),
+    model=Ollama(id="gpt-oss:20b"),
     tools=[get_ptf_currency],
     markdown=True,
     debug_mode=True,

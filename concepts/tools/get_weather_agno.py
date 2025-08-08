@@ -4,10 +4,10 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.models.ollama import Ollama
 from agno.tools import tool
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import requests
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 
 @tool(show_result=True, stop_after_tool_call=True)

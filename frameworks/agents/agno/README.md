@@ -2,12 +2,25 @@
 
 A collection of agents for interacting with Db2i databases using the Agno framework. This package includes a command-line interface and a web-based playground for database exploration and querying.
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** This framework requires the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../../../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## Prerequisites
 
 - Python 3.12+
-- [uv](https://github.com/astral-sh/uv) for package management
+- [uv](https://github.com/astral-sh/uv) for package management  
 - [Ollama](https://ollama.ai/) (optional, for local LLM support)
 - [OpenAI API key](https://platform.openai.com/api-keys) (optional, for OpenAI model support)
+- **✅ Completed main repository setup** (see above)
 
 ## Run the Db2i Agent CLI
 
@@ -21,29 +34,29 @@ Install the dependencies:
 - Install Ollama from [Ollama](https://ollama.com/)
 ---
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/ajshedivy/db2i-agents.git
-   cd db2i-agents/frameworks/agents/agno
-   ```
-2. **Prepare Ollama model:**
-    ```bash
-    ollama pull qwen2.5:latest
-    ```
-3. **Setup environment variables:**
-    ```bash
-    # Copy the central env file or create a .env file and update it with your database connection details
-    cp ../../../config/.env.central .env
-    ```
-    or manually create the `.env` file with your Mapepire credentials:
+## 🔧 Framework-Specific Setup
 
-    ```env
-    HOST=your_db2i_host
-    DB_USER=your_username
-    PORT=8076               # Default port for Mapepire
-    PASSWORD=your_password
-    SCHEMA=SAMPLE           # Or your preferred schema
-    ```
+Since you've completed the main setup, you can now run Agno agents directly:
+
+1. **Navigate to the Agno directory:**
+   ```bash
+   cd frameworks/agents/agno
+   ```
+
+2. **Verify your setup:**
+   ```bash
+   # Your root .env file should already contain your database credentials
+   # The framework will automatically find and use it
+   ```
+
+3. **Pull Ollama model (if using local models):**
+   ```bash
+   ollama pull qwen2.5:latest
+   # OR try the new recommended model for better general performance:
+   ollama pull gpt-oss:20b
+   ```
+
+   > 💡 **Recommended**: Try `gpt-oss:20b` for a GPT-like experience with excellent general performance!
 
 4. **Run the CLI:**
     ```bash
@@ -60,6 +73,8 @@ Install the dependencies:
     Run with `Ollama`:
     ```bash
     uv run agent.py --provider ollama --model-id qwen2.5:latest --debug
+    # OR try with the new recommended model:
+    uv run agent.py --provider ollama --model-id gpt-oss:20b --debug
     ```
 
 ![alt text](images/image.png)
@@ -68,11 +83,10 @@ Install the dependencies:
 
 ### Run with Watsonx
 
-To run the agent with Watsonx, you need to set up your environment variables in the `.env` file.
+To run the agent with Watsonx, make sure your root `.env` file includes watsonx credentials:
 ```env
-#watsonx
-IBM_WATSONX_API_KEY=
-IBM_WATSONX_PROJECT_ID=
+IBM_WATSONX_API_KEY=your_watsonx_api_key
+IBM_WATSONX_PROJECT_ID=your_project_id
 IBM_WATSONX_BASE_URL=https://us-south.ml.cloud.ibm.com
 IBM_WATSONX_MODEL_ID=meta-llama/llama-3-3-70b-instruct
 ```
@@ -153,30 +167,21 @@ Check out this repo to run a [Db2 for i agent application](https://github.com/aj
 
 Mapepire AI is an AI platform for building tools to interact with your Db2 for i database. It provides an easy way to create SQL based tools that can seamlessly integrate with your LLM applications.
 
-To test Mapepire AI tools, follow the instructions below:
-1. Configure tools and generate MCP server token
-2. Add MCP server token to `.env` file
-    ```sh
-    cd db2i-agents/frameworks/agents/agno
-    cp .env.example .env
-    ```
-    fill out the `.env` file with your Mapepire credentials:
-    ```ini
+To test Mapepire AI tools:
+1. **Configure tools and generate MCP server token** (external setup required)
+2. **Add MCP server token to your root `.env` file:**
+    ```env
     MAPEPIRE_AI_MCP_URL="http://localhost:8080/sse?token=YOUR_TOKEN"
-
-    HOST=X
-    DB_USER=X
-    PASSWORD=X
-    PORT=8076
-    SCHEMA=SAMPLE
-    READONLY=True
     ```
-3. pull Ollama model (if not already done):
+3. **Pull Ollama model (if not already done):**
     ```bash
     ollama pull qwen2.5:latest
+    # OR try the new recommended model:
+    ollama pull gpt-oss:20b
     ```
-4. Run the agent:
+4. **Run the agent:**
     ```bash
+    cd frameworks/agents/agno
     uv run mapepire_ai.py --debug
     ```
 

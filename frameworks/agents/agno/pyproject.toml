@@ -3,11 +3,11 @@ name = "agno-dev"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-    "agno>=1.2.5",
+    "agno>=1.7.0",
     "fastapi[standard]>=0.115.12",
     "ibm-watsonx-ai>=1.3.8",
     "mapepire-python>=0.2.0",
-    "mcp>=1.6.0",
+    "mcp>=1.10.0",
     "ollama>=0.4.7",
     "openai>=1.69.0",
     "prompt_toolkit>=3.0.43",

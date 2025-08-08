@@ -6,16 +6,16 @@ from typing import Any, Dict, Optional
 from agno.agent import Agent
 from agno.tools import tool
 from db2i_shared_utils.cli import get_model
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters, ResultSet
 from agno.tools.reasoning import ReasoningTools
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from agno.storage.sqlite import SqliteStorage
 
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # Database connection credentials
 credentials = {

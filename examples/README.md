@@ -2,6 +2,18 @@
 
 This directory contains practical, ready-to-run examples that demonstrate how to use AI with Db2 for i databases. From simple scripts to complete applications, these examples provide clear starting points for your own AI projects.
 
+## 🚨 Before You Start
+
+**Have you completed the main setup?** These examples require the environment setup from the main README.
+
+✅ **Required**: Complete the [Getting Started guide](../README.md#-getting-started) first, which covers:
+- Setting up Mapepire on IBM i
+- Creating your `.env` file with database credentials  
+- Installing uv package manager
+- Choosing your AI model provider
+
+If you haven't done this yet, **stop here** and complete the main setup first.
+
 ## 🧪 Example Categories
 
 This repository is organized into several main categories:
@@ -42,25 +54,21 @@ This repository is organized into several main categories:
 
 ## 🚀 Running the Examples
 
-### Prerequisites
-
-- Python 3.9+ with the `uv` package manager
-- Access to a Db2 for i database
-- Mapepire service running on your IBM i system
+Since you've completed the main setup, you can run examples directly:
 
 ### Quick Start
 
-> 💡 **Note**: Make sure to setup your central `.env` file [here](../README.md#configure-mapepire-and-api-keys) first
-
-1. First, run the setup script to pull the environment file into the examples directory:
+1. **Choose an example from the categories below**
+2. **Navigate to its directory:**
    ```bash
-   cd examples/ # Navigate to the examples directory
-   ./setup_env.sh
+   cd examples/agents/sample/  # or your chosen example directory
+   ```
+3. **Run the example:**
+   ```bash
+   uv run <script_name>.py
    ```
 
-2. Choose an example directory
-3. Navigate to its directory
-4. Run the example: `uv run <script_name>.py`
+The examples will automatically find your root `.env` file with database credentials.
 
 ## 📚 Example Categories Explained
 
