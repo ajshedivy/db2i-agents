@@ -379,7 +379,7 @@ requires-dist = [
 [[package]]
 name = "db2i-tools"
 version = "0.1.0"
-source = { directory = "../frameworks/agents/langchain/db2i-tools" }
+source = { editable = "../frameworks/agents/langchain/db2i-tools" }
 dependencies = [
     { name = "dotenv" },
     { name = "ipykernel" },
@@ -528,7 +528,7 @@ requires-dist = [
     { name = "agno", specifier = "==1.7.8" },
     { name = "anthropic", specifier = ">=0.54.0" },
     { name = "db2-shared-utils", editable = "../shared" },
-    { name = "db2i-tools", directory = "../frameworks/agents/langchain/db2i-tools" },
+    { name = "db2i-tools", editable = "../frameworks/agents/langchain/db2i-tools" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "mapepire-python", specifier = ">=0.2.0" },

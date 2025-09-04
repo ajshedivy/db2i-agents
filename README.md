@@ -96,8 +96,8 @@ Get up and running with Db2 for i AI agents in 4 simple steps:
 On your IBM i system, install and start Mapepire:
 ```bash
 yum install service-commander
-yum install mapepire
-sc start mapepire
+yum install mapepire-server 
+sc start mapepire-server 
 ```
 
 That's it! Mapepire runs on port 8076 by default and provides secure, AI-friendly database access.

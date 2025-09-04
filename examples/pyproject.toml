@@ -21,4 +21,4 @@ dependencies = [
 
 [tool.uv.sources]
 db2-shared-utils = { path = "../shared", editable = true }
-db2i-tools = { path = "../frameworks/agents/langchain/db2i-tools" }
+db2i-tools = { path = "../frameworks/agents/langchain/db2i-tools", editable = true }
