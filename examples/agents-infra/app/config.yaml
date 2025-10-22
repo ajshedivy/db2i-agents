@@ -1,0 +1,50 @@
+chat:
+  quick_prompts:
+    web-search-agent:
+      - "What can you do?"
+      - "What is currently happening in France?"
+      - "What is the latest news on the stock market?"
+    agno-assist:
+      - "What can you do?"
+      - "What is the latest news on Agno?"
+      - "Tell me about Agno's AgentOS"
+    metrics-assistant:
+      - "What's the current system performance status?"
+      - "Are there any performance bottlenecks?"
+      - "Check HTTP server performance"
+    ptf-assistant:
+      - "Check PTF currency for my system"
+      - "Are there any missing Technology Refresh PTFs?"
+      - "Show me security PTF updates"
+    storage-assistant:
+      - "What are the largest files owned by QSYS?"
+      - "Show me files over 100MB"
+      - "Find large files that haven't been used recently"
+    security-assistant:
+      - "How many user profiles are exposed?"
+      - "List exposed user profiles"
+      - "Generate fix queries for security issues"
+    employee-info:
+      - "Get information for employee 000010"
+      - "What is the total compensation of employee 000020?"
+    ptf-specialist-team:
+      - "Are there any PTF updates available?"
+      - "Check for missing Technology Refresh PTFs"
+    ibm-i-performance-routing-team:
+      - "Analyze overall system performance"
+      - "What's consuming the most resources?"
+    ibm-i-performance-coordination-team:
+      - "Perform a comprehensive system health check"
+      - "Analyze system for optimization opportunities"
+    ibm-i-performance-collaboration-team:
+      - "Review all aspects of system performance"
+      - "Identify any system bottlenecks or issues"
+    quick-ibm-i-performance-check:
+      - "Give me a quick system status check"
+      - "Show me a fast overview of system performance"
+    comprehensive-ibm-i-performance-analysis:
+      - "Perform comprehensive performance analysis"
+      - "Give me a detailed system performance report"
+    iterative-ibm-i-performance-analysis:
+      - "Run quality-driven performance analysis"
+      - "Analyze system with iterative refinement"

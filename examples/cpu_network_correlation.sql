@@ -1,0 +1,179 @@
+-- CPU and Network Traffic Correlation Analysis
+-- This script analyzes the relationship between job CPU utilization and network traffic
+
+-- 1. Get top CPU consuming jobs
+WITH TOP_CPU_JOBS AS (
+    SELECT
+        JOB_NAME,
+        AUTHORIZATION_NAME,
+        SUBSYSTEM,
+        JOB_TYPE,
+        FUNCTION,
+        CPU_TIME,
+        ELAPSED_CPU_PERCENTAGE,
+        ELAPSED_TIME,
+        MEMORY_POOL,
+        THREAD_COUNT,
+        TOTAL_DISK_IO_COUNT
+    FROM TABLE(QSYS2.ACTIVE_JOB_INFO())
+    WHERE CPU_TIME > 0
+    ORDER BY CPU_TIME DESC
+    FETCH FIRST 50 ROWS ONLY
+),
+
+-- 2. Get network connection information by job
+NETWORK_JOBS AS (
+    SELECT
+        JOB_NAME,
+        REMOTE_ADDRESS,
+        REMOTE_PORT,
+        LOCAL_PORT_NAME,
+        CONNECTION_TYPE,
+        LOCAL_PORT
+    FROM QSYS2.NETSTAT_JOB_INFO
+),
+
+-- 3. Get system status information
+SYS_STATUS AS (
+    SELECT
+        CURRENT_CPU_CAPACITY,
+        AVERAGE_CPU_RATE,
+        MINIMUM_CPU_RATE,
+        MAXIMUM_CPU_RATE,
+        SQL_CPU_UTILIZATION,
+        MAIN_STORAGE_SIZE,
+        SYSTEM_ASP_STORAGE,
+        TOTAL_JOBS_IN_SYSTEM
+    FROM QSYS2.SYSTEM_STATUS_INFO
+),
+
+-- 4. Get network interface statistics
+NET_INTERFACES AS (
+    SELECT
+        INTERFACE_NAME,
+        INTERFACE_STATUS,
+        INTERNET_ADDRESS,
+        MAXIMUM_TRANSMISSION_UNIT,
+        CONNECTION_TYPE
+    FROM QSYS2.NETSTAT_INTERFACE_INFO
+)
+
+-- 5. Join CPU and network data to analyze correlation
+-- Since NETSTAT_JOB_INFO doesn't have direct network traffic metrics,
+-- we'll analyze the relationship between CPU usage and network connections
+SELECT
+    C.JOB_NAME,
+    C.AUTHORIZATION_NAME,
+    C.SUBSYSTEM,
+    C.CPU_TIME,
+    C.ELAPSED_CPU_PERCENTAGE,
+    C.TOTAL_DISK_IO_COUNT,
+    N.REMOTE_ADDRESS,
+    N.REMOTE_PORT,
+    N.LOCAL_PORT,
+    N.CONNECTION_TYPE,
+    -- Count of network connections per job
+    COUNT(*) OVER (PARTITION BY C.JOB_NAME) AS CONNECTION_COUNT
+FROM TOP_CPU_JOBS C
+JOIN NETWORK_JOBS N ON C.JOB_NAME = N.JOB_NAME
+ORDER BY C.CPU_TIME DESC;
+
+-- 6. System overview - CPU utilization
+SELECT * FROM SYS_STATUS;
+
+-- 7. Network interface statistics
+SELECT * FROM NET_INTERFACES;
+
+-- 8. Top CPU consuming jobs (regardless of network activity)
+SELECT * FROM TOP_CPU_JOBS
+ORDER BY CPU_TIME DESC;
+
+-- 9. Network connections by job (regardless of CPU usage)
+SELECT
+    JOB_NAME,
+    COUNT(*) AS CONNECTION_COUNT,
+    COUNT(DISTINCT REMOTE_ADDRESS) AS UNIQUE_REMOTE_ADDRESSES
+FROM NETWORK_JOBS
+GROUP BY JOB_NAME
+ORDER BY CONNECTION_COUNT DESC
+FETCH FIRST 20 ROWS ONLY;
+
+-- 10. Alternative correlation analysis if direct job name matching fails
+-- This query attempts to match jobs by the first part of the job name
+WITH TOP_CPU_JOBS AS (
+    SELECT
+        JOB_NAME,
+        SUBSTR(JOB_NAME, 1, LOCATE('/', JOB_NAME) - 1) AS JOB_BASE,
+        AUTHORIZATION_NAME,
+        CPU_TIME,
+        ELAPSED_CPU_PERCENTAGE
+    FROM TABLE(QSYS2.ACTIVE_JOB_INFO())
+    WHERE CPU_TIME > 0
+    ORDER BY CPU_TIME DESC
+    FETCH FIRST 50 ROWS ONLY
+),
+NETWORK_JOBS AS (
+    SELECT
+        JOB_NAME,
+        SUBSTR(JOB_NAME, 1, LOCATE('/', JOB_NAME) - 1) AS JOB_BASE,
+        COUNT(*) AS CONNECTION_COUNT
+    FROM QSYS2.NETSTAT_JOB_INFO
+    GROUP BY JOB_NAME, SUBSTR(JOB_NAME, 1, LOCATE('/', JOB_NAME) - 1)
+)
+SELECT
+    C.JOB_NAME AS CPU_JOB_NAME,
+    N.JOB_NAME AS NETWORK_JOB_NAME,
+    C.JOB_BASE,
+    C.CPU_TIME,
+    C.ELAPSED_CPU_PERCENTAGE,
+    N.CONNECTION_COUNT,
+    -- Calculate connections per CPU unit (higher values indicate more network activity per CPU unit)
+    CASE
+        WHEN C.CPU_TIME > 0 THEN DECIMAL(N.CONNECTION_COUNT * 1000000 / C.CPU_TIME, 20, 4)
+        ELSE NULL
+    END AS CONNECTIONS_PER_CPU_MILLION
+FROM TOP_CPU_JOBS C
+JOIN NETWORK_JOBS N ON C.JOB_BASE = N.JOB_BASE
+WHERE C.JOB_BASE IS NOT NULL AND N.JOB_BASE IS NOT NULL
+ORDER BY C.CPU_TIME DESC;
+
+-- 11. Statistical analysis - Calculate average connections per job by CPU usage groups
+WITH JOB_STATS AS (
+    SELECT
+        C.JOB_NAME,
+        C.CPU_TIME,
+        (SELECT COUNT(*) FROM QSYS2.NETSTAT_JOB_INFO N WHERE N.JOB_NAME = C.JOB_NAME) AS CONNECTION_COUNT,
+        CASE
+            WHEN C.CPU_TIME < 1000 THEN 'Low CPU (< 1s)'
+            WHEN C.CPU_TIME < 10000 THEN 'Medium CPU (1-10s)'
+            ELSE 'High CPU (> 10s)'
+        END AS CPU_GROUP
+    FROM TABLE(QSYS2.ACTIVE_JOB_INFO()) C
+    WHERE C.CPU_TIME > 0
+)
+SELECT
+    CPU_GROUP,
+    COUNT(*) AS JOB_COUNT,
+    AVG(CPU_TIME) AS AVG_CPU_TIME,
+    AVG(CONNECTION_COUNT) AS AVG_CONNECTION_COUNT,
+    CORRELATION(CPU_TIME, CONNECTION_COUNT) AS CPU_CONN_CORRELATION
+FROM JOB_STATS
+GROUP BY CPU_GROUP
+ORDER BY AVG_CPU_TIME;
+
+-- 12. Analyze disk I/O vs CPU usage to compare with network correlation
+SELECT
+    AUTHORIZATION_NAME,
+    COUNT(*) AS JOB_COUNT,
+    AVG(CPU_TIME) AS AVG_CPU_TIME,
+    AVG(TOTAL_DISK_IO_COUNT) AS AVG_DISK_IO,
+    CORRELATION(CPU_TIME, TOTAL_DISK_IO_COUNT) AS CPU_DISK_CORRELATION
+FROM TABLE(QSYS2.ACTIVE_JOB_INFO())
+WHERE CPU_TIME > 0 AND TOTAL_DISK_IO_COUNT > 0
+GROUP BY AUTHORIZATION_NAME
+HAVING COUNT(*) > 1
+ORDER BY AVG_CPU_TIME DESC;
+
+-- Made with Bob
+
+select * from QSYS2.SYSTEM_STATUS_INFO;
