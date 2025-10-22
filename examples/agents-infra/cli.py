@@ -37,6 +37,7 @@ os.environ["SQLITE_DB_PATH"] = str(Path(__file__).parent / "tmp" / "agents.db")
 # Items with missing dependencies will be excluded from the registry
 
 from agno.workflow import Workflow
+from utils.model_selector import COMMON_MODELS
 
 AGENTS = {}
 TEAMS = {}
@@ -361,7 +362,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="CLI for running agents-infra agents, teams, and workflows locally",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
+        epilog=f"""
 Examples:
   # List all available agents, teams, and workflows
   python cli.py --list-agents
@@ -382,6 +383,9 @@ Examples:
   python cli.py --workflow quick-performance --prompt "Check system performance"
   python cli.py --workflow comprehensive-analysis --prompt "Analyze performance bottlenecks"
   python cli.py --workflow iterative-analysis --prompt "Find and fix performance issues" --debug
+  
+  Common model specifications:
+{''.join([f"    {alias:<15} ({spec})\n" for alias, spec in COMMON_MODELS.items()])}
         """,
     )
 

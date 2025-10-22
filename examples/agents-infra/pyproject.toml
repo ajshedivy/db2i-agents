@@ -21,6 +21,7 @@ dependencies = [
   "python-dotenv",
   "anthropic>=0.69.0",
   "ibm-watsonx-ai>=1.4.0",
+  "ollama>=0.6.0",
 ]
 
 [project.optional-dependencies]

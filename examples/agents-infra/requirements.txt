@@ -45,6 +45,7 @@ marshmallow==3.26.1
 mdurl==0.1.2
 mypy-extensions==1.1.0
 numpy==2.3.3
+ollama==0.6.0
 openai==1.109.1
 packaging==25.0
 pandas==2.2.3

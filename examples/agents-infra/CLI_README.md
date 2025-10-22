@@ -24,15 +24,18 @@ The CLI (`cli.py`) allows you to run any of the agents-infra agents, teams, and 
 
 ## Requirements
 
-The CLI uses the same dependencies as the Docker deployment, but:
-- PostgreSQL and pgvector are not required
-- Some agents may require additional packages (e.g., `ddgs` for web search)
+The CLI uses the same dependencies as the Docker deployment, but PostgreSQL and pgvector are not required
 
 ## Quick Start
 
 ### List Available Agents, Teams, and Workflows
 
 ```bash
+cd examples/agents-infra
+./scripts/dev_setup.sh  # Install dependencies
+source .venv/bin/activate  # Activate virtual environment
+
+
 python cli.py --list-agents
 python cli.py --list-teams
 python cli.py --list-workflows
@@ -40,12 +43,18 @@ python cli.py --list-workflows
 
 ### Run an Agent
 
+
+> **Note**: Make sure to set any required API keys for model providers and IBM i connection details in the `.env` file.
+
 ```bash
 # Run with default model (OpenAI GPT-4o)
 python cli.py --agent metrics
 
-# Run with specific model
+# Run with specific model (make sure to set API keys in .env)
 python cli.py --agent ptf --model-id watsonx:mistralai/mistral-large
+
+# Run with Ollama model (if configured)
+python cli.py --agent ptf --model-id ollama:gpt-oss:latest
 
 # Run with streaming
 python cli.py --agent security --stream

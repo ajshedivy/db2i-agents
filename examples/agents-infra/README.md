@@ -99,6 +99,13 @@ DB_PORT=8076
 ```
 > **Note**: Use the IBM i credentials from the `.env` file from [Getting Started guide](../README.md#-getting-started)
 
+### Supported Model Providers
+
+This application supports multiple model providers. Make sure to set the appropriate API keys in the `.env` file for the models you intend to use:
+- **OpenAI**: `OPENAI_API_KEY`
+- **IBM watsonx**: `IBM_WATSONX_API_KEY`, `IBM_WATSONX_BASE_URL`, `IBM_WATSONX_MODEL_ID`, `IBM_WATSONX_PROJECT_ID`
+- **Anthropic**: `ANTHROPIC_API_KEY`
+
 
 ### Start the application
 

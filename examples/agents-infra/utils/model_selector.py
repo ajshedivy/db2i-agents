@@ -22,6 +22,7 @@ from typing import Union
 
 from agno.models.openai import OpenAIChat
 from agno.models.anthropic import Claude
+from agno.models.ollama import Ollama
 from agno.models.base import Model
 from dotenv import load_dotenv
 from .watsonx import MyWatsonx
@@ -79,8 +80,10 @@ def get_model(model_spec: str | object, **kwargs) -> Model:
         return MyWatsonx(id=model_id, **kwargs)
     elif provider == "anthropic":
         return Claude(id=model_id, **kwargs)
+    elif provider == "ollama":
+        return Ollama(id=model_id, **kwargs)
     else:
-        supported_providers = ["openai", "watsonx", "anthropic"]
+        supported_providers = ["openai", "watsonx", "anthropic", "ollama"]
         raise ValueError(
             f"Unsupported provider: '{provider}'. "
             f"Supported providers: {', '.join(supported_providers)}"
@@ -128,6 +131,9 @@ COMMON_MODELS = {
     "granite-3": "watsonx:granite-3-8b-instruct",
     # Anthropic models
     "claude4-5": "anthropic:claude-sonnet-4-5",
+    # Ollama models
+    "granite4-small": "ollama:granite4:small-h",
+    "gpt-oss": "ollama:gpt-oss:latest"
 }
 
 
