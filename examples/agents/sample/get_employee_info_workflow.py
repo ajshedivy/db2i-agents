@@ -54,8 +54,8 @@ def get_llm(model_name="llama3.1"):
     """Get the LLM based on environment variables"""
     print("🧠 Initializing language model...")
     if os.getenv("ANTHROPIC_API_KEY"):
-        print(f"🔄 Using Claude (claude-3-sonnet-20240229)")
-        return ChatAnthropic(model="claude-3-sonnet-20240229")
+        print(f"🔄 Using Claude (claude-sonnet-4-20250514)")
+        return ChatAnthropic(model="claude-sonnet-4-20250514")
     else:
         print(f"🔄 Using Ollama with model: {model_name}")
         return ChatOllama(model=model_name)

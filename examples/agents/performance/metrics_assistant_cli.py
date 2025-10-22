@@ -8,26 +8,27 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools import tool
 from agno.tools.reasoning import ReasoningTools
+from agno.db.sqlite import SqliteDb
 from db2i_shared_utils.cli import CLIConfig, InteractiveCLI, get_model
 from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters
-from agno.storage.sqlite import SqliteStorage
-import weave
+from phoenix.otel import register
+from agno.tools.file import FileTools
 
 # Load environment variables
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(), override=True)
 
-# Initialize Weave for observability if API key is provided
-if os.getenv("WANDB_API_KEY"):
-    weave.init("db2i-agents")
+# Set environment variables for Arize Phoenix
+os.environ["PHOENIX_CLIENT_HEADERS"] = f"api_key={os.getenv('PHOENIX_API_KEY')}"
+os.environ["PHOENIX_COLLECTOR_ENDPOINT"] = "https://app.phoenix.arize.com"
 
 # Database connection credentials
 credentials = {
     "host": os.getenv("HOST"),
     "user": os.getenv("DB_USER"),
     "password": os.getenv("PASSWORD"),
-    "port": os.getenv("DB_PORT"),
+    "port": int(os.getenv("DB_PORT")) if os.getenv("DB_PORT") else 8076,
 }
 
 # Performance metrics configuration
@@ -136,8 +137,9 @@ performance_metrics = {
         """,
     },
     "active_job_info": {
-        "name": "Active Job Info",
-        "description": "Find the top 10 consumers of CPU in the QUSRWRK and QSYSWRK subsystems",
+        "name": "Active Job Information",
+        "description": "Details about currently active jobs on the system",
+        "interval": 60,
         "sql": """
             select CPU_TIME, A.* FROM 
             table(QSYS2.ACTIVE_JOB_INFO(SUBSYSTEM_LIST_FILTER => 'QUSRWRK,QSYSWRK')) A 
@@ -149,12 +151,100 @@ performance_metrics = {
 
 
 @tool(
+    name="get_system_status",
+    description="Overall system performance statistics with CPU, memory, and I/O metrics",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_system_status() -> str:
+    """Overall system performance statistics with CPU, memory, and I/O metrics"""
+    return run_sql_statement(dedent(performance_metrics["system_status"]["sql"]))
+
+
+@tool(
+    name="get_system_activity",
+    description="Current system activity information including active jobs and resource utilization",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_system_activity() -> str:
+    """Current system activity information including active jobs and resource utilization"""
+    return run_sql_statement(dedent(performance_metrics["system_activity"]["sql"]))
+
+
+@tool(
+    name="get_remote_connections",
+    description="Number of established remote connections to the system",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_remote_connections() -> str:
+    """Number of established remote connections to the system"""
+    return run_sql_statement(dedent(performance_metrics["remote_connections"]["sql"]))
+
+
+@tool(
+    name="get_memory_pools",
+    description="Information about memory pool sizes and thread utilization",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_memory_pools() -> str:
+    """Information about memory pool sizes and thread utilization"""
+    return run_sql_statement(dedent(performance_metrics["memory_pools"]["sql"]))
+
+
+@tool(
+    name="get_temp_storage_buckets",
+    description="Information about named temporary storage usage",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_temp_storage_buckets() -> str:
+    """Information about named temporary storage usage"""
+    return run_sql_statement(dedent(performance_metrics["temp_storage_buckets"]["sql"]))
+
+
+@tool(
+    name="get_unnamed_temp_storage",
+    description="Total usage of unnamed temporary storage buckets",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_unnamed_temp_storage() -> str:
+    """Total usage of unnamed temporary storage buckets"""
+    return run_sql_statement(dedent(performance_metrics["unnamed_temp_storage"]["sql"]))
+
+
+@tool(
+    name="get_http_server",
+    description="Performance metrics for HTTP servers including connections and request handling",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_http_server() -> str:
+    """Performance metrics for HTTP servers including connections and request handling"""
+    return run_sql_statement(dedent(performance_metrics["http_server"]["sql"]))
+
+
+@tool(
+    name="get_system_values",
+    description="Current numeric system values that affect performance",
+    show_result=False,
+    stop_after_tool_call=False,
+)
+def get_system_values() -> str:
+    """Current numeric system values that affect performance"""
+    return run_sql_statement(dedent(performance_metrics["system_values"]["sql"]))
+
+
+@tool(
     name="get_top_cpu_jobs",
     description="Get the top N CPU consuming jobs in QUSRWRK and QSYSWRK subsystems",
     show_result=False,
     stop_after_tool_call=False,
 )
-def get_top_cpu_jobs(num_jobs: int = 10) -> str:
+def get_top_cpu_jobs(num_jobs: int = 5) -> str:
     """Get the top N CPU consuming jobs in QUSRWRK and QSYSWRK subsystems
 
     Args:
@@ -171,7 +261,11 @@ def get_top_cpu_jobs(num_jobs: int = 10) -> str:
 def get_metrics_summary():
     summary = {}
     for key, metric in performance_metrics.items():
-        summary[key] = {"name": metric["name"], "description": metric["description"]}
+        summary[key] = {
+            "name": metric["name"],
+            "description": metric["description"],
+            "parameters": metric.get("parameters", []),
+        }
     return summary
 
 
@@ -241,34 +335,26 @@ def analyze_system_performance() -> str:
     return f"System Status:\n{status}\n\nMemory Pool Usage:\n{memory}\n\nSystem Activity:\n{activity}"
 
 
-@tool(
-    name="get_performance_metrics",
-    description=f"Gather relevant performance metrics by running one of {performance_metrics.keys()}",
-    show_result=False,
-    stop_after_tool_call=False,
-)
-def get_metrics(id: str = None) -> str:
-    if id not in performance_metrics.keys():
-        return f"{id} not valid metric"
-
-    if id == "active_job_info":
-        return
-
-    return run_sql_statement(dedent(performance_metrics[id]["sql"]))
-
 performance_agent = Agent(
     name="Performance Agent",
     monitoring=True,
     model=OpenAIChat(),
     tools=[
+        get_system_status,
+        get_system_activity,
+        get_remote_connections,
+        get_memory_pools,
+        get_temp_storage_buckets,
+        get_unnamed_temp_storage,
+        get_http_server,
+        get_system_values,
         get_collection_services_config,
         analyze_system_performance,
         get_top_cpu_jobs,
         ReasoningTools(add_instructions=True),
-        get_metrics,
+        FileTools()
     ],
-    storage=SqliteStorage(
-        table_name="agent_sessions", db_file="tmp/data.db", auto_upgrade_schema=True
+    db=SqliteDb(db_file="tmp/data.db"
     ),
     context={"performance_metrics": get_metrics_summary()},
     instructions=dedent(
@@ -284,7 +370,7 @@ performance_agent = Agent(
         - Offer suggestions for what to investigate based on common performance issues
         
         ## Available Performance Metrics:
-        You can gather data about: {performance_metrics}
+        You can gather data about: {performance_metrics} plus active job info.
         
         ## When to Use Tools:
         - User asks about specific metrics (CPU usage, memory, etc.)
@@ -317,9 +403,10 @@ performance_agent = Agent(
     add_history_to_messages=True,
     num_history_responses=5,
     debug_mode=False,
+    tool_call_limit=5
 )
 
-@weave.op()
+
 async def run_db2i_cli(
     debug_mode: bool = False,
     model_id: Optional[str] = None,
@@ -331,12 +418,10 @@ async def run_db2i_cli(
     performance_agent.model = get_model(model_id)
     performance_agent.debug_mode = debug_mode
     config = CLIConfig(
-        title="Db2i Database Assistant CLI",
+        title="IBM i Performance Assistant",
         agent_title="Db2i Performance Agent",
         db_path=db_path,
     )
-
-
 
     # Configure the CLI
     cli = InteractiveCLI(agent=performance_agent, config=config, stream=stream)

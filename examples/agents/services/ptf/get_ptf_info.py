@@ -1,61 +1,16 @@
 import os
-import pprint
 from textwrap import dedent
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Dict, Optional
 
 from agno.agent import Agent
-from agno.exceptions import StopAgentRun
 from agno.models.openai import OpenAIChat
 from agno.models.ollama import Ollama
 from agno.tools import tool
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from mapepire_python import connect
 from pep249 import QueryParameters
-from rich.console import Console
-from rich.prompt import Prompt
-from agno.utils import pprint
-from agno.storage.sqlite import SqliteStorage
 
-console = Console()
-
-
-def confirmation_hook(
-    function_name: str, function_call: Callable, arguments: Dict[str, Any]
-):
-    # Get the live display instance from the console if it exists
-    live = getattr(console, '_live', None)
-
-    # Stop the live display temporarily so we can ask for user confirmation
-    if live:
-        live.stop()  # type: ignore
-
-    # Ask for confirmation
-    console.print(f"\nAbout to run [bold blue]{function_name}[/]")
-    message = (
-        Prompt.ask("Do you want to continue?", choices=["y", "n"], default="y")
-        .strip()
-        .lower()
-    )
-
-    # Restart the live display
-    if live:
-        live.start()  # type: ignore
-
-    # If the user does not want to continue, raise a StopExecution exception
-    if message != "y":
-        raise StopAgentRun(
-            "Tool call cancelled by user",
-            agent_message="Stopping execution as permission was not granted.",
-        )
-    
-    # Call the function
-    result = function_call(**arguments)
-
-    # Optionally transform the result
-
-    return result
-
-load_dotenv(override=True)
+load_dotenv(find_dotenv())
 
 credentials = {
     "host": os.getenv("HOST"),
@@ -96,25 +51,16 @@ def run_sql_statement(
     name="get_ptf_currency_info",
     description="Derive the IBM i operating system level and then determine the level of currency of PTF Groups",
     show_result=False,
-    stop_after_tool_call=False
+    stop_after_tool_call=False,
 )
-def get_ptf_currency(sql=ptf_currency) -> str:
-    return run_sql_statement(sql=sql)
+def get_ptf_currency() -> str:
+    return run_sql_statement(sql=ptf_currency)
 
 
-ptf_agent = Agent(
-    name="Simple PTF Agent",
-    monitoring=True,
-    storage=SqliteStorage(
-        table_name="ptf_agent_sessions", db_file="tmp/data.db", auto_upgrade_schema=True
-    ),
-    model=OpenAIChat(id="o4-mini", api_key=os.getenv("OPENAI_API_KEY")), #Ollama(id="gpt-oss:20b"), 
+agent = Agent(
+    model=Ollama(id="devstral"), #OpenAIChat(id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY")),
     tools=[get_ptf_currency],
     markdown=True,
-    debug_mode=False,
-    show_tool_calls=True
+    debug_mode=True,
 )
-
-if __name__ == '__main__':
-    import asyncio
-    asyncio.run(ptf_agent.aprint_response("Are there any PTF group updates available?", stream=False))
+agent.print_response("Are there any PTF group updates available?", stream=True)

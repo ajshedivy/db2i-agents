@@ -82,7 +82,7 @@ def get_missing_ptfs(name: str) -> str:
 
 
 ptf_extended_agent = Agent(
-    name="Simple PTF Agent 2",
+    name="Missing PTF Agent",
     model=OpenAIChat(id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY")),
     tools=[get_missing_ptfs],
     context={"ptf_groups": ptf_groups},
@@ -107,4 +107,4 @@ ptf_extended_agent = Agent(
     markdown=True,
     debug_mode=False,
 )
-ptf_extended_agent.print_response("Are there any missing technology refresh PTFs?", stream=True)
+# ptf_extended_agent.print_response("Are there any missing technology refresh PTFs?", stream=True)

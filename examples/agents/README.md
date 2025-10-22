@@ -1,4 +1,7 @@
-# 🤖 AI Agents for Db2 for i
+# 🤖 AI Agents for Db2 for i (Legacy)
+
+⚠️ **Deprecated**: This directory contains legacy AI agent examples for Db2 for i. All of these agents have been updated and added to [IBM i Agents OS](../ibmi-agent-os/)
+
 
 This directory contains AI agent examples organized by category, each demonstrating different approaches to using AI with IBM i systems and Db2 for i databases.
 

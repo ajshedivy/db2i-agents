@@ -117,7 +117,7 @@ def get_largest_files(username: str = "QSYS", limit: int = 10) -> str:
     show_result=False,
     stop_after_tool_call=False,
 )
-def get_files_by_size(username: str, min_size_mb: float, limit: int = 20) -> str:
+def get_files_by_size(username: str = "QSYS", min_size_mb: float = 10.0, limit: int = 20) -> str:
     """Find files owned by a user that exceed a specific size threshold.
     
     Args:
