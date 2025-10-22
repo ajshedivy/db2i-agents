@@ -91,49 +91,15 @@ The **primary examples** are now in `agents-infra/`, which implements [Agno's Ag
 
 ---
 
-### 📚 Legacy Examples (`agents/` - Reference Only)
-
-> **⚠️ DEPRECATED:** The `agents/` directory contains legacy examples for **reference only**.
->
-> **For new development, use `agents-infra/`** which provides:
-> - Better architecture with Agno AgentOS
-> - Multi-agent team support
-> - Production deployment options
-> - Local CLI and Docker deployment
-
-#### Sample Database Examples (Legacy)
-- 👥 [Employee Information Retrieval](agents/sample/get_employee_info_agent.py) - Simple agent that queries employee data
-- 🔄 [Employee Info Workflow](agents/sample/get_employee_info_workflow.py) - LangChain workflow for employee data analysis
-- 🔌 [Simple MCP Database Client](agents/sample/mcp_simple.py) - Basic MCP client for database queries
-
-#### Performance Monitoring Examples (Legacy)
-- 📈 [Metrics Assistant CLI](agents/performance/metrics_assistant_cli.py) - Interactive CLI for system performance metrics
-- 🔍 [SQL Examples RAG](agents/performance/sql_examples_rag.py) - Retrieval-augmented generation for SQL performance
-
-#### Security Examples (Legacy)
-- 🛡️ [Security Assistant](agents/security/security_assistant.py) - Interactive CLI for security vulnerability analysis
-- 📝 [Security Agent Playground](agents/security/playground.py) - Testing environment for security analysis
-
-#### IBM i Services Examples (Legacy)
-- 🔍 [PTF Information Retrieval](agents/services/ptf/get_ptf_info.py) - Basic PTF information retrieval
-- 🔬 [Enhanced PTF Analysis](agents/services/ptf/get_ptf_info_extended.py) - Detailed PTF information with enhanced AI
-- 📂 [IFS File Reader](agents/services/ifs/read_stream_file.py) - Read and search IFS file contents
-- 💾 [IFS Storage Analyzer](agents/services/ifs/storage_assistant.py) - Find and analyze large files
-- ☕ [JVM Performance Monitor](agents/services/java/jvm_assistant.py) - Monitor Java Virtual Machines on IBM i
-- 🗃️ [SQL Services Agent](agents/services/sql_services_agent.py) - Interactive CLI for SQL services
-- 📓 [SQL Services Info Notebook](agents/services/sql_services_info.ipynb) - Jupyter notebook for SQL services
-
-#### Complete Applications (Legacy)
-- 🧠 [SQL Agent with Knowledge Base](apps/sql_agent_with_knowledge/) - Interactive SQL assistant with database knowledge
-
----
-
 ## 🚀 Running the Examples
 
 ### AgentOS Examples (Recommended)
 
 ```bash
 cd agents-infra
+./scripts/dev_setup.sh  # Install dependencies
+
+source .venv/bin/activate  # Activate virtual environment
 
 # List what's available
 python cli.py --list-agents
@@ -223,3 +189,40 @@ docker-compose up
 
 ### 6️⃣ **Explore Legacy Examples** (Reference)
 Review `agents/` directory for alternative implementation patterns
+
+### 📚 Legacy Examples (`agents/` - Reference Only)
+
+> **⚠️ DEPRECATED:** The `agents/` directory contains legacy examples for **reference only**.
+>
+> **For new development, use `agents-infra/`** which provides:
+> - Better architecture with Agno AgentOS
+> - Multi-agent team support
+> - Production deployment options
+> - Local CLI and Docker deployment
+
+#### Sample Database Examples (Legacy)
+- 👥 [Employee Information Retrieval](agents/sample/get_employee_info_agent.py) - Simple agent that queries employee data
+- 🔄 [Employee Info Workflow](agents/sample/get_employee_info_workflow.py) - LangChain workflow for employee data analysis
+- 🔌 [Simple MCP Database Client](agents/sample/mcp_simple.py) - Basic MCP client for database queries
+
+#### Performance Monitoring Examples (Legacy)
+- 📈 [Metrics Assistant CLI](agents/performance/metrics_assistant_cli.py) - Interactive CLI for system performance metrics
+- 🔍 [SQL Examples RAG](agents/performance/sql_examples_rag.py) - Retrieval-augmented generation for SQL performance
+
+#### Security Examples (Legacy)
+- 🛡️ [Security Assistant](agents/security/security_assistant.py) - Interactive CLI for security vulnerability analysis
+- 📝 [Security Agent Playground](agents/security/playground.py) - Testing environment for security analysis
+
+#### IBM i Services Examples (Legacy)
+- 🔍 [PTF Information Retrieval](agents/services/ptf/get_ptf_info.py) - Basic PTF information retrieval
+- 🔬 [Enhanced PTF Analysis](agents/services/ptf/get_ptf_info_extended.py) - Detailed PTF information with enhanced AI
+- 📂 [IFS File Reader](agents/services/ifs/read_stream_file.py) - Read and search IFS file contents
+- 💾 [IFS Storage Analyzer](agents/services/ifs/storage_assistant.py) - Find and analyze large files
+- ☕ [JVM Performance Monitor](agents/services/java/jvm_assistant.py) - Monitor Java Virtual Machines on IBM i
+- 🗃️ [SQL Services Agent](agents/services/sql_services_agent.py) - Interactive CLI for SQL services
+- 📓 [SQL Services Info Notebook](agents/services/sql_services_info.ipynb) - Jupyter notebook for SQL services
+
+#### Complete Applications (Legacy)
+- 🧠 [SQL Agent with Knowledge Base](apps/sql_agent_with_knowledge/) - Interactive SQL assistant with database knowledge
+
+---

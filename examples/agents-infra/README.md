@@ -64,9 +64,18 @@ Follow these steps to get your Agent OS up and running:
 ### Clone the repo
 
 ```sh
-git clone https://github.com/agno-agi/agent-infra-docker.git
-cd agent-infra-docker
+git clone https://github.com/ajshedivy/db2i-agents.git
+cd db2i-agents/examples/agents-infra
 ```
+
+### Install dependencies
+
+```bash
+./scripts/dev_setup.sh  # Install dependencies
+source .venv/bin/activate  # Activate virtual environment
+```
+
+> **Note**: Install uv if you don't have it already. See the [Development Setup](#development-setup) section for instructions.
 
 ### Configure API keys and IBM i connection
 
@@ -88,8 +97,8 @@ DB_USER=your_db_username
 PASSWORD=your_db_password
 DB_PORT=8076
 ```
+> **Note**: Use the IBM i credentials from the `.env` file from [Getting Started guide](../README.md#-getting-started)
 
-> **Note**: You can use any model provider, just update the agents in the `/agents` folder and add the required library in the `pyproject.toml` and `requirements.txt` file.
 
 ### Start the application
 
@@ -132,57 +141,12 @@ Or:
 docker compose down
 ```
 
-## Prebuilt Agents
+## Using the CLI
 
-The `/agents` folder contains pre-built agents organized by category:
+You can also run agents, teams, and workflows directly from the command line using `cli.py`.
 
-### Demo Agents
-- **Web Search Agent**: A simple agent that can search the web using DuckDuckGo
-- **Agno Assist**: An Agent that can help answer questions about Agno framework
+follow the instructions in the [CLI README](./CLI_README.md) for detailed usage examples.
 
-### IBM i Agents
-
-#### Performance Monitoring (`agents/performance/`)
-- **Metrics Assistant**: Comprehensive IBM i system performance monitoring with CPU, memory, and I/O analysis
-
-#### Services Management (`agents/services/`)
-- **PTF Assistant**: PTF currency checking and missing PTF identification
-- **Storage Assistant**: IFS storage analysis and large file identification
-
-#### Security Analysis (`agents/security/`)
-- **Security Assistant**: User profile security analysis and vulnerability remediation
-
-#### Sample Agents (`agents/sample/`)
-- **Employee Info**: Query employee data from SAMPLE database (demo)
-
-### IBM i Teams
-
-The `/teams` folder contains team configurations that coordinate multiple agents:
-
-#### Collaborative Teams (`teams/`)
-- **PTF Specialist Team**: Routes PTF-related queries to appropriate specialists
-- **Performance Routing Team**: Smart routing to the most appropriate specialist based on query
-- **Performance Coordination Team**: Orchestrates multiple specialists for comprehensive analysis
-- **Performance Collaboration Team**: All specialists work simultaneously on complex problems
-
-Teams use different collaboration modes:
-- **Route**: Directs queries to the single most appropriate specialist
-- **Coordinate**: Team leader orchestrates specialists working sequentially
-- **Collaborate**: All specialists contribute their expertise simultaneously
-
-### IBM i Workflows
-
-The `/workflows` folder contains workflow configurations for multi-step analysis:
-
-#### Analysis Workflows (`workflows/`)
-- **Quick Performance Check**: Fast performance overview with key system metrics
-- **Comprehensive Performance Analysis**: Complete system analysis with quality-driven reporting
-- **Iterative Performance Analysis**: Quality-driven workflow that refines analysis until standards are met
-
-Workflows support advanced patterns:
-- **Sequential Steps**: Execute analysis steps in order
-- **Loop**: Repeat analysis until quality criteria are met
-- **Data Processing**: Custom functions for data consolidation and quality checks
 
 ## Development Setup
 
