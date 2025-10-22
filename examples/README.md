@@ -42,7 +42,7 @@ The **primary examples** are now in `agents-infra/`, which implements [Agno's Ag
    python cli.py --team performance-collaboration --stream
 
    # Run a workflow
-   python cli.py --workflow comprehensive-analysis --input "Analyze system performance"
+   python cli.py --workflow comprehensive-analysis --prompt "Analyze system performance"
    ```
 
 2. **Docker AgentOS (Recommended for Production)**
@@ -147,7 +147,7 @@ python cli.py --agent metrics
 python cli.py --team performance-routing
 
 # Run a workflow
-python cli.py --workflow quick-performance --input "Check system status"
+python cli.py --workflow quick-performance --prompt "Check system status"
 ```
 
 ### Legacy Examples (Reference)
@@ -210,7 +210,7 @@ python cli.py --team performance-collaboration --stream
 
 ### 4️⃣ **Run an Automated Workflow** (10 minutes)
 ```bash
-python cli.py --workflow comprehensive-analysis --input "Perform a full performance analysis"
+python cli.py --workflow comprehensive-analysis --prompt "Perform a full performance analysis"
 ```
 **Learn:** Multi-step automated execution
 

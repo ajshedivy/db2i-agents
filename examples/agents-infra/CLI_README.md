@@ -19,7 +19,7 @@ The CLI (`cli.py`) allows you to run any of the agents-infra agents, teams, and 
 - **Model selection**: Choose any supported model via `--model-id`
 - **Streaming support**: Enable streaming responses with `--stream` (agents/teams)
 - **Debug mode**: Verbose output with `--debug`
-- **Workflow input**: Provide workflow queries via `--input` parameter
+- **Workflow input**: Provide workflow queries via `--prompt` parameter
 - **Graceful degradation**: Items with missing dependencies are skipped automatically
 
 ## Requirements
@@ -71,13 +71,13 @@ python cli.py --team performance-collaboration --stream
 
 ```bash
 # Run quick performance check workflow
-python cli.py --workflow quick-performance --input "Check current system performance"
+python cli.py --workflow quick-performance --prompt "Check current system performance"
 
 # Run comprehensive analysis with specific model
-python cli.py --workflow comprehensive-analysis --input "Analyze performance bottlenecks" --model-id watsonx:mistralai/mistral-large
+python cli.py --workflow comprehensive-analysis --prompt "Analyze performance bottlenecks" --model-id watsonx:mistralai/mistral-large
 
 # Run iterative analysis with debug mode
-python cli.py --workflow iterative-analysis --input "Find and resolve performance issues" --debug
+python cli.py --workflow iterative-analysis --prompt "Find and resolve performance issues" --debug
 ```
 
 ## Available Agents
@@ -151,7 +151,7 @@ Specify models using the format `provider:model_id`:
 1. **Storage Backend**: SQLite instead of PostgreSQL
 2. **Knowledge Base**: Disabled for agents that use pgvector (e.g., agno-assist)
 3. **Dependencies**: Optional agent/team/workflow dependencies are skipped if not installed
-4. **Workflow Interaction**: Single input via `--input` parameter (not interactive)
+4. **Workflow Interaction**: Single input via `--prompt` parameter (not interactive)
 
 ### What Works the Same
 
@@ -213,7 +213,7 @@ python cli.py --team performance-collaboration --stream
 ### Workflow Execution
 
 ```bash
-python cli.py --workflow comprehensive-analysis --input "Perform a complete performance analysis and generate a detailed report" --debug
+python cli.py --workflow comprehensive-analysis --prompt "Perform a complete performance analysis and generate a detailed report" --debug
 # Workflow executes all steps automatically and displays results
 ```
 

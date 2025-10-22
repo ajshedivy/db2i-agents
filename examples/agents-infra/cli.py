@@ -18,8 +18,8 @@ Usage:
     python cli.py --team performance-routing --stream
 
     # Run workflows
-    python cli.py --workflow quick-performance --input "Check system performance"
-    python cli.py --workflow comprehensive-analysis --input "Analyze bottlenecks" --debug
+    python cli.py --workflow quick-performance --prompt "Check system performance"
+    python cli.py --workflow comprehensive-analysis --prompt "Analyze bottlenecks" --debug
 """
 
 import argparse
@@ -379,9 +379,9 @@ Examples:
   python cli.py --team performance-collaboration --stream
 
   # Run a workflow
-  python cli.py --workflow quick-performance --input "Check system performance"
-  python cli.py --workflow comprehensive-analysis --input "Analyze performance bottlenecks"
-  python cli.py --workflow iterative-analysis --input "Find and fix performance issues" --debug
+  python cli.py --workflow quick-performance --prompt "Check system performance"
+  python cli.py --workflow comprehensive-analysis --prompt "Analyze performance bottlenecks"
+  python cli.py --workflow iterative-analysis --prompt "Find and fix performance issues" --debug
         """,
     )
 
@@ -481,10 +481,10 @@ Examples:
         print("       (or use --list-agents / --list-teams / --list-workflows)")
         sys.exit(1)
 
-    # Validate --workflow requires --input
+    # Validate --workflow requires --prompt
     if args.workflow and not args.input:
         parser.print_help()
-        print("\nError: --workflow requires --input to specify the workflow query")
+        print("\nError: --workflow requires --prompt to specify the workflow query")
         sys.exit(1)
 
     # Ensure tmp directory exists for SQLite database
