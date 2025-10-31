@@ -148,8 +148,11 @@ def get_ptf_assistant(
         add_history_to_context=True,
         num_history_runs=3,
         read_chat_history=True,
+        enable_session_summaries=True,
+        search_session_history=True,
+        num_history_sessions=3,
         # -*- Memory -*-
-        enable_agentic_memory=True,
+        enable_user_memories=True,
         # -*- Other settings -*-
         markdown=True,
         add_datetime_to_context=True,

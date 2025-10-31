@@ -93,6 +93,7 @@ agent_os = AgentOS(
     ],
     # Configuration for the AgentOS
     config=os_config_path,
+    enable_mcp=True,
 )
 app = agent_os.get_app()
 

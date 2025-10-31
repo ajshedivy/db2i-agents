@@ -32,7 +32,7 @@ def get_database(db_id: str = "agno-storage") -> Union["PostgresDb", SqliteDb]:
     if use_sqlite:
         # Use SQLite for local CLI
         db_path = os.getenv("SQLITE_DB_PATH", "tmp/agents.db")
-        return SqliteDb(id=db_id, db_file=db_path)
+        return SqliteDb(id=db_id, db_file=db_path, memory_table="agent_memories", metrics_table="agent_metrics")
     else:
         # Use PostgreSQL for docker deployment
         # Import here to avoid errors when PostgreSQL is not available

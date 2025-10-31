@@ -93,7 +93,7 @@ def get_report_generator(model_id: str = "openai:gpt-4o") -> Agent:
     return Agent(
         name="Performance Report Generator",
         model=model,
-        tools=[ReasoningTools()],
+        tools=[],
         instructions=dedent("""
             You are an expert technical report writer specializing in IBM i system performance analysis
             within workflow-based analysis systems.

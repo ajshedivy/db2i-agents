@@ -42,7 +42,7 @@ def get_quick_performance_workflow(
         description="Fast performance overview with key system metrics",
         steps=[
             Step(name="System Status Check", agent=system_analyzer),
-            Step(name="Generate Quick Report", agent=report_generator),
+            # Step(name="Generate Quick Report", agent=report_generator),
         ],
         db=get_database("agno-storage"),
         debug_mode=debug_mode,

@@ -16,7 +16,6 @@ performance_metrics = {
     "system_status": {
         "name": "System Statistics",
         "description": "Overall system performance statistics with CPU, memory, and I/O metrics",
-        "interval": 60,
         "sql": """
             SELECT * FROM TABLE(QSYS2.SYSTEM_STATUS(RESET_STATISTICS=>'YES',DETAILED_INFO=>'ALL')) X
         """
@@ -24,7 +23,6 @@ performance_metrics = {
     "system_activity": {
         "name": "System Activity",
         "description": "Current system activity information including active jobs and resource utilization",
-        "interval": 20,
         "sql": """
             SELECT * FROM TABLE(QSYS2.SYSTEM_ACTIVITY_INFO())
         """
@@ -32,7 +30,6 @@ performance_metrics = {
     "remote_connections": {
         "name": "Remote Connections",
         "description": "Number of established remote connections to the system",
-        "interval": 30,
         "sql": """
             SELECT COUNT(REMOTE_ADDRESS) as REMOTE_CONNECTIONS
             FROM qsys2.netstat_info
@@ -44,7 +41,6 @@ performance_metrics = {
     "memory_pools": {
         "name": "Memory Pool Information",
         "description": "Information about memory pool sizes and thread utilization",
-        "interval": 100,
         "sql": """
             SELECT POOL_NAME, CURRENT_SIZE, DEFINED_SIZE,
                    MAXIMUM_ACTIVE_THREADS, CURRENT_THREADS, RESERVED_SIZE
@@ -54,7 +50,6 @@ performance_metrics = {
     "temp_storage_buckets": {
         "name": "Named Temporary Storage Buckets",
         "description": "Information about named temporary storage usage",
-        "interval": 90,
         "sql": """
             SELECT REPLACE(UPPER(REPLACE(GLOBAL_BUCKET_NAME, '*','')), ' ', '_') as NAME,
                    BUCKET_CURRENT_SIZE as CURRENT_SIZE, BUCKET_PEAK_SIZE as PEAK_SIZE
@@ -65,7 +60,6 @@ performance_metrics = {
     "unnamed_temp_storage": {
         "name": "Unnamed Temporary Storage Usage",
         "description": "Total usage of unnamed temporary storage buckets",
-        "interval": 90,
         "sql": """
             SELECT SUM(BUCKET_CURRENT_SIZE) as CURRENT_SIZE,
                    SUM(BUCKET_PEAK_SIZE) as PEAK_SIZE
@@ -76,7 +70,6 @@ performance_metrics = {
     "http_server": {
         "name": "HTTP Server Metrics",
         "description": "Performance metrics for HTTP servers including connections and request handling",
-        "interval": 60,
         "sql": """
             SELECT SERVER_NAME CONCAT '_' CONCAT REPLACE(HTTP_FUNCTION, ' ','_') as SERVER_FUNC,
                    SERVER_NORMAL_CONNECTIONS, SERVER_SSL_CONNECTIONS, SERVER_ACTIVE_THREADS,
@@ -89,7 +82,6 @@ performance_metrics = {
     "system_values": {
         "name": "System Values",
         "description": "Current numeric system values that affect performance",
-        "interval": 333,
         "sql": """
             SELECT SYSTEM_VALUE_NAME, CURRENT_NUMERIC_VALUE
             FROM QSYS2.SYSTEM_VALUE_INFO
@@ -99,7 +91,6 @@ performance_metrics = {
     "collection_services": {
         "name": "Collection Services Configuration",
         "description": "Current configuration of Collection Services",
-        "interval": 600,
         "sql": """
             SELECT * FROM QSYS2.COLLECTION_SERVICES_INFO
         """
@@ -107,7 +98,6 @@ performance_metrics = {
     "collection_categories": {
         "name": "Collection Services Categories",
         "description": "Collection Services category settings and intervals",
-        "interval": 600,
         "sql": """
             SELECT cs_category, cs_interval
             FROM QSYS2.COLLECTION_SERVICES_INFO,
@@ -241,7 +231,11 @@ def get_metrics_assistant(
         num_history_runs=3,
         read_chat_history=True,
         # -*- Memory -*-
-        enable_agentic_memory=True,
+        enable_user_memories=True,
+        # -*- Session Summaries-*-
+        enable_session_summaries=True,
+        num_history_sessions=3,
+        search_session_history=True,
         # -*- Other settings -*-
         markdown=True,
         add_datetime_to_context=True,
