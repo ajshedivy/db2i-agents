@@ -26,7 +26,7 @@
   - [📚 SAMPLE Database](#-sample-database)
 </details>
 
-![alt text](docs/image.png)
+![alt text](docs/logo-new.png)
 
 
 # 🤖 Db2 for i AI Agents Cookbook
