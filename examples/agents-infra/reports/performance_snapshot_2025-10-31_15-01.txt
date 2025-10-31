@@ -1,0 +1,55 @@
+## System Performance Snapshot - October 31, 2025 at 15:01
+
+### Current System Status Summary
+
+**System:** COMMON1 (Partition 11 of 45)
+**Timestamp:** 2025-10-31 15:01:18
+
+---
+
+### CPU Performance
+- **Average CPU Utilization:** 35.28%
+- **Maximum CPU Utilization:** 78.91%
+- **Minimum CPU Utilization:** 0.0%
+- **Average CPU Rate:** 83.75%
+- **Configured CPUs:** 3 virtual processors
+- **Processing Capacity:** 3.0 (Uncapped, shared processor pool)
+
+---
+
+### Memory Statistics
+- **Total Main Storage:** 133,021,696 KB (130 GB)
+- **Defined Memory:** 131,072 MB
+- **System ASP Used:** 52.79%
+- **Current Temporary Storage:** 80,006 pages
+- **Maximum Temporary Storage Used:** 97,222 pages
+
+---
+
+### Job Statistics
+- **Total Jobs in System:** 2,873
+- **Active Jobs:** 1,048
+- **Batch Running:** 244
+- **Batch on Unassigned JOBQ:** 1,746
+- **Interactive Jobs:** 0
+- **Jobs Signed On:** 14
+- **Active Threads in System:** 4,327
+
+---
+
+### Memory Pool Usage
+
+| Pool Name | Current Size (MB) | Current Threads | Max Threads | Reserved (MB) |
+|-----------|-------------------|-----------------|-------------|---------------|
+| *MACHINE  | 7,827.51 | 250 | 32,767 | 4,063.19 |
+| *BASE     | 121,102.21 | 4,055 | 10,266 | 25.87 |
+| *INTERACT | 649.51 | 21 | 153 | 0.0 |
+| *SPOOL    | 324.75 | 0 | 102 | 0.0 |
+
+---
+
+### Key Observations
+1. **CPU Utilization:** Moderate at 35.28% average with peak at 78.91%
+2. **Memory Pools:** *BASE pool is heavily utilized with 4,055 active threads (39.5% of max)
+3. **Job Activity:** High number of batch jobs on unassigned job queues (1,746)
+4. **System Capacity:** System has headroom for growth

@@ -145,8 +145,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 1. Install Ollama from [ollama.com](https://ollama.com/)
 2. Pull recommended models:
    ```bash
-   ollama pull llama3.1        # Great for general tasks
+   ollama pull llama3.1        # for general tasks
    ollama pull qwen2.5:latest  # Excellent for coding
+   ollama pull gpt-oss:20b     # NEW - GPT-like experience locally
    ```
 
 #### 📊 Model Recommendations
@@ -205,7 +206,7 @@ This repository includes several powerful frameworks for building AI agents, eac
 | Framework | Best For | Key Feature |
 |:----------|:---------|:------------|
 | [🔗 LangChain](frameworks/agents/langchain/README.md) | Production-ready solutions | Robust ecosystem with extensive integrations |
-| [🏗️ Agno](frameworks/agents/agno/README.md) | Learning agent fundamentals | Transparent architecture that reveals core agent concepts |
+| [🏗️ Agno](frameworks/agents/agno/README.md) | Agent performance and flexibility | Transparent architecture that reveals core agent concepts |
 | [📡 MCP](frameworks/mcp/README.md) | Standardized context | Consistent way to provide context to LLMs |
 
 To explore these frameworks:
@@ -213,7 +214,7 @@ To explore these frameworks:
 2. Follow the framework-specific README instructions
 3. Run the included demos to see agents in action
 
-> 💡 **Recommendation**: Choose LangChain when you need comprehensive, battle-tested solutions with extensive documentation. Use Agno when you want to deeply understand agent architecture or need a lightweight framework that makes the concepts behind agent construction more transparent.
+> 💡 **Recommendation**: Choose LangChain when you need comprehensive, battle-tested solutions. Use Agno when you want to deeply understand agent architecture or need a lightweight framework that makes the concepts behind agent construction more transparent.
 
 ## 🧠 Agent Concepts
 
@@ -242,7 +243,7 @@ Each concept includes code examples and explanations to help you implement these
 |:----------|:----------|:----------------------|:------------------|:-------------|:--------------|
 | [🔗 LangChain](frameworks/agents/langchain/) | Python ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | Popular framework for developing applications powered by LLMs  |
 | [🏗️ MCP](frameworks/mcp/) | Python ✅<br>TypeScript ✅ | Complete ✅ | Mapepire 🔌 | Yes ✅ | An open protocol that standardizes how applications provide context to LLMs. |
-| [🧩 Agno](frameworks/agents/agno/) | Python ✅ | Complete ✅  | Mapepire 🔌 | Yes ✅ | A lightweight library for building Agents with memory, knowledge, tools and reasoning. |
+| [🧩 Agno](frameworks/agents/agno/) | Python ✅ | Complete ✅  | Mapepire 🔌 | Yes ✅ | An open source framework for building Agents with memory, knowledge, tools and reasoning. |
 | [🐝 BeeAI](frameworks/agents/beeai/) | Python ✅<br>TypeScript ✅ | Coming soon ⏳| Mapepire 🔌 | Yes ✅ | An open-source ecosystem that empowers developers to discover, run, and compose AI agents from any framework. |
 | [👥 CrewAI](frameworks/agents/crewai/) | Python ✅ | Coming soon ⏳ | Mapepire 🔌 | No ❌ | Fast and flexible Python Multi-Agent automation framework |
 
