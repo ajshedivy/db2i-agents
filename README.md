@@ -58,6 +58,11 @@ Agents work by combining large language models with specialized tools that conne
 
 
 
+![ScreenRecording2025-11-26at12 21 00PM-ezgif com-crop](https://github.com/user-attachments/assets/e88ff2a8-7552-4d7c-b684-53b630a65207)
+
+
+
+
 ## 📂 Repository Structure
 
 This repository is organized into three main sections:
