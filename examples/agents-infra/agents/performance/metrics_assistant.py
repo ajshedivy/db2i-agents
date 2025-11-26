@@ -6,6 +6,7 @@ from pathlib import Path
 from agno.agent import Agent
 from agno.tools.file import FileTools
 from agno.tools import tool
+from agno.tools.reasoning import ReasoningTools
 
 from db.factory import get_database
 from db.ibmi import run_sql_statement
@@ -161,6 +162,20 @@ def get_metrics(id: str = None) -> str:
 
     return run_sql_statement(dedent(performance_metrics[id]["sql"]))
 
+@tool(
+    name="get_top_cpu_jobs",
+    description="Get top N jobs by CPU usage",
+)
+def get_top_cpu_jobs(n: Optional[int] = 5) -> str:
+    """Get top N jobs by CPU usage"""
+    sql = f"""
+      SELECT CPU_TIME, A.* FROM 
+      TABLE(QSYS2.ACTIVE_JOB_INFO(SUBSYSTEM_LIST_FILTER => 'QUSRWRK,QSYSWRK')) A 
+      ORDER BY CPU_TIME DESC 
+      FETCH FIRST ? ROWS ONLY
+    """
+    return run_sql_statement(dedent(sql), parameters=[n])
+
 
 def get_metrics_assistant(
     model_id: str = "openai:gpt-4o",
@@ -187,6 +202,8 @@ def get_metrics_assistant(
             get_metrics,
             get_collection_services_config,
             analyze_system_performance,
+            get_top_cpu_jobs,
+            ReasoningTools(add_instructions=True),
             FileTools(Path("reports"))
         ],
         dependencies={"performance_metrics": get_metrics_summary()},

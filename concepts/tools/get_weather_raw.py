@@ -8,11 +8,10 @@ Minimal agentic loop using:
 
 import json
 import typing as t
-from dataclasses import dataclass
+from pydantic import BaseModel, ConfigDict
 import requests
 from rich.console import Console
 from rich.panel import Panel
-from rich import print as rprint
 
 
 # Set up console for rich debugging output
@@ -20,11 +19,12 @@ console = Console()
 
 
 # ─────────────────── 1.  TOOL DEFINITIONS ────────────────────
-@dataclass
-class Tool:
+class Tool(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     name: str
     description: str
-    schema: dict
+    parameters: dict
     handler: t.Callable[[dict], str]
 
 
@@ -53,7 +53,7 @@ TOOL_REGISTRY: dict[str, Tool] = {
     "get_weather": Tool(
         name="get_weather",
         description="Get the current weather for a given city name.",
-        schema={
+        parameters={
             "type": "object",
             "properties": {"city": {"type": "string"}},
             "required": ["city"],
@@ -69,7 +69,7 @@ TOOLS_PAYLOAD = [
         "function": {
             "name": t.name,
             "description": t.description,
-            "parameters": t.schema,
+            "parameters": t.parameters,
         },
     }
     for t in TOOL_REGISTRY.values()
